@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.google.android.gms.maps.MapView>
+
+    <TextView
+        android:id="@+id/hint_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/map_hint_message"
+        android:gravity="center"
+        android:textColor="#B8B8B8"
+        android:background="#FBFBFB"/>
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/hint_message"
+        android:background="@drawable/orange_button_shaped"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/back_button"/>
+
+</RelativeLayout>
