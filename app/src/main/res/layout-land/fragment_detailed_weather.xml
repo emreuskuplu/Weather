@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2EBCF">
+
+    <TextView
+        android:id="@+id/location_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@id/back_button"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_weather_row_one"
+        app:layout_constraintStart_toEndOf="@+id/back_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/detailed_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:textColor="#B8B8B8"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_weather_row_one"
+        app:layout_constraintStart_toEndOf="@+id/back_button"
+        app:layout_constraintTop_toBottomOf="@+id/location_name" />
+
+    <LinearLayout
+        android:id="@+id/weather_temp_degree_layout"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_day">
+
+        <ImageView
+            android:id="@+id/weather_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:contentDescription="@string/weather_image_is_not_set"
+            android:focusable="true"
+            android:src="@drawable/thermometer" />
+
+        <TextView
+            android:id="@+id/temp_degree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="31dp"
+            android:gravity="center"
+            android:text="@string/celsius_sign"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="40dp"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_weather_row_two"
+        app:layout_constraintStart_toEndOf="@+id/back_button"
+        app:layout_constraintTop_toBottomOf="@id/weather_temp_degree_layout" />
+
+    <LinearLayout
+        android:id="@+id/detailed_weather_row_one"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/weather_temp_degree_layout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@string/humidity"
+            android:focusable="true"
+            android:src="@drawable/humidity" />
+
+        <TextView
+            android:id="@+id/humidity_volume"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8sp"
+            android:text="@string/default_volume"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/wind_volume"
+            android:focusable="true"
+            android:src="@drawable/wind" />
+
+        <TextView
+            android:id="@+id/wind_volume"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8sp"
+            android:text="@string/default_volume"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/detailed_weather_row_two"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/weather_temp_degree_layout"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_weather_row_one">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@string/rain_volume"
+            android:focusable="true"
+            android:src="@drawable/rain_volume" />
+
+        <TextView
+            android:id="@+id/rain_volume"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8sp"
+            android:text="@string/default_volume"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/snow_volume"
+            android:focusable="true"
+            android:src="@drawable/snow_volume" />
+
+        <TextView
+            android:id="@+id/snow_volume"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8sp"
+            android:text="@string/default_volume"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/weather_temp_degree_layout"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_weather_row_two">
+
+        <LinearLayout
+            android:id="@+id/first_day_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contentDescription="@string/first_day_layout">
+
+            <TextView
+                android:id="@+id/first_day_date"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/first_day_weather_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"/>
+
+            <TextView
+                android:id="@+id/first_day_temp_degree"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/celsius_sign" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/second_day_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contentDescription="@string/second_day_layout">
+
+            <TextView
+                android:id="@+id/second_day_date"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/second_day_weather_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"/>
+
+            <TextView
+                android:id="@+id/second_day_temp_degree"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/celsius_sign" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/third_day_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contentDescription="@string/third_day_layout">
+
+            <TextView
+                android:id="@+id/third_day_date"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/third_day_weather_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"/>
+
+            <TextView
+                android:id="@+id/third_day_temp_degree"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/celsius_sign" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fourth_day_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contentDescription="@string/fourth_day_layout">
+
+            <TextView
+                android:id="@+id/fourth_day_date"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/fourth_day_weather_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"/>
+
+            <TextView
+                android:id="@+id/fourth_day_temp_degree"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/celsius_sign" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fifth_day_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contentDescription="@string/fifth_day_layout">
+
+            <TextView
+                android:id="@+id/fifth_day_date"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+            <ImageView
+                android:id="@+id/fifth_day_weather_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"/>
+
+            <TextView
+                android:id="@+id/fifth_day_temp_degree"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/celsius_sign" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/brown_arrow"
+        android:contentDescription="@string/back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/refresh_weather_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/refresh"
+        android:contentDescription="@string/refresh_weather"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/weather_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="411dp"
+        android:layout_marginTop="658dp"
+        android:layout_marginEnd="411dp"
+        android:layout_marginBottom="659dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
