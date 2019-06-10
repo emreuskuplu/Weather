@@ -71,7 +71,8 @@ public class WeatherListFragment extends Fragment {
     private LocationDAO mLocationDAO;
     private static List<LocationDTO> sLocationDTOList;
     private static WeatherDTO sUserWeatherDTO;
-    private static List<WeatherDTO> sWeatherDTOList = new ArrayList<>();
+    private List<WeatherDTO> mWeatherDTOList;
+    private static List<WeatherDTO> sWeatherDTOList;
 
     private static GoogleApiClient sClient;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -94,7 +95,7 @@ public class WeatherListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sClient = new GoogleApiClient.Builder(getActivity())
+        sClient = new GoogleApiClient.Builder(requireActivity())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
@@ -114,7 +115,7 @@ public class WeatherListFragment extends Fragment {
                 .build();
 
         mFusedLocationProviderClient =
-                LocationServices.getFusedLocationProviderClient(getActivity());
+                LocationServices.getFusedLocationProviderClient(requireActivity());
 
         mLocationDAO = new LocationDAO(getContext());
     }
@@ -173,7 +174,7 @@ public class WeatherListFragment extends Fragment {
                 List<WeatherDTO> weatherDTOList = new ArrayList<>();
                 List<LocationDTO> locationDTOList = new ArrayList<>();
 
-                for (WeatherDTO weatherDTO : sWeatherDTOList) {
+                for (WeatherDTO weatherDTO : mWeatherDTOList) {
                     if (s.equalsIgnoreCase(weatherDTO.getLocationName())) {
                         weatherDTOList.add(weatherDTO);
 
@@ -306,21 +307,30 @@ public class WeatherListFragment extends Fragment {
     }
 
     private boolean hasLocationPermission() {
-        return ActivityCompat.checkSelfPermission(this.getContext(),
+        return ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this.getContext(),
+                ActivityCompat.checkSelfPermission(requireContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
-                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo;
+
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } else {
+            // If there is not default network then ignore isOnline condition
+            Log.i(TAG, "There is not default network");
+            return true;
+        }
+
         return networkInfo != null && networkInfo.isConnected();
     }
 
     private void showOfflineNetworkAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage(getString(R.string.offline_network_alert_dialog_message));
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -337,7 +347,7 @@ public class WeatherListFragment extends Fragment {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(request);
 
-        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(getContext()).
+        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(requireContext()).
                 checkLocationSettings(builder.build());
 
         task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
@@ -483,34 +493,33 @@ public class WeatherListFragment extends Fragment {
 
         // Following permission is already used in hasLocationPermission().
         // Same permission control is necessary for avoid the warning of FusedLocationProviderClient
-        if (ActivityCompat.checkSelfPermission(this.getContext(),
+        if (ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this.getContext(),
+                ActivityCompat.checkSelfPermission(requireContext(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        LocationCallback mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult result) {
-                Log.i(TAG, "User location: " + result.getLastLocation());
-                mUserWeatherProgressBar.setVisibility(View.VISIBLE);
+    LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult result) {
+            Log.i(TAG, "User location: " + result.getLastLocation());
+            mUserWeatherProgressBar.setVisibility(View.VISIBLE);
 
-                sUserLocation = result.getLastLocation();
+            sUserLocation = result.getLastLocation();
 
-                new SearchUserWeatherTask()
-                        .execute(sUserLocation);
-            }
-        };
+            new SearchUserWeatherTask()
+                    .execute(sUserLocation);
+        }
+    };
 
         mFusedLocationProviderClient.requestLocationUpdates(request, mLocationCallback, null);
-    }
+}
 
     private void executeWeatherListTask() {
         Log.i(TAG, "Weather list task is executing");
 
         List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
-        sLocationDTOList = locationDTOList;
 
         if (locationDTOList.isEmpty()) {
             mBookmarkNotFoundMessage.setVisibility(View.GONE);
@@ -526,6 +535,8 @@ public class WeatherListFragment extends Fragment {
 
     private void updateUserWeather(WeatherDTO weatherDTO) {
         if (isAdded()) {
+            sUserWeatherDTO = weatherDTO;
+
             String tempDegree =
                     getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
 
@@ -540,11 +551,12 @@ public class WeatherListFragment extends Fragment {
 
     private void updateWeatherList(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
         if (isAdded()) {
+            mWeatherDTOList = weatherDTOList;
             sWeatherDTOList = weatherDTOList;
             sLocationDTOList = locationDTOList;
-            addingLocationDTOIdInWeatherDTO(sWeatherDTOList, sLocationDTOList);
+            addingLocationDTOIdInWeatherDTO(weatherDTOList, locationDTOList);
 
-            WeatherAdapter weatherAdapter = new WeatherAdapter(sWeatherDTOList);
+            WeatherAdapter weatherAdapter = new WeatherAdapter(weatherDTOList, locationDTOList);
             mWeatherRecyclerView.setAdapter(weatherAdapter);
 
             mWeatherListProgressBar.setVisibility(View.GONE);
@@ -561,35 +573,37 @@ public class WeatherListFragment extends Fragment {
 
     private class WeatherHolder extends RecyclerView.ViewHolder
     implements View.OnClickListener {
-        private CardView mWeatherCardView;
-        private TextView mLocationNameTextView;
-        private ImageView mWeatherImageView;
-        private TextView mTempDegreeTextView;
+        private CardView weatherCardView;
+        private TextView locationNameTextView;
+        private ImageView weatherImageView;
+        private TextView tempDegreeTextView;
+        private LocationDTO locationDTO;
 
-        public WeatherHolder(@NonNull LayoutInflater inflater, ViewGroup viewGroup) {
+        private WeatherHolder(@NonNull LayoutInflater inflater, ViewGroup viewGroup) {
             super(inflater.inflate(R.layout.list_item_weather, viewGroup, false));
             itemView.setOnClickListener(this);
 
-            mWeatherCardView = itemView.findViewById(R.id.weather_card_view);
-            mLocationNameTextView = mWeatherCardView.findViewById(R.id.list_item_location_name);
-            mWeatherImageView = mWeatherCardView.findViewById(R.id.list_item_weather_image);
-            mTempDegreeTextView = mWeatherCardView.findViewById(R.id.list_item_temp_degree);
+            weatherCardView = itemView.findViewById(R.id.weather_card_view);
+            locationNameTextView = weatherCardView.findViewById(R.id.list_item_location_name);
+            weatherImageView = weatherCardView.findViewById(R.id.list_item_weather_image);
+            tempDegreeTextView = weatherCardView.findViewById(R.id.list_item_temp_degree);
         }
 
-        public void bind(WeatherDTO weatherDTO) {
+        private void bind(WeatherDTO weatherDTO, LocationDTO locationDTO) {
+            this.locationDTO = locationDTO;
+
             String tempDegree =
                     getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
-            mLocationNameTextView.setText(weatherDTO.getLocationName());
-            mTempDegreeTextView.setText(tempDegree);
+            locationNameTextView.setText(weatherDTO.getLocationName());
+            tempDegreeTextView.setText(tempDegree);
 
             if (weatherDTO.getMainDescription() != null && weatherDTO.getDescription() != null) {
-                updateListItemWeatherImage(weatherDTO, mWeatherImageView, mWeatherCardView);
+                updateListItemWeatherImage(weatherDTO, weatherImageView, weatherCardView);
             }
         }
 
         @Override
         public void onClick(View view) {
-            LocationDTO locationDTO = sLocationDTOList.get(getAdapterPosition());
             Location location = new Location("");
             location.setLatitude(locationDTO.getLatitude());
             location.setLongitude(locationDTO.getLongitude());
@@ -602,10 +616,12 @@ public class WeatherListFragment extends Fragment {
 
     private class WeatherAdapter extends RecyclerView.Adapter<WeatherHolder> {
 
-        private List<WeatherDTO> mWeatherDTOList;
+        private List<WeatherDTO> weatherDTOList;
+        private List<LocationDTO> locationDTOList;
 
-        private WeatherAdapter(List<WeatherDTO> locationData) {
-            mWeatherDTOList = locationData;
+        private WeatherAdapter(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
+            this.weatherDTOList = weatherDTOList;
+            this.locationDTOList = locationDTOList;
         }
 
         @NonNull
@@ -618,13 +634,14 @@ public class WeatherListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull WeatherHolder weatherHolder, int position) {
-            WeatherDTO weatherDTO = mWeatherDTOList.get(position);
-            weatherHolder.bind(weatherDTO);
+            WeatherDTO weatherDTO = weatherDTOList.get(position);
+            LocationDTO locationDTO = locationDTOList.get(position);
+            weatherHolder.bind(weatherDTO, locationDTO);
         }
 
         @Override
         public int getItemCount() {
-            return mWeatherDTOList.size();
+            return weatherDTOList.size();
         }
     }
 
@@ -639,15 +656,17 @@ public class WeatherListFragment extends Fragment {
         protected void onPostExecute(WeatherDTO result) {
             Log.i(TAG, "User weather task is executed");
 
-            sUserWeatherDTO = result;
-            updateUserWeather(sUserWeatherDTO);
+            updateUserWeather(result);
         }
     }
 
     private class SearchWeatherListTask extends AsyncTask<List<LocationDTO>, Void, List<WeatherDTO>> {
 
+        List<LocationDTO> locationDTOList = new ArrayList<>();
+
         @Override
         protected List<WeatherDTO> doInBackground(List<LocationDTO>... lists) {
+            locationDTOList = lists[0];
             return new WeatherDAO().getWeatherList(lists[0]);
         }
 
@@ -655,8 +674,7 @@ public class WeatherListFragment extends Fragment {
         protected void onPostExecute(List<WeatherDTO> result) {
             Log.i(TAG, "Weather list task is executed");
 
-            sWeatherDTOList = result;
-            updateWeatherList(sWeatherDTOList, sLocationDTOList);
+            updateWeatherList(result, locationDTOList);
         }
     }
 }
