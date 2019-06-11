@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dao.WeatherDAO;
-import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherForecastDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +40,8 @@ public class DetailedWeatherFragment extends Fragment {
             "com.emre.android.weatherapp.locationdata";
 
     private String mDegreeCalculation = "°C";
-    private static int sSelectedDayIndex = 0;
+    private int mSelectedDayIndex = 0;
+    private static int sSelectedDayIndex;
     private static List<WeatherDTO> sWeatherDTOList;
 
     private static Location sLocation;
@@ -81,7 +82,16 @@ public class DetailedWeatherFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        sLocation = getArguments().getParcelable(ARG_LOCATION_DATA_INFO);
+        if (getArguments() != null) {
+            sLocation = getArguments().getParcelable(ARG_LOCATION_DATA_INFO);
+        } else {
+            Log.e(TAG, "getArgument is null");
+            requireActivity().finish();
+            Toast.makeText(requireContext(),
+                    R.string.issue_location_values,
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -128,7 +138,8 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                sSelectedDayIndex = 0;
+                mSelectedDayIndex = 0;
+                sSelectedDayIndex = mSelectedDayIndex;
                 new SearchWeatherTask().execute(sLocation);
             }
         });
@@ -137,7 +148,8 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                sSelectedDayIndex = 1;
+                mSelectedDayIndex = 1;
+                sSelectedDayIndex = mSelectedDayIndex;
                 new SearchWeatherTask().execute(sLocation);
             }
         });
@@ -146,7 +158,8 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                sSelectedDayIndex = 2;
+                mSelectedDayIndex = 2;
+                sSelectedDayIndex = mSelectedDayIndex;
                 new SearchWeatherTask().execute(sLocation);
             }
         });
@@ -155,7 +168,8 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                sSelectedDayIndex = 3;
+                mSelectedDayIndex = 3;
+                sSelectedDayIndex = mSelectedDayIndex;
                 new SearchWeatherTask().execute(sLocation);
             }
         });
@@ -164,7 +178,8 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                sSelectedDayIndex = 4;
+                mSelectedDayIndex = 4;
+                sSelectedDayIndex = mSelectedDayIndex;
                 new SearchWeatherTask().execute(sLocation);
             }
         });
@@ -172,7 +187,7 @@ public class DetailedWeatherFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
 
@@ -198,11 +213,20 @@ public class DetailedWeatherFragment extends Fragment {
         }
     }
 
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
-                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+                requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo;
+
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } else {
+            // If there is not default network then ignore isOnline condition
+            Log.i(TAG, "There is not default network");
+            return true;
+        }
+
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     public static Location getLocation() {
@@ -231,7 +255,7 @@ public class DetailedWeatherFragment extends Fragment {
     }
 
     private void showOfflineNetworkAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage(getString(R.string.offline_network_alert_dialog_message));
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -265,6 +289,8 @@ public class DetailedWeatherFragment extends Fragment {
 
     private void updateWeatherForecastDays(List<WeatherDTO> weatherDTOList) {
         if (isAdded()) {
+            sWeatherDTOList = weatherDTOList;
+
             List<TextView> weatherDayList = new ArrayList<>();
             weatherDayList.add(mFirstDayName);
             weatherDayList.add(mSecondDayName);
@@ -296,7 +322,7 @@ public class DetailedWeatherFragment extends Fragment {
                 weatherDayNameTextView.setTextColor(mDescription.getTextColors());
             }
 
-            weatherDayList.get(sSelectedDayIndex).setTextColor(mDetailedDayName.getTextColors());
+            weatherDayList.get(mSelectedDayIndex).setTextColor(mDetailedDayName.getTextColors());
 
             for (int i = 0; i < weatherForecastDaysLimit; i++) {
                 WeatherDTO weatherDTO = weatherDTOList.get(i);
@@ -364,12 +390,6 @@ public class DetailedWeatherFragment extends Fragment {
 
         @Override
         protected WeatherForecastDTO doInBackground(Location... location) {
-/*            double latitude = locationsData[0].getLatitude();
-            double longitude = locationsData[0].getLongitude();*/
-
-/*            locationDTO.setLatitude(latitude);
-            locationDTO.setLongitude(longitude);*/
-
             return new WeatherDAO().getDetailedWeather(location[0]);
         }
 
@@ -378,8 +398,7 @@ public class DetailedWeatherFragment extends Fragment {
             List<WeatherDTO> weatherDTOList = result.getWeatherDTOList();
 
             if (!weatherDTOList.isEmpty()) {
-                WeatherDTO weatherDTO = weatherDTOList.get(sSelectedDayIndex);
-                sWeatherDTOList = weatherDTOList;
+                WeatherDTO weatherDTO = weatherDTOList.get(mSelectedDayIndex);
                 updateDetailedWeatherDescriptions(weatherDTO);
                 updateWeatherForecastDays(weatherDTOList);
             }

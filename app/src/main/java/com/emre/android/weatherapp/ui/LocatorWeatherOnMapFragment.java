@@ -66,7 +66,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
 
@@ -133,6 +133,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         @Override
         public void onMapLongClick(LatLng latLng) {
             sLatLng = latLng;
+
             mLocationDAO.LocationDbInserting(UUID.randomUUID(), latLng.latitude, latLng.longitude);
             Log.i(TAG, "New location is inserted to database (" +
                     latLng.latitude + " " + latLng.longitude + ")");

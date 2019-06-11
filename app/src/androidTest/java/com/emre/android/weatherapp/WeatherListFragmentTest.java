@@ -155,7 +155,16 @@ public class WeatherListFragmentTest {
     private boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 activityRule.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        NetworkInfo networkInfo;
+
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } else {
+            // If there is not default network then ignore isOnline condition
+            Log.i(TAG, "There is not default network");
+            return true;
+        }
+
         return networkInfo != null && networkInfo.isConnected();
     }
 
