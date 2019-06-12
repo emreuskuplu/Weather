@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dao.WeatherDAO;
-import com.emre.android.weatherapp.dto.WeatherForecastDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 
 import java.text.ParseException;
@@ -140,7 +139,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 0;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new SearchWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(sLocation);
             }
         });
 
@@ -150,7 +149,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 1;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new SearchWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(sLocation);
             }
         });
 
@@ -160,7 +159,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 2;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new SearchWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(sLocation);
             }
         });
 
@@ -170,7 +169,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 3;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new SearchWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(sLocation);
             }
         });
 
@@ -180,7 +179,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 4;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new SearchWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(sLocation);
             }
         });
 
@@ -195,7 +194,7 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                new SearchWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(sLocation);
             }
         });
 
@@ -207,7 +206,7 @@ public class DetailedWeatherFragment extends Fragment {
         super.onStart();
         if (isOnline()) {
             mWeatherProgressBar.setVisibility(View.VISIBLE);
-            new SearchWeatherTask().execute(sLocation);
+            new ForecastDetailedWeatherTask().execute(sLocation);
         } else {
             showOfflineNetworkAlertDialog();
         }
@@ -386,21 +385,19 @@ public class DetailedWeatherFragment extends Fragment {
         }
     }
 
-    private class SearchWeatherTask extends AsyncTask<Location, Void, WeatherForecastDTO> {
+    private class ForecastDetailedWeatherTask extends AsyncTask<Location, Void, List<WeatherDTO>> {
 
         @Override
-        protected WeatherForecastDTO doInBackground(Location... location) {
-            return new WeatherDAO().getDetailedWeather(location[0]);
+        protected List<WeatherDTO> doInBackground(Location... location) {
+            return new WeatherDAO().getForecastDetailedWeatherList(location[0]);
         }
 
         @Override
-        protected void onPostExecute(WeatherForecastDTO result) {
-            List<WeatherDTO> weatherDTOList = result.getWeatherDTOList();
-
-            if (!weatherDTOList.isEmpty()) {
-                WeatherDTO weatherDTO = weatherDTOList.get(mSelectedDayIndex);
+        protected void onPostExecute(List<WeatherDTO> result) {
+            if (!result.isEmpty()) {
+                WeatherDTO weatherDTO = result.get(mSelectedDayIndex);
                 updateDetailedWeatherDescriptions(weatherDTO);
-                updateWeatherForecastDays(weatherDTOList);
+                updateWeatherForecastDays(result);
             }
         }
     }

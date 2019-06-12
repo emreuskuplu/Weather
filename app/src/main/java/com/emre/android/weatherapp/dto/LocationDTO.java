@@ -3,7 +3,7 @@ package com.emre.android.weatherapp.dto;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class LocationDTO implements Serializable {
+public class LocationDTO {
     private static final String TAG = LocationDTO.class.getSimpleName();
 
     private UUID mId;

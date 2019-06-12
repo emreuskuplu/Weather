@@ -30,7 +30,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
     private LocationDAO mLocationDAO;
 
     private GoogleMap mMap;
-    protected MapView mMapView;
+    private MapView mMapView;
     private LocatorOnLongClick mLocatorOnLongClick;
     private static LatLng sLatLng;
 
@@ -103,7 +103,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         mMapView.onDestroy();
     }
 
-    public void setBookmarksFromList() {
+    private void setBookmarksFromList() {
         List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
         List<LatLng> latLngList = new ArrayList<>();
         double latitude;
@@ -128,7 +128,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         return sLatLng;
     }
 
-    public class LocatorOnLongClick implements GoogleMap.OnMapLongClickListener {
+    private class LocatorOnLongClick implements GoogleMap.OnMapLongClickListener {
 
         @Override
         public void onMapLongClick(LatLng latLng) {

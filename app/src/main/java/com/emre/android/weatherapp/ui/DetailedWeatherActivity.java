@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 
-import com.emre.android.weatherapp.dto.LocationDTO;
-
 public class DetailedWeatherActivity extends SingleFragmentActivity {
     private static final String TAG = DetailedWeatherActivity.class.getSimpleName();
 

@@ -24,7 +24,6 @@
     <string name="third_day_layout">Third day</string>
     <string name="fourth_day_layout">Fourth day</string>
     <string name="fifth_day_layout">Fifth day</string>
-    <string name="title_activity_maps">Map</string>
     <string name="refresh_locations">Refreshing weather of your added bookmarks and weather of your location</string>
     <string name="refresh_weather">Refreshing weather</string>
     <string name="add_locations">Open google map and adding locations to your bookmark list</string>

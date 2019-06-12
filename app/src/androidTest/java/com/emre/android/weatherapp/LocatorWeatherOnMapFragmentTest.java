@@ -7,7 +7,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
-import com.emre.android.weatherapp.ui.LocatorWeatherOnMapActivity;
 import com.emre.android.weatherapp.ui.LocatorWeatherOnMapFragment;
 import com.emre.android.weatherapp.ui.WeatherListActivity;
 import com.emre.android.weatherapp.ui.WeatherListFragment;

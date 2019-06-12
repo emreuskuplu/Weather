@@ -38,6 +38,7 @@ import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dao.LocationDAO;
 import com.emre.android.weatherapp.dao.WeatherDAO;
 import com.emre.android.weatherapp.dto.LocationDTO;
+import com.emre.android.weatherapp.dto.LocationDTOListBookmark;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -81,11 +82,11 @@ public class WeatherListFragment extends Fragment {
     private TextView mTempDegree;
     private TextView mDescription;
     private RecyclerView mWeatherRecyclerView;
-    private SearchView mWeatherListSearchView;
+    private SearchView mBookmarkWeatherListSearchView;
     private TextView mAddBookmarkInfoMessage;
     private TextView mBookmarkNotFoundMessage;
     private ProgressBar mUserWeatherProgressBar;
-    private ProgressBar mWeatherListProgressBar;
+    private ProgressBar mBookmarkWeatherListProgressBar;
 
     public static WeatherListFragment newInstance() {
         return new WeatherListFragment();
@@ -130,14 +131,14 @@ public class WeatherListFragment extends Fragment {
         mTempDegree = v.findViewById(R.id.temp_degree);
         mDescription = v.findViewById(R.id.description);
         ImageButton weatherAppInfoButton = v.findViewById(R.id.app_info_button);
-        mWeatherListSearchView = v.findViewById(R.id.search_list_item);
+        mBookmarkWeatherListSearchView = v.findViewById(R.id.search_list_item);
         ImageButton refreshWeatherButton = v.findViewById(R.id.refresh_weather_button);
         ImageButton addLocationButton = v.findViewById(R.id.add_location_button);
         mWeatherRecyclerView = v.findViewById(R.id.weather_list_recycler_view);
         mAddBookmarkInfoMessage = v.findViewById(R.id.add_bookmark_info);
         mBookmarkNotFoundMessage = v.findViewById(R.id.query_not_found_message);
         mUserWeatherProgressBar = v.findViewById(R.id.user_weather_progress_bar);
-        mWeatherListProgressBar = v.findViewById(R.id.weather_list_progress_bar);
+        mBookmarkWeatherListProgressBar = v.findViewById(R.id.weather_list_progress_bar);
 
         userWeatherTempDegreeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +167,7 @@ public class WeatherListFragment extends Fragment {
             }
         });
 
-        mWeatherListSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mBookmarkWeatherListSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Log.d(TAG, "QueryTextSubmit: " + s);
@@ -193,8 +194,8 @@ public class WeatherListFragment extends Fragment {
                     mBookmarkNotFoundMessage.setVisibility(View.GONE);
                 }
 
-                updateWeatherList(weatherDTOList, locationDTOList);
-                mWeatherListSearchView.clearFocus();
+                updateBookmarkWeatherList(weatherDTOList, locationDTOList);
+                mBookmarkWeatherListSearchView.clearFocus();
 
                 return true;
             }
@@ -254,7 +255,7 @@ public class WeatherListFragment extends Fragment {
             sClient.connect();
             executeWeatherListTask();
         } else {
-            mWeatherListProgressBar.setVisibility(View.GONE);
+            mBookmarkWeatherListProgressBar.setVisibility(View.GONE);
             showOfflineNetworkAlertDialog();
         }
     }
@@ -263,16 +264,6 @@ public class WeatherListFragment extends Fragment {
     public void onStop() {
         super.onStop();
         sClient.disconnect();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -508,7 +499,7 @@ public class WeatherListFragment extends Fragment {
 
             sUserLocation = result.getLastLocation();
 
-            new SearchUserWeatherTask()
+            new UserWeatherTask()
                     .execute(sUserLocation);
         }
     };
@@ -519,18 +510,20 @@ public class WeatherListFragment extends Fragment {
     private void executeWeatherListTask() {
         Log.i(TAG, "Weather list task is executing");
 
+        LocationDTOListBookmark locationDTOListBookmark = new LocationDTOListBookmark();
         List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
+        locationDTOListBookmark.setLocationDTOList(locationDTOList);
 
         if (locationDTOList.isEmpty()) {
             mBookmarkNotFoundMessage.setVisibility(View.GONE);
             mAddBookmarkInfoMessage.setVisibility(View.VISIBLE);
         } else {
-            mWeatherListProgressBar.setVisibility(View.VISIBLE);
+            mBookmarkWeatherListProgressBar.setVisibility(View.VISIBLE);
             mAddBookmarkInfoMessage.setVisibility(View.GONE);
             mBookmarkNotFoundMessage.setVisibility(View.GONE);
         }
 
-        new SearchWeatherListTask().execute(locationDTOList);
+        new BookmarkWeatherListTask().execute(locationDTOListBookmark);
     }
 
     private void updateUserWeather(WeatherDTO weatherDTO) {
@@ -549,7 +542,7 @@ public class WeatherListFragment extends Fragment {
         }
     }
 
-    private void updateWeatherList(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
+    private void updateBookmarkWeatherList(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
         if (isAdded()) {
             mWeatherDTOList = weatherDTOList;
             sWeatherDTOList = weatherDTOList;
@@ -559,7 +552,7 @@ public class WeatherListFragment extends Fragment {
             WeatherAdapter weatherAdapter = new WeatherAdapter(weatherDTOList, locationDTOList);
             mWeatherRecyclerView.setAdapter(weatherAdapter);
 
-            mWeatherListProgressBar.setVisibility(View.GONE);
+            mBookmarkWeatherListProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -645,7 +638,7 @@ public class WeatherListFragment extends Fragment {
         }
     }
 
-    private class SearchUserWeatherTask extends AsyncTask<Location, Void, WeatherDTO> {
+    private class UserWeatherTask extends AsyncTask<Location, Void, WeatherDTO> {
 
         @Override
         protected WeatherDTO doInBackground(Location... locations) {
@@ -660,21 +653,20 @@ public class WeatherListFragment extends Fragment {
         }
     }
 
-    private class SearchWeatherListTask extends AsyncTask<List<LocationDTO>, Void, List<WeatherDTO>> {
-
+    private class BookmarkWeatherListTask extends AsyncTask<LocationDTOListBookmark, Void, List<WeatherDTO>> {
         List<LocationDTO> locationDTOList = new ArrayList<>();
 
         @Override
-        protected List<WeatherDTO> doInBackground(List<LocationDTO>... lists) {
-            locationDTOList = lists[0];
-            return new WeatherDAO().getWeatherList(lists[0]);
+        protected List<WeatherDTO> doInBackground(LocationDTOListBookmark... locationDTOListBookmarks) {
+            locationDTOList = locationDTOListBookmarks[0].getLocationDTOList();
+            return new WeatherDAO().getBookmarkWeatherList(locationDTOList);
         }
 
         @Override
         protected void onPostExecute(List<WeatherDTO> result) {
             Log.i(TAG, "Weather list task is executed");
 
-            updateWeatherList(result, locationDTOList);
+            updateBookmarkWeatherList(result, locationDTOList);
         }
     }
 }

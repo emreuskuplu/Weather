@@ -1,10 +1,7 @@
 package com.emre.android.weatherapp.dao;
 
-import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.emre.android.weatherapp.dto.weather_json_schema.ForecastBody;
 import com.emre.android.weatherapp.dto.weather_json_schema.WeatherBody;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

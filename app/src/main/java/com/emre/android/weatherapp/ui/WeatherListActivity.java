@@ -1,7 +1,6 @@
 package com.emre.android.weatherapp.ui;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,7 +17,7 @@ public class WeatherListActivity extends SingleFragmentActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();

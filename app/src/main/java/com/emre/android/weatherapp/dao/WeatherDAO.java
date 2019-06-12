@@ -4,7 +4,6 @@ import android.location.Location;
 import android.util.Log;
 
 import com.emre.android.weatherapp.dto.LocationDTO;
-import com.emre.android.weatherapp.dto.WeatherForecastDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.emre.android.weatherapp.dto.weather_json_schema.City;
 import com.emre.android.weatherapp.dto.weather_json_schema.ForecastBody;
@@ -61,7 +60,7 @@ public class WeatherDAO implements IWeatherDAO {
     }
 
     @Override
-    public List<WeatherDTO> getWeatherList(List<LocationDTO> locationDTOList) {
+    public List<WeatherDTO> getBookmarkWeatherList(List<LocationDTO> locationDTOList) {
         List<WeatherDTO> weatherDTOList = new ArrayList<>();
         Retrofit retrofit = buildBaseUrlCurrentWeather();
         IRetrofitWeatherDAO iRetrofitWeatherDAO = retrofit.create(IRetrofitWeatherDAO.class);
@@ -90,7 +89,7 @@ public class WeatherDAO implements IWeatherDAO {
     }
 
     @Override
-    public WeatherForecastDTO getDetailedWeather(Location location) {
+    public List<WeatherDTO> getForecastDetailedWeatherList(Location location) {
         Retrofit retrofit = buildBaseUrlDetailedWeather();
         IRetrofitWeatherDAO iRetrofitWeatherDAO = retrofit.create(IRetrofitWeatherDAO.class);
 
@@ -103,15 +102,15 @@ public class WeatherDAO implements IWeatherDAO {
 
         Log.i(TAG, "Detailed weather api url = " + forecastBodyCall.request().url().toString());
 
-        WeatherForecastDTO weatherForecastDTO = new WeatherForecastDTO();
+        List<WeatherDTO> weatherDTOList = new ArrayList<>();
 
         try {
-            parseDetailedWeatherResponse(forecastBodyCall, weatherForecastDTO);
+            parseDetailedWeatherResponse(forecastBodyCall, weatherDTOList);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return weatherForecastDTO;
+        return weatherDTOList;
     }
 
     private void parseCurrentWeatherResponse(Call<WeatherBody> weatherBodyCall,
@@ -149,9 +148,7 @@ public class WeatherDAO implements IWeatherDAO {
      }
 
     private void parseDetailedWeatherResponse(Call<ForecastBody> forecastBodyCall,
-                                              WeatherForecastDTO weatherForecastDTO) throws IOException {
-        List<WeatherDTO> weatherDTOList = new ArrayList<>();
-
+                                              List<WeatherDTO> weatherDTOList) throws IOException {
         if (forecastBodyCall.execute().isSuccessful()) {
             ForecastBody forecastBody = forecastBodyCall.clone().execute().body();
 
@@ -211,8 +208,6 @@ public class WeatherDAO implements IWeatherDAO {
                 }
             }
         }
-
-        weatherForecastDTO.setWeatherDTOList(weatherDTOList);
     }
 
     private Retrofit buildBaseUrlCurrentWeather() {

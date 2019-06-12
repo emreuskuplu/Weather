@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.emre.android.weatherapp.persistence.LocationDbCursorWrapper;
 import com.emre.android.weatherapp.persistence.LocationDbHelper;
@@ -39,7 +38,7 @@ public class LocationDAO implements ILocationDAO {
     public List<LocationDTO> LocationDbExtract() {
         List<LocationDTO> locations = new ArrayList<>();
 
-        LocationDbCursorWrapper cursor = queryLocations(null, null);
+        LocationDbCursorWrapper cursor = queryLocations();
 
         try {
             cursor.moveToFirst();
@@ -63,12 +62,12 @@ public class LocationDAO implements ILocationDAO {
                 new String[] { uuidString });
     }
 
-    private LocationDbCursorWrapper queryLocations(String whereClause, String[] whereArgs) {
+    private LocationDbCursorWrapper queryLocations() {
         Cursor cursor = mDatabase.query(
                 LocationTable.NAME,
                 null,
-                whereClause,
-                whereArgs,
+                null,
+                null,
                 null,
                 null,
                 null

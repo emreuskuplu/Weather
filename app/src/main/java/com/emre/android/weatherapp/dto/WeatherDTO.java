@@ -1,5 +1,7 @@
 package com.emre.android.weatherapp.dto;
 
+import android.support.annotation.NonNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -117,6 +119,7 @@ public class WeatherDTO {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return mLocationName + " " + mMainDescription + " " + mTempDegree + " "
