@@ -2,7 +2,6 @@ package com.emre.android.weatherapp.dao;
 
 import android.location.Location;
 
-import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class WeatherDAOStub implements IWeatherDAO {
     }
 
     @Override
-    public List<WeatherDTO> getBookmarkWeatherList(List<LocationDTO> locationDTOList) {
+    public List<WeatherDTO> getBookmarkWeatherList(List<WeatherDTO> weatherDTOList) {
         String[] locationNames =
                 {"İstanbul", "Kağıthane", "Amsterdam", "Schipol", "Germany", "Berlin", "", "", "", ""};
         String[] mainDescriptions =
@@ -31,8 +30,6 @@ public class WeatherDAOStub implements IWeatherDAO {
                 {"10", "25", "6", "100", "2000", "0", "10000", "10", "10", "0"};
         String[] descriptions =
                 {"clear sky", "few clouds", "light rain", "snow", "", "", "", "", "", ""};
-
-        List<WeatherDTO> weatherDTOList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             WeatherDTO weatherDTO = new WeatherDTO();

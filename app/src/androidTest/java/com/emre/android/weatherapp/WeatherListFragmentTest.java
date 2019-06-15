@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,11 @@ public class WeatherListFragmentTest {
     @Rule
     public ActivityTestRule<WeatherListActivity> activityRule =
             new ActivityTestRule<>(WeatherListActivity.class);
+
+    @BeforeClass
+    public static void deactivateRatingBarDialog() {
+        WeatherListFragment.deactivateRatingBarDialog();
+    }
 
     @Test
     public void verifyIncomingUserWeatherDataOnView() {
@@ -90,12 +96,15 @@ public class WeatherListFragmentTest {
     }
 
     @Test
-    public void verifyWeatherDTOListItemsHasLocationId() {
+    public void verifyWeatherDTOListItemsHasLocationDTOValues() {
         List<WeatherDTO> weatherDTOList = WeatherListFragment.getWeatherDTOList();
 
-        for (WeatherDTO weatherDTO : weatherDTOList) {
-            if (weatherDTO.getLocationDTOId() == null) {
-                Assert.fail("WeatherDTOList items has not id, it must be has id matches LocationDTO for use it's latitude and longitude values");
+        for (int i = 0; i < weatherDTOList.size(); i++) {
+            WeatherDTO weatherDTO = weatherDTOList.get(i);
+
+            if (weatherDTO.getLocationDTOId() == null ||
+                    weatherDTO.getLocationDTOLatitude() == 0 || weatherDTO.getLocationDTOLongitude() == 0) {
+                Assert.fail(i + ". item in WeatherDTOList has not locationDTO values");
             }
         }
     }

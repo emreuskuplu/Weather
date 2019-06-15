@@ -35,4 +35,8 @@
     <string name="bookmark_not_found_message">Matching bookmarks not found</string>
     <string name="offline_network_alert_dialog_message">Internet connection is not found, please check your internet connectivity and try again</string>
     <string name="issue_location_values">There is a issue about bookmark location values</string>
+    <string name="issue_weather_load">Failed to load weather information</string>
+    <string name="issue_loading_weather_item">Failed to load bookmark weather</string>
+    <string name="review_app">Would you like to review our application?</string>
+    <string name="send">SEND</string>
 </resources>

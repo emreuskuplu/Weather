@@ -17,6 +17,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,8 +39,8 @@ import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dao.LocationDAO;
 import com.emre.android.weatherapp.dao.WeatherDAO;
 import com.emre.android.weatherapp.dto.LocationDTO;
-import com.emre.android.weatherapp.dto.LocationDTOListBookmark;
 import com.emre.android.weatherapp.dto.WeatherDTO;
+import com.emre.android.weatherapp.dto.WeatherDTOListBookmark;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -56,6 +57,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class WeatherListFragment extends Fragment {
     private static final String TAG = WeatherListFragment.class.getSimpleName();
@@ -64,10 +66,13 @@ public class WeatherListFragment extends Fragment {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
     };
+    private static final String RATING_BAR = "RatingBar";
+    private static final String DIALOG_RATING_BAR = "DialogRatingBar";
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private static final int REQUEST_LOCATION = 0;
 
     private String mDegreeCalculation = "°C";
+    private static boolean sIsShowedRatingBarDialog = false;
     private static Location sUserLocation;
     private LocationDAO mLocationDAO;
     private static List<LocationDTO> sLocationDTOList;
@@ -119,12 +124,17 @@ public class WeatherListFragment extends Fragment {
                 LocationServices.getFusedLocationProviderClient(requireActivity());
 
         mLocationDAO = new LocationDAO(getContext());
+
+        if (savedInstanceState != null) {
+            sIsShowedRatingBarDialog = savedInstanceState.getBoolean(DIALOG_RATING_BAR);
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_weather_list, viewGroup, false);
+
         LinearLayout userWeatherTempDegreeLayout = v.findViewById(R.id.weather_temp_degree_layout);
         mLocationName = v.findViewById(R.id.location_name);
         mUserWeatherImageView = v.findViewById(R.id.weather_image);
@@ -173,17 +183,10 @@ public class WeatherListFragment extends Fragment {
                 Log.d(TAG, "QueryTextSubmit: " + s);
 
                 List<WeatherDTO> weatherDTOList = new ArrayList<>();
-                List<LocationDTO> locationDTOList = new ArrayList<>();
 
                 for (WeatherDTO weatherDTO : mWeatherDTOList) {
                     if (s.equalsIgnoreCase(weatherDTO.getLocationName())) {
                         weatherDTOList.add(weatherDTO);
-
-                        for (LocationDTO locationDTO : sLocationDTOList) {
-                            if (weatherDTO.getLocationDTOId().equals(locationDTO.getId())) {
-                                locationDTOList.add(locationDTO);
-                            }
-                        }
                     }
                 }
 
@@ -194,7 +197,7 @@ public class WeatherListFragment extends Fragment {
                     mBookmarkNotFoundMessage.setVisibility(View.GONE);
                 }
 
-                updateBookmarkWeatherList(weatherDTOList, locationDTOList);
+                updateBookmarkWeatherList(weatherDTOList);
                 mBookmarkWeatherListSearchView.clearFocus();
 
                 return true;
@@ -228,8 +231,8 @@ public class WeatherListFragment extends Fragment {
                     @Override
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                         int position = viewHolder.getAdapterPosition();
-                        WeatherDTO weatherDTO = sWeatherDTOList.get(position);
-                        String locationName = sWeatherDTOList.get(position).getLocationName();
+                        WeatherDTO weatherDTO = mWeatherDTOList.get(position);
+                        String locationName = mWeatherDTOList.get(position).getLocationName();
                         mLocationDAO.
                                 LocationDbDeleteLocationData(weatherDTO.getLocationDTOId());
                         Toast.makeText(getContext(),
@@ -267,6 +270,12 @@ public class WeatherListFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(DIALOG_RATING_BAR, sIsShowedRatingBarDialog);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION_PERMISSIONS) {
@@ -295,6 +304,20 @@ public class WeatherListFragment extends Fragment {
 
     public static List<WeatherDTO> getWeatherDTOList() {
         return sWeatherDTOList;
+    }
+
+    public static void deactivateRatingBarDialog() {
+        sIsShowedRatingBarDialog = true;
+    }
+
+    private void showRatingBar() {
+        if (isAdded() && !sIsShowedRatingBarDialog) {
+            FragmentManager manager = getChildFragmentManager();
+            RatingBarFragment dialog = RatingBarFragment.newInstance();
+            dialog.show(manager, RATING_BAR);
+
+            sIsShowedRatingBarDialog = true;
+        }
     }
 
     private boolean hasLocationPermission() {
@@ -362,9 +385,110 @@ public class WeatherListFragment extends Fragment {
         });
     }
 
+    private void executeUserWeatherTask() {
+        Log.i(TAG, "User weather task is executing");
+
+        LocationRequest request = LocationRequest.create();
+        // PRIORITY_HIGH_ACCURACY is necessary for emulator testing.
+        // It must be PRIORITY_BALANCED_POWER_ACCURACY for real device that consumes less power
+        request.setPriority(LocationRequest. PRIORITY_HIGH_ACCURACY);
+        request.setNumUpdates(1);
+        request.setInterval(0);
+
+        createLocationResolutionDialogIfDeviceLocationIsDeactivate(request);
+
+        // Following permission is already used in hasLocationPermission().
+        // Same permission control is necessary for avoid the warning of FusedLocationProviderClient
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        LocationCallback mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult result) {
+                Log.i(TAG, "User location: " + result.getLastLocation());
+                mUserWeatherProgressBar.setVisibility(View.VISIBLE);
+
+                sUserLocation = result.getLastLocation();
+
+                new UserWeatherTask()
+                        .execute(sUserLocation);
+            }
+        };
+
+        mFusedLocationProviderClient.requestLocationUpdates(request, mLocationCallback, null);
+    }
+
+    private void executeWeatherListTask() {
+        Log.i(TAG, "Weather list task is executing");
+
+        List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
+        sLocationDTOList = locationDTOList;
+
+        WeatherDTOListBookmark weatherDTOListBookmark = getWeatherDTOListBookmark(locationDTOList);
+
+        if (weatherDTOListBookmark.getWeatherDTOList().isEmpty()) {
+            mBookmarkNotFoundMessage.setVisibility(View.GONE);
+            mAddBookmarkInfoMessage.setVisibility(View.VISIBLE);
+        } else {
+            mBookmarkWeatherListProgressBar.setVisibility(View.VISIBLE);
+            mAddBookmarkInfoMessage.setVisibility(View.GONE);
+            mBookmarkNotFoundMessage.setVisibility(View.GONE);
+        }
+
+        new BookmarkWeatherListTask().execute(weatherDTOListBookmark);
+    }
+
+    private void updateUserWeather(WeatherDTO weatherDTO) {
+        if (isAdded()) {
+            sUserWeatherDTO = weatherDTO;
+
+            String tempDegree =
+                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
+
+            mLocationName.setText(weatherDTO.getLocationName());
+            mTempDegree.setText(tempDegree);
+            mDescription.setText(weatherDTO.getDescription());
+
+            updateUserWeatherImage(weatherDTO, mUserWeatherImageView);
+            mUserWeatherProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateBookmarkWeatherList(List<WeatherDTO> weatherDTOList) {
+        if (isAdded()) {
+            mWeatherDTOList = weatherDTOList;
+            sWeatherDTOList = weatherDTOList;
+
+            WeatherAdapter weatherAdapter = new WeatherAdapter(weatherDTOList);
+            mWeatherRecyclerView.setAdapter(weatherAdapter);
+
+            mBookmarkWeatherListProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private WeatherDTOListBookmark getWeatherDTOListBookmark(List<LocationDTO> locationDTOList) {
+        WeatherDTOListBookmark weatherDTOListBookmark = new WeatherDTOListBookmark();
+        List<WeatherDTO> weatherDTOList = new ArrayList<>();
+
+        for (LocationDTO locationDTO : locationDTOList) {
+            WeatherDTO weatherDTO = new WeatherDTO();
+            weatherDTO.setLocationDTOId(locationDTO.getId());
+            weatherDTO.setLocationDTOLatitude(locationDTO.getLatitude());
+            weatherDTO.setLocationDTOLongitude(locationDTO.getLongitude());
+            weatherDTOList.add(weatherDTO);
+        }
+
+        weatherDTOListBookmark.setWeatherDTOList(weatherDTOList);
+
+        return weatherDTOListBookmark;
+    }
+
     private void updateUserWeatherImage(WeatherDTO weatherDTO,
                                         ImageView weatherImageView) {
-
         switch (weatherDTO.getMainDescription()) {
             case "Clear":
                 weatherImageView.setImageResource(R.drawable.sun);
@@ -418,7 +542,6 @@ public class WeatherListFragment extends Fragment {
 
     private void updateListItemWeatherImage(WeatherDTO weatherDTO,
                                             ImageView weatherImageView, CardView weatherCardView) {
-
         ConstraintLayout weatherCardViewLayout = weatherCardView.findViewById(R.id.weather_card_view_layout);
 
         switch (weatherDTO.getMainDescription()) {
@@ -452,10 +575,12 @@ public class WeatherListFragment extends Fragment {
                 weatherImageView.setImageResource(R.drawable.thunderstorm_solid);
                 weatherImageView.setContentDescription(getString(R.string.weather_image_is_thunderstorm));
                 weatherCardViewLayout.setBackgroundResource(R.drawable.thunderstorm_background);
+                break;
             case "Snow":
                 weatherImageView.setImageResource(R.drawable.snow_solid);
                 weatherImageView.setContentDescription(getString(R.string.weather_image_is_snow));
                 weatherCardViewLayout.setBackgroundResource(R.drawable.snow_background);
+                break;
             default:
                 String[] atmosphereDescriptions = {"Mist", "Smoke", "Haze",
                         "Dust", "Fog", "Sand", "Dust", "Ash", "Squall", "Tornado"};
@@ -470,107 +595,13 @@ public class WeatherListFragment extends Fragment {
         }
     }
 
-    private void executeUserWeatherTask() {
-        Log.i(TAG, "User weather task is executing");
-
-        LocationRequest request = LocationRequest.create();
-        // PRIORITY_HIGH_ACCURACY is necessary for emulator testing.
-        // It must be PRIORITY_BALANCED_POWER_ACCURACY for real device that consumes less power
-        request.setPriority(LocationRequest. PRIORITY_HIGH_ACCURACY);
-        request.setNumUpdates(1);
-        request.setInterval(0);
-
-        createLocationResolutionDialogIfDeviceLocationIsDeactivate(request);
-
-        // Following permission is already used in hasLocationPermission().
-        // Same permission control is necessary for avoid the warning of FusedLocationProviderClient
-        if (ActivityCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(requireContext(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-    LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult result) {
-            Log.i(TAG, "User location: " + result.getLastLocation());
-            mUserWeatherProgressBar.setVisibility(View.VISIBLE);
-
-            sUserLocation = result.getLastLocation();
-
-            new UserWeatherTask()
-                    .execute(sUserLocation);
-        }
-    };
-
-        mFusedLocationProviderClient.requestLocationUpdates(request, mLocationCallback, null);
-}
-
-    private void executeWeatherListTask() {
-        Log.i(TAG, "Weather list task is executing");
-
-        LocationDTOListBookmark locationDTOListBookmark = new LocationDTOListBookmark();
-        List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
-        locationDTOListBookmark.setLocationDTOList(locationDTOList);
-
-        if (locationDTOList.isEmpty()) {
-            mBookmarkNotFoundMessage.setVisibility(View.GONE);
-            mAddBookmarkInfoMessage.setVisibility(View.VISIBLE);
-        } else {
-            mBookmarkWeatherListProgressBar.setVisibility(View.VISIBLE);
-            mAddBookmarkInfoMessage.setVisibility(View.GONE);
-            mBookmarkNotFoundMessage.setVisibility(View.GONE);
-        }
-
-        new BookmarkWeatherListTask().execute(locationDTOListBookmark);
-    }
-
-    private void updateUserWeather(WeatherDTO weatherDTO) {
-        if (isAdded()) {
-            sUserWeatherDTO = weatherDTO;
-
-            String tempDegree =
-                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
-
-            mLocationName.setText(weatherDTO.getLocationName());
-            mTempDegree.setText(tempDegree);
-            mDescription.setText(weatherDTO.getDescription());
-
-            updateUserWeatherImage(weatherDTO, mUserWeatherImageView);
-            mUserWeatherProgressBar.setVisibility(View.GONE);
-        }
-    }
-
-    private void updateBookmarkWeatherList(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
-        if (isAdded()) {
-            mWeatherDTOList = weatherDTOList;
-            sWeatherDTOList = weatherDTOList;
-            sLocationDTOList = locationDTOList;
-            addingLocationDTOIdInWeatherDTO(weatherDTOList, locationDTOList);
-
-            WeatherAdapter weatherAdapter = new WeatherAdapter(weatherDTOList, locationDTOList);
-            mWeatherRecyclerView.setAdapter(weatherAdapter);
-
-            mBookmarkWeatherListProgressBar.setVisibility(View.GONE);
-        }
-    }
-
-    private void addingLocationDTOIdInWeatherDTO(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
-        for (int i = 0; i < locationDTOList.size(); i++) {
-            WeatherDTO weatherDTO = weatherDTOList.get(i);
-            LocationDTO locationDTO = locationDTOList.get(i);
-            weatherDTO.setLocationDTOId(locationDTO.getId());
-        }
-    }
-
     private class WeatherHolder extends RecyclerView.ViewHolder
     implements View.OnClickListener {
         private CardView weatherCardView;
         private TextView locationNameTextView;
         private ImageView weatherImageView;
         private TextView tempDegreeTextView;
-        private LocationDTO locationDTO;
+        private WeatherDTO weatherDTO;
 
         private WeatherHolder(@NonNull LayoutInflater inflater, ViewGroup viewGroup) {
             super(inflater.inflate(R.layout.list_item_weather, viewGroup, false));
@@ -582,39 +613,36 @@ public class WeatherListFragment extends Fragment {
             tempDegreeTextView = weatherCardView.findViewById(R.id.list_item_temp_degree);
         }
 
-        private void bind(WeatherDTO weatherDTO, LocationDTO locationDTO) {
-            this.locationDTO = locationDTO;
-
+        private void bind(WeatherDTO weatherDTO) {
             String tempDegree =
                     getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
             locationNameTextView.setText(weatherDTO.getLocationName());
             tempDegreeTextView.setText(tempDegree);
+            this.weatherDTO = weatherDTO;
 
             if (weatherDTO.getMainDescription() != null && weatherDTO.getDescription() != null) {
                 updateListItemWeatherImage(weatherDTO, weatherImageView, weatherCardView);
             }
-        }
+         }
 
         @Override
         public void onClick(View view) {
-            Location location = new Location("");
-            location.setLatitude(locationDTO.getLatitude());
-            location.setLongitude(locationDTO.getLongitude());
+                Location location = new Location("");
+                location.setLatitude(weatherDTO.getLocationDTOLatitude());
+                location.setLongitude(weatherDTO.getLocationDTOLongitude());
 
-            Intent intent = DetailedWeatherActivity.newIntent(getActivity(),
-                    location);
-            startActivity(intent);
+                Intent intent = DetailedWeatherActivity.newIntent(getActivity(),
+                        location);
+                startActivity(intent);
+
         }
     }
 
     private class WeatherAdapter extends RecyclerView.Adapter<WeatherHolder> {
-
         private List<WeatherDTO> weatherDTOList;
-        private List<LocationDTO> locationDTOList;
 
-        private WeatherAdapter(List<WeatherDTO> weatherDTOList, List<LocationDTO> locationDTOList) {
+        private WeatherAdapter(List<WeatherDTO> weatherDTOList) {
             this.weatherDTOList = weatherDTOList;
-            this.locationDTOList = locationDTOList;
         }
 
         @NonNull
@@ -628,8 +656,7 @@ public class WeatherListFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull WeatherHolder weatherHolder, int position) {
             WeatherDTO weatherDTO = weatherDTOList.get(position);
-            LocationDTO locationDTO = locationDTOList.get(position);
-            weatherHolder.bind(weatherDTO, locationDTO);
+            weatherHolder.bind(weatherDTO);
         }
 
         @Override
@@ -650,23 +677,24 @@ public class WeatherListFragment extends Fragment {
             Log.i(TAG, "User weather task is executed");
 
             updateUserWeather(result);
+            showRatingBar();
         }
     }
 
-    private class BookmarkWeatherListTask extends AsyncTask<LocationDTOListBookmark, Void, List<WeatherDTO>> {
-        List<LocationDTO> locationDTOList = new ArrayList<>();
+    private class BookmarkWeatherListTask extends AsyncTask<WeatherDTOListBookmark, Void, List<WeatherDTO>> {
 
         @Override
-        protected List<WeatherDTO> doInBackground(LocationDTOListBookmark... locationDTOListBookmarks) {
-            locationDTOList = locationDTOListBookmarks[0].getLocationDTOList();
-            return new WeatherDAO().getBookmarkWeatherList(locationDTOList);
+        protected List<WeatherDTO> doInBackground(WeatherDTOListBookmark... weatherDTOListBookmarks) {
+            List<WeatherDTO> weatherDTOList = weatherDTOListBookmarks[0].getWeatherDTOList();
+            return new WeatherDAO().getBookmarkWeatherList(weatherDTOList);
         }
 
         @Override
         protected void onPostExecute(List<WeatherDTO> result) {
             Log.i(TAG, "Weather list task is executed");
 
-            updateBookmarkWeatherList(result, locationDTOList);
+            updateBookmarkWeatherList(result);
+            showRatingBar();
         }
     }
 }

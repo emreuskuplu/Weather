@@ -212,22 +212,6 @@ public class DetailedWeatherFragment extends Fragment {
         }
     }
 
-    private boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo;
-
-        if (connMgr != null) {
-            networkInfo = connMgr.getActiveNetworkInfo();
-        } else {
-            // If there is not default network then ignore isOnline condition
-            Log.i(TAG, "There is not default network");
-            return true;
-        }
-
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
     public static Location getLocation() {
         return sLocation;
     }
@@ -251,6 +235,22 @@ public class DetailedWeatherFragment extends Fragment {
         }
 
         return detailedDayName;
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo;
+
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } else {
+            // If there is not default network then ignore isOnline condition
+            Log.i(TAG, "There is not default network");
+            return true;
+        }
+
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     private void showOfflineNetworkAlertDialog() {
@@ -282,7 +282,6 @@ public class DetailedWeatherFragment extends Fragment {
             mSnowVolume.setText(weatherDTO.getSnowVolume());
 
             updateWeatherImage(weatherDTO, mWeatherImageView);
-            mWeatherProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -335,8 +334,6 @@ public class DetailedWeatherFragment extends Fragment {
                 TextView tempDegreeTextView = weatherForecastDaysTempDegreeList.get(i);
                 tempDegreeTextView.setText(tempDegree);
             }
-
-            mWeatherProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -398,6 +395,15 @@ public class DetailedWeatherFragment extends Fragment {
                 WeatherDTO weatherDTO = result.get(mSelectedDayIndex);
                 updateDetailedWeatherDescriptions(weatherDTO);
                 updateWeatherForecastDays(result);
+            } else {
+                Toast.makeText(requireContext(),
+                        R.string.issue_weather_load,
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            if (isAdded()) {
+                mWeatherProgressBar.setVisibility(View.GONE);
             }
         }
     }

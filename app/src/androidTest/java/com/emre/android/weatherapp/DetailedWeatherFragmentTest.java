@@ -9,6 +9,7 @@ import com.emre.android.weatherapp.ui.DetailedWeatherFragment;
 import com.emre.android.weatherapp.ui.WeatherListActivity;
 import com.emre.android.weatherapp.ui.WeatherListFragment;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,12 @@ public class DetailedWeatherFragmentTest {
     @Rule
     public ActivityTestRule<WeatherListActivity> activityRule =
             new ActivityTestRule<>(WeatherListActivity.class);
+
+    @BeforeClass
+    public static void deactivateRatingBarDialog() {
+        WeatherListFragment.deactivateRatingBarDialog();
+    }
+
 
     @Test
     public void verifyLocationDTOInWeatherListFragmentMatchesLocationDTOInDetailedWeatherFragment() {

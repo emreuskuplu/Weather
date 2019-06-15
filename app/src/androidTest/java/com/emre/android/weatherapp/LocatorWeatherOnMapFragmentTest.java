@@ -15,6 +15,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,12 @@ public class LocatorWeatherOnMapFragmentTest {
     @Rule
     public ActivityTestRule<WeatherListActivity> activityRule =
             new ActivityTestRule<>(WeatherListActivity.class);
+
+    @BeforeClass
+    public static void deactivateRatingBarDialog() {
+        WeatherListFragment.deactivateRatingBarDialog();
+    }
+
 
     @Test
     public void longClickOnMapForInsertingLocationOnDatabaseAndValidateLocationIsAddedInLocationDTOListAndItsIdInWeatherDTOList() {

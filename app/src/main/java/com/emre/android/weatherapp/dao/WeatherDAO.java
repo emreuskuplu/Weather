@@ -60,26 +60,22 @@ public class WeatherDAO implements IWeatherDAO {
     }
 
     @Override
-    public List<WeatherDTO> getBookmarkWeatherList(List<LocationDTO> locationDTOList) {
-        List<WeatherDTO> weatherDTOList = new ArrayList<>();
+    public List<WeatherDTO> getBookmarkWeatherList(List<WeatherDTO> weatherDTOList) {
         Retrofit retrofit = buildBaseUrlCurrentWeather();
         IRetrofitWeatherDAO iRetrofitWeatherDAO = retrofit.create(IRetrofitWeatherDAO.class);
 
-        for (LocationDTO locationDTO : locationDTOList) {
+        for (WeatherDTO weatherDTO : weatherDTOList) {
             Call<WeatherBody> weatherBodyCall = iRetrofitWeatherDAO.getCurrentWeatherDTO(
                     API_KEY,
                     UNITS,
-                    locationDTO.getLatitude(),
-                    locationDTO.getLongitude()
+                    weatherDTO.getLocationDTOLatitude(),
+                    weatherDTO.getLocationDTOLongitude()
             );
 
             Log.i(TAG, "List item weather api url = " + weatherBodyCall.request().url().toString());
 
-            WeatherDTO weatherDTO = new WeatherDTO();
-
             try {
                 parseCurrentWeatherResponse(weatherBodyCall, weatherDTO);
-                weatherDTOList.add(weatherDTO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
