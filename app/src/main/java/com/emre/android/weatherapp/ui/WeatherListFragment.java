@@ -57,7 +57,6 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class WeatherListFragment extends Fragment {
     private static final String TAG = WeatherListFragment.class.getSimpleName();
@@ -154,7 +153,7 @@ public class WeatherListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (sUserLocation != null) {
-                    Intent intent = DetailedWeatherActivity.newIntent(getActivity(),
+                    Intent intent = DetailedUserWeatherActivity.newIntent(getActivity(),
                             sUserLocation);
                     startActivity(intent);
                 }
@@ -627,14 +626,18 @@ public class WeatherListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
+            List<Location> locationList = new ArrayList<>();
+
+            for (WeatherDTO weatherDTO : mWeatherDTOList) {
                 Location location = new Location("");
                 location.setLatitude(weatherDTO.getLocationDTOLatitude());
                 location.setLongitude(weatherDTO.getLocationDTOLongitude());
+                locationList.add(location);
+            }
 
-                Intent intent = DetailedWeatherActivity.newIntent(getActivity(),
-                        location);
-                startActivity(intent);
-
+            Intent intent = DetailedBookmarkWeatherActivity.newIntent(getActivity(),
+                    locationList, getAdapterPosition());
+            startActivity(intent);
         }
     }
 

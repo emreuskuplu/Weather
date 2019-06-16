@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.DetailedWeatherActivity"
+            android:name=".ui.DetailedBookmarkWeatherActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
@@ -52,6 +52,8 @@
         <activity
             android:name=".ui.AppInfoPageActivity"
             android:parentActivityName=".ui.WeatherListActivity"/>
+        <activity android:name=".ui.DetailedUserWeatherActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

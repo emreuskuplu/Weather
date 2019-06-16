@@ -5,14 +5,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 
-public class DetailedWeatherActivity extends SingleFragmentActivity {
-    private static final String TAG = DetailedWeatherActivity.class.getSimpleName();
+public class DetailedUserWeatherActivity extends SingleFragmentActivity {
+    private static final String TAG = DetailedUserWeatherActivity.class.getSimpleName();
 
     private static final String EXTRA_LOCATION_DATA_ACTIVITY =
             "com.emre.android.weatherapp.locationdata";
 
     public static Intent newIntent(Context packageContext, Location location) {
-        Intent intent = new Intent(packageContext, DetailedWeatherActivity.class);
+        Intent intent = new Intent(packageContext, DetailedUserWeatherActivity.class);
         intent.putExtra(EXTRA_LOCATION_DATA_ACTIVITY, location);
         return intent;
     }
@@ -22,4 +22,5 @@ public class DetailedWeatherActivity extends SingleFragmentActivity {
         Location location = getIntent().getParcelableExtra(EXTRA_LOCATION_DATA_ACTIVITY);
         return DetailedWeatherFragment.newInstance(location);
     }
+
 }

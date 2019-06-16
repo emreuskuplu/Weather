@@ -39,4 +39,6 @@
     <string name="issue_loading_weather_item">Failed to load bookmark weather</string>
     <string name="review_app">Would you like to review our application?</string>
     <string name="send">SEND</string>
+    <string name="swipe_left">Swipe to left available</string>
+    <string name="swipe_right">Swipe to right available</string>
 </resources>

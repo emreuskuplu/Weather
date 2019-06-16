@@ -43,6 +43,7 @@ public class DetailedWeatherFragment extends Fragment {
     private static int sSelectedDayIndex;
     private static List<WeatherDTO> sWeatherDTOList;
 
+    private Location mLocation;
     private static Location sLocation;
     private ImageView mWeatherImageView;
     private TextView mLocationName;
@@ -82,7 +83,8 @@ public class DetailedWeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (getArguments() != null) {
-            sLocation = getArguments().getParcelable(ARG_LOCATION_DATA_INFO);
+            mLocation = getArguments().getParcelable(ARG_LOCATION_DATA_INFO);
+            sLocation = mLocation;
         } else {
             Log.e(TAG, "getArgument is null");
             requireActivity().finish();
@@ -139,7 +141,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 0;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new ForecastDetailedWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(mLocation);
             }
         });
 
@@ -149,7 +151,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 1;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new ForecastDetailedWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(mLocation);
             }
         });
 
@@ -159,7 +161,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 2;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new ForecastDetailedWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(mLocation);
             }
         });
 
@@ -169,7 +171,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 3;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new ForecastDetailedWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(mLocation);
             }
         });
 
@@ -179,7 +181,7 @@ public class DetailedWeatherFragment extends Fragment {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
                 mSelectedDayIndex = 4;
                 sSelectedDayIndex = mSelectedDayIndex;
-                new ForecastDetailedWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(mLocation);
             }
         });
 
@@ -194,7 +196,7 @@ public class DetailedWeatherFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mWeatherProgressBar.setVisibility(View.VISIBLE);
-                new ForecastDetailedWeatherTask().execute(sLocation);
+                new ForecastDetailedWeatherTask().execute(mLocation);
             }
         });
 
@@ -206,7 +208,7 @@ public class DetailedWeatherFragment extends Fragment {
         super.onStart();
         if (isOnline()) {
             mWeatherProgressBar.setVisibility(View.VISIBLE);
-            new ForecastDetailedWeatherTask().execute(sLocation);
+            new ForecastDetailedWeatherTask().execute(mLocation);
         } else {
             showOfflineNetworkAlertDialog();
         }
