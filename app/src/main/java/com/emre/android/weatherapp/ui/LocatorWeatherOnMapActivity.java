@@ -8,14 +8,21 @@ import android.support.v4.app.Fragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-public class LocatorWeatherOnMapActivity extends SingleFragmentActivity {
+import java.util.List;
+
+public class LocatorWeatherOnMapActivity extends MainFragmentActivity {
     private static final String TAG = LocatorWeatherOnMapActivity.class.getSimpleName();
 
     private static final int REQUEST_ERROR = 0;
 
     @Override
-    protected Fragment createFragment() {
+    protected Fragment createSingleFragment() {
         return LocatorWeatherOnMapFragment.newInstance();
+    }
+
+    @Override
+    protected List<Fragment> createWeatherBaseFragment() {
+        return null;
     }
 
     public static Intent newIntent(Context packageContext) {

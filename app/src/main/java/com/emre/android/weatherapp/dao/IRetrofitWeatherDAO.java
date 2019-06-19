@@ -7,7 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface IRetrofitWeatherDAO {
+interface IRetrofitWeatherDAO {
 
     @GET("weather")
     Call<WeatherBody> getCurrentWeatherDTO(

@@ -355,8 +355,8 @@
 
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="10dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -367,8 +367,8 @@
 
     <ImageButton
         android:id="@+id/refresh_weather_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:layout_marginTop="8dp"

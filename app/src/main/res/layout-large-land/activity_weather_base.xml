@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2EBCF">
+
+    <FrameLayout
+        android:id="@+id/user_weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="80dp">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/bookmark_weather_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/refresh_weather_button"
+        android:layout_toEndOf="@id/user_weather"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="40dp">
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/refresh_weather_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/refresh"
+        android:contentDescription="@string/refresh_locations" />
+
+    <ImageButton
+        android:id="@+id/app_info_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/baseline_help"
+        android:contentDescription="@string/app_info" />
+
+</RelativeLayout>

@@ -13,8 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.emre.android.weatherapp.dto.WeatherDTO;
-import com.emre.android.weatherapp.ui.WeatherListActivity;
-import com.emre.android.weatherapp.ui.WeatherListFragment;
+import com.emre.android.weatherapp.ui.BookmarkWeatherListFragment;
+import com.emre.android.weatherapp.ui.UserWeatherFragment;
+import com.emre.android.weatherapp.ui.WeatherBaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ApiException;
@@ -45,20 +46,20 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class WeatherListFragmentTest {
-    private static final String TAG = WeatherListFragmentTest.class.getSimpleName();
+public class WeatherBaseActivityTest {
+    private static final String TAG = WeatherBaseActivityTest.class.getSimpleName();
     private boolean isResolutionRequired = true;
     private String mDegreeCalculation = "°C";
 
     private Context mAppContext = InstrumentationRegistry.getTargetContext();
 
     @Rule
-    public ActivityTestRule<WeatherListActivity> activityRule =
-            new ActivityTestRule<>(WeatherListActivity.class);
+    public ActivityTestRule<WeatherBaseActivity> activityRule =
+            new ActivityTestRule<>(WeatherBaseActivity.class);
 
     @BeforeClass
     public static void deactivateRatingBarDialog() {
-        WeatherListFragment.deactivateRatingBarDialog();
+        WeatherBaseActivity.deactivateRatingBarDialog();
     }
 
     @Test
@@ -68,7 +69,7 @@ public class WeatherListFragmentTest {
                 if (isGoogleApiClientConnected()) {
                     if (hasLocationPermission()) {
                         if (isDeviceLocationActive()) {
-                            WeatherDTO weatherDTO = WeatherListFragment.getUserWeatherDTO();
+                            WeatherDTO weatherDTO = UserWeatherFragment.getUserWeatherDTO();
                             onView(withId(R.id.location_name)).check(matches(withText(weatherDTO.getLocationName())));
                             onView(withId(R.id.temp_degree)).check(matches(withText(weatherDTO.getTempDegree() + mDegreeCalculation)));
                             onView(withId(R.id.description)).check(matches(withText(weatherDTO.getDescription())));
@@ -97,7 +98,7 @@ public class WeatherListFragmentTest {
 
     @Test
     public void verifyWeatherDTOListItemsHasLocationDTOValues() {
-        List<WeatherDTO> weatherDTOList = WeatherListFragment.getWeatherDTOList();
+        List<WeatherDTO> weatherDTOList = BookmarkWeatherListFragment.getWeatherDTOList();
 
         for (int i = 0; i < weatherDTOList.size(); i++) {
             WeatherDTO weatherDTO = weatherDTOList.get(i);
@@ -111,12 +112,12 @@ public class WeatherListFragmentTest {
 
     @Test
     public void verifyRefreshWeatherButtonIsWorkingCorrectly() {
-        List<WeatherDTO> weatherDTOList = WeatherListFragment.getWeatherDTOList();
+        List<WeatherDTO> weatherDTOList = BookmarkWeatherListFragment.getWeatherDTOList();
         int weatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked = weatherDTOList.hashCode();
 
         onView(withId(R.id.refresh_weather_button)).perform(click());
 
-        weatherDTOList = WeatherListFragment.getWeatherDTOList();
+        weatherDTOList = BookmarkWeatherListFragment.getWeatherDTOList();
         int weatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked = weatherDTOList.hashCode();
 
         assertThat(weatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked,
@@ -125,7 +126,7 @@ public class WeatherListFragmentTest {
 
     @Test
     public void verifyAddLocationBookmarkMessageIsWorkingCorrectly() {
-        List<WeatherDTO> weatherDTOList = WeatherListFragment.getWeatherDTOList();
+        List<WeatherDTO> weatherDTOList = BookmarkWeatherListFragment.getWeatherDTOList();
 
         if (weatherDTOList.isEmpty()) {
             onView(withId(R.id.add_bookmark_info)).check(matches(isDisplayed()));
@@ -177,7 +178,7 @@ public class WeatherListFragmentTest {
     }
 
     private boolean isGoogleApiClientConnected() {
-        return WeatherListFragment.getGoogleApiClientStatus();
+        return UserWeatherFragment.getGoogleApiClientStatus();
     }
 
     private boolean hasLocationPermission() {

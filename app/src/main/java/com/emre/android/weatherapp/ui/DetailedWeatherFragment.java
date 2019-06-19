@@ -208,6 +208,7 @@ public class DetailedWeatherFragment extends Fragment {
         super.onStart();
         if (isOnline()) {
             mWeatherProgressBar.setVisibility(View.VISIBLE);
+            
             new ForecastDetailedWeatherTask().execute(mLocation);
         } else {
             showOfflineNetworkAlertDialog();
@@ -232,6 +233,7 @@ public class DetailedWeatherFragment extends Fragment {
         try {
             Date longDate = outFormat.parse(shortDate);
             detailedDayName = outFormat.format(longDate);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -274,6 +276,7 @@ public class DetailedWeatherFragment extends Fragment {
             String detailedDayName = changeShortDateToLargeDate(weatherDTO.getDate());
             String tempDegree =
                     getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
+
             mLocationName.setText(weatherDTO.getLocationName());
             mDetailedDayName.setText(detailedDayName);
             mTempDegree.setText(tempDegree);
@@ -318,6 +321,7 @@ public class DetailedWeatherFragment extends Fragment {
                 WeatherDTO weatherDTO = weatherDTOList.get(i);
                 String dayName = weatherDTO.getDate();
                 TextView weatherDayNameTextView = weatherDayList.get(i);
+
                 weatherDayNameTextView.setText(dayName);
                 weatherDayNameTextView.setTextColor(mDescription.getTextColors());
             }
@@ -395,6 +399,7 @@ public class DetailedWeatherFragment extends Fragment {
         protected void onPostExecute(List<WeatherDTO> result) {
             if (!result.isEmpty()) {
                 WeatherDTO weatherDTO = result.get(mSelectedDayIndex);
+
                 updateDetailedWeatherDescriptions(weatherDTO);
                 updateWeatherForecastDays(result);
             } else {

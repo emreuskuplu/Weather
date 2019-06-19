@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 
-public class DetailedUserWeatherActivity extends SingleFragmentActivity {
+import java.util.List;
+
+public class DetailedUserWeatherActivity extends MainFragmentActivity {
     private static final String TAG = DetailedUserWeatherActivity.class.getSimpleName();
 
     private static final String EXTRA_LOCATION_DATA_ACTIVITY =
@@ -18,9 +20,13 @@ public class DetailedUserWeatherActivity extends SingleFragmentActivity {
     }
 
     @Override
-    protected Fragment createFragment() {
+    protected Fragment createSingleFragment() {
         Location location = getIntent().getParcelableExtra(EXTRA_LOCATION_DATA_ACTIVITY);
         return DetailedWeatherFragment.newInstance(location);
     }
 
+    @Override
+    protected List<Fragment> createWeatherBaseFragment() {
+        return null;
+    }
 }

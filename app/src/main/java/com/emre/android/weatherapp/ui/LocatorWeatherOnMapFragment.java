@@ -27,12 +27,13 @@ import java.util.UUID;
 public class LocatorWeatherOnMapFragment extends Fragment {
     private static final String TAG = LocatorWeatherOnMapFragment.class.getSimpleName();
 
+    private static LatLng sLatLng;
+
     private LocationDAO mLocationDAO;
 
     private GoogleMap mMap;
     private MapView mMapView;
     private LocatorOnLongClick mLocatorOnLongClick;
-    private static LatLng sLatLng;
 
     public static LocatorWeatherOnMapFragment newInstance() {
         return new LocatorWeatherOnMapFragment();
@@ -41,6 +42,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mLocatorOnLongClick = new LocatorOnLongClick();
         mLocationDAO = new LocationDAO(getContext());
     }
@@ -49,6 +51,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_locator_weather_on_map, viewGroup, false);
+
         mMapView = v.findViewById(R.id.map_view);
         ImageButton backButton = v.findViewById(R.id.back_button);
 

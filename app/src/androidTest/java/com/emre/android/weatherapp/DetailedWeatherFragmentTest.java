@@ -6,8 +6,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.emre.android.weatherapp.ui.DetailedWeatherFragment;
-import com.emre.android.weatherapp.ui.WeatherListActivity;
-import com.emre.android.weatherapp.ui.WeatherListFragment;
+import com.emre.android.weatherapp.ui.UserWeatherFragment;
+import com.emre.android.weatherapp.ui.WeatherBaseActivity;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -32,18 +32,18 @@ public class DetailedWeatherFragmentTest {
     private String mDegreeCalculation = "°C";
 
     @Rule
-    public ActivityTestRule<WeatherListActivity> activityRule =
-            new ActivityTestRule<>(WeatherListActivity.class);
+    public ActivityTestRule<WeatherBaseActivity> activityRule =
+            new ActivityTestRule<>(WeatherBaseActivity.class);
 
     @BeforeClass
     public static void deactivateRatingBarDialog() {
-        WeatherListFragment.deactivateRatingBarDialog();
+        WeatherBaseActivity.deactivateRatingBarDialog();
     }
 
 
     @Test
     public void verifyLocationDTOInWeatherListFragmentMatchesLocationDTOInDetailedWeatherFragment() {
-        Location weatherListFragmentLocation = WeatherListFragment.getUserLocationDTO();
+        Location weatherListFragmentLocation = UserWeatherFragment.getUserLocation();
 
         onView(withId(R.id.weather_temp_degree_layout)).perform(click());
 

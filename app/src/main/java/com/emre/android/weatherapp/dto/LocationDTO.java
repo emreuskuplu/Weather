@@ -1,6 +1,5 @@
 package com.emre.android.weatherapp.dto;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 public class LocationDTO {
