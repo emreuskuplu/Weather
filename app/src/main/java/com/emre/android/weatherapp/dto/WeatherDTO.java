@@ -1,6 +1,6 @@
 package com.emre.android.weatherapp.dto;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

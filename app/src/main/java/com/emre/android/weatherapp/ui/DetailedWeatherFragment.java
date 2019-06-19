@@ -7,9 +7,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,11 +40,12 @@ public class DetailedWeatherFragment extends Fragment {
 
     private String mDegreeCalculation = "°C";
     private int mSelectedDayIndex = 0;
+
     private static int sSelectedDayIndex;
     private static List<WeatherDTO> sWeatherDTOList;
+    private static Location sLocation;
 
     private Location mLocation;
-    private static Location sLocation;
     private ImageView mWeatherImageView;
     private TextView mLocationName;
     private TextView mDetailedDayName;
@@ -208,7 +209,7 @@ public class DetailedWeatherFragment extends Fragment {
         super.onStart();
         if (isOnline()) {
             mWeatherProgressBar.setVisibility(View.VISIBLE);
-            
+
             new ForecastDetailedWeatherTask().execute(mLocation);
         } else {
             showOfflineNetworkAlertDialog();

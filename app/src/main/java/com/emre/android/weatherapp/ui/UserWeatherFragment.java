@@ -7,10 +7,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +48,12 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private static final int REQUEST_LOCATION = 0;
 
-    private String mUnitsFormat = "°C";
-
     private static WeatherDTO sUserWeatherDTO;
+
+    private static Location sUserLocation;
+    private static GoogleApiClient sClient;
+
+    private String mUnitsFormat = "°C";
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private ImageView mUserWeatherImageView;
@@ -58,9 +61,6 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
     private TextView mTempDegree;
     private TextView mDescription;
     private ProgressBar mUserWeatherProgressBar;
-
-    private static Location sUserLocation;
-    private static GoogleApiClient sClient;
 
     public static UserWeatherFragment newInstance() {
         return new UserWeatherFragment();

@@ -13,14 +13,14 @@
         android:text="@string/review_app"
         android:textSize="18sp"/>
 
-    <android.support.v7.widget.AppCompatRatingBar
+    <androidx.appcompat.widget.AppCompatRatingBar
         android:id="@+id/rating_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:numStars="5">
-    </android.support.v7.widget.AppCompatRatingBar>
+    </androidx.appcompat.widget.AppCompatRatingBar>
 
     <Button
         android:id="@+id/send_button"
