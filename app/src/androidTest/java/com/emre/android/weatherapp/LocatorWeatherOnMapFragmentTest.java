@@ -1,9 +1,9 @@
 package com.emre.android.weatherapp;
 
 import android.content.Context;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 
 import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
@@ -34,7 +34,7 @@ import static org.hamcrest.Matchers.is;
 public class LocatorWeatherOnMapFragmentTest {
     private static final String TAG = LocatorWeatherOnMapFragmentTest.class.getSimpleName();
 
-    private Context mAppContext = InstrumentationRegistry.getTargetContext();
+    private Context mAppContext = ApplicationProvider.getApplicationContext();
 
     @Rule
     public ActivityTestRule<WeatherBaseActivity> activityRule =

@@ -1,9 +1,9 @@
 package com.emre.android.weatherapp.dao;
 
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
-import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.emre.android.weatherapp.dto.weather_json_schema.City;
 import com.emre.android.weatherapp.dto.weather_json_schema.ForecastBody;
@@ -12,17 +12,10 @@ import com.emre.android.weatherapp.dto.weather_json_schema.Main;
 import com.emre.android.weatherapp.dto.weather_json_schema.Weather;
 import com.emre.android.weatherapp.dto.weather_json_schema.WeatherBody;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -31,20 +24,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WeatherDAO implements IWeatherDAO {
     private static final String TAG = WeatherDAO.class.getSimpleName();
 
-    private static final String ENDPOINT_WEATHER = "http://api.openweathermap.org/data/2.5/";
-    private static final String ENDPOINT_FORECAST = "http://api.openweathermap.org/data/2.5/";
+    private static final String API_URL = "http://api.openweathermap.org/data/2.5/";
     private static final String API_KEY = "2cd12ee50d586f06c24dbd1dd2cd8eca";
-    private static final String UNITS = "metric";
+
+    private String mUnits;
+    private String mLang;
+
+    public WeatherDAO(Context context) {
+        SettingsDAO settingsDAO = new SettingsDAO();
+        mUnits = settingsDAO.getPrefUnitsFormatStorage(context);
+
+        if (Locale.getDefault().getLanguage().equals("tr")) {
+            mLang = "tr" ;
+        } else {
+            mLang = "en";
+        }
+    }
 
     @Override
     public WeatherDTO getUserWeather(Location userLocation) {
         WeatherDTO weatherDTO = new WeatherDTO();
-        Retrofit retrofit = buildBaseUrlCurrentWeather();
+        Retrofit retrofit = buildBaseUrl();
         IRetrofitWeatherDAO retrofitWeatherDAO = retrofit.create(IRetrofitWeatherDAO.class);
 
         Call<WeatherBody> weatherBodyCall = retrofitWeatherDAO.getCurrentWeatherDTO(
                 API_KEY,
-                UNITS,
+                mUnits,
+                mLang,
                 userLocation.getLatitude(),
                 userLocation.getLongitude());
 
@@ -61,13 +67,14 @@ public class WeatherDAO implements IWeatherDAO {
 
     @Override
     public List<WeatherDTO> getBookmarkWeatherList(List<WeatherDTO> weatherDTOList) {
-        Retrofit retrofit = buildBaseUrlCurrentWeather();
+        Retrofit retrofit = buildBaseUrl();
         IRetrofitWeatherDAO iRetrofitWeatherDAO = retrofit.create(IRetrofitWeatherDAO.class);
 
         for (WeatherDTO weatherDTO : weatherDTOList) {
             Call<WeatherBody> weatherBodyCall = iRetrofitWeatherDAO.getCurrentWeatherDTO(
                     API_KEY,
-                    UNITS,
+                    mUnits,
+                    mLang,
                     weatherDTO.getLocationDTOLatitude(),
                     weatherDTO.getLocationDTOLongitude()
             );
@@ -86,17 +93,18 @@ public class WeatherDAO implements IWeatherDAO {
 
     @Override
     public List<WeatherDTO> getForecastDetailedWeatherList(Location location) {
-        Retrofit retrofit = buildBaseUrlDetailedWeather();
+        Retrofit retrofit = buildBaseUrl();
         IRetrofitWeatherDAO iRetrofitWeatherDAO = retrofit.create(IRetrofitWeatherDAO.class);
 
         Call<ForecastBody> forecastBodyCall = iRetrofitWeatherDAO.getForecastWeatherDTO(
                 API_KEY,
-                UNITS,
+                mUnits,
+                mLang,
                 location.getLatitude(),
                 location.getLongitude()
         );
 
-        Log.i(TAG, "Detailed weather api url = " + forecastBodyCall.request().url().toString());
+        Log.i(TAG, "Forecast weather api url = " + forecastBodyCall.request().url().toString());
 
         List<WeatherDTO> weatherDTOList = new ArrayList<>();
 
@@ -206,16 +214,9 @@ public class WeatherDAO implements IWeatherDAO {
         }
     }
 
-    private Retrofit buildBaseUrlCurrentWeather() {
+    private Retrofit buildBaseUrl() {
         return new Retrofit.Builder()
-                .baseUrl(ENDPOINT_WEATHER)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }
-
-    private Retrofit buildBaseUrlDetailedWeather() {
-        return new Retrofit.Builder()
-                .baseUrl(ENDPOINT_FORECAST)
+                .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

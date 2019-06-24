@@ -13,6 +13,7 @@ interface IRetrofitWeatherDAO {
     Call<WeatherBody> getCurrentWeatherDTO(
             @Query("appId") String appId,
             @Query("units") String units,
+            @Query("lang") String lang,
             @Query("lat") Double lat,
             @Query("lon") Double lon
     );
@@ -21,6 +22,7 @@ interface IRetrofitWeatherDAO {
     Call<ForecastBody> getForecastWeatherDTO(
             @Query("appId") String appId,
             @Query("units") String units,
+            @Query("lang") String lang,
             @Query("lat") Double lat,
             @Query("lon") Double lon
     );

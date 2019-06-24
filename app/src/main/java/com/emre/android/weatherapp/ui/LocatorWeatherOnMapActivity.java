@@ -3,6 +3,8 @@ package com.emre.android.weatherapp.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -30,8 +32,8 @@ public class LocatorWeatherOnMapActivity extends MainFragmentActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);

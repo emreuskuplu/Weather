@@ -5,20 +5,26 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.emre.android.weatherapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailedBookmarkWeatherActivity extends AppCompatActivity {
+import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
+
+public class DetailedBookmarkWeatherActivity extends AppCompatActivity implements INetworkMessage {
     private static final String TAG = DetailedBookmarkWeatherActivity.class.getSimpleName();
 
     private static final String EXTRA_LIST_LOCATION_DATA_ACTIVITY =
@@ -29,6 +35,7 @@ public class DetailedBookmarkWeatherActivity extends AppCompatActivity {
     private List<Location> mLocationList;
     private ImageView mChevronLeft;
     private ImageView mChevronRight;
+    private Toast mOfflineNetworkToast;
 
     public static Intent newIntent(Context packageContext, List<Location> locationList, int position) {
         Intent intent = new Intent(packageContext, DetailedBookmarkWeatherActivity.class);
@@ -43,6 +50,10 @@ public class DetailedBookmarkWeatherActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_detailed_bookmark_weather);
 
+        mOfflineNetworkToast = Toast.makeText(this,
+                R.string.offline_network_alert_message,
+                Toast.LENGTH_LONG);
+
         mChevronLeft = findViewById(R.id.chevron_left);
         mChevronRight = findViewById(R.id.chevron_right);
 
@@ -51,17 +62,21 @@ public class DetailedBookmarkWeatherActivity extends AppCompatActivity {
 
         final ViewPager viewPager = findViewById(R.id.detailed_weather_view_pager);
         viewPager.setOffscreenPageLimit(2);
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+            @NonNull
             @Override
             public Fragment getItem(int i) {
                 Log.i(TAG, "Position: " + i);
 
                 if (viewPager.getCurrentItem() == 0) {
-                    mChevronLeft.setVisibility(View.GONE);
-                    mChevronRight.setVisibility(View.VISIBLE);
-                } else if (viewPager.getCurrentItem() == mLocationList.size() - 1) {
-                    mChevronLeft.setVisibility(View.VISIBLE);
-                    mChevronRight.setVisibility(View.GONE);
+                    if (viewPager.getCurrentItem() == mLocationList.size() - 1) {
+                        mChevronLeft.setVisibility(View.GONE);
+                        mChevronRight.setVisibility(View.GONE);
+                    } else {
+                        mChevronLeft.setVisibility(View.GONE);
+                        mChevronRight.setVisibility(View.VISIBLE);
+
+                    }
                 }
 
                 Location location = mLocationList.get(i);
@@ -106,5 +121,10 @@ public class DetailedBookmarkWeatherActivity extends AppCompatActivity {
         });
 
         viewPager.setCurrentItem(position);
+    }
+
+    @Override
+    public void showOfflineNetworkAlertMessage() {
+        mOfflineNetworkToast.show();
     }
 }

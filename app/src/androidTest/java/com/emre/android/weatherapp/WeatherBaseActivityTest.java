@@ -6,12 +6,15 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import androidx.annotation.NonNull;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+
 import androidx.core.app.ActivityCompat;
 import android.util.Log;
 
+import com.emre.android.weatherapp.dao.ISettingsDAO;
+import com.emre.android.weatherapp.dao.SettingsDAO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.emre.android.weatherapp.ui.BookmarkWeatherListFragment;
 import com.emre.android.weatherapp.ui.UserWeatherFragment;
@@ -48,10 +51,12 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class WeatherBaseActivityTest {
     private static final String TAG = WeatherBaseActivityTest.class.getSimpleName();
-    private boolean isResolutionRequired = true;
-    private String mDegreeCalculation = "°C";
 
-    private Context mAppContext = InstrumentationRegistry.getTargetContext();
+    private boolean isResolutionRequired = true;
+    private String mUnitsFormat;
+    private ISettingsDAO mISettingsDAO;
+
+    private Context mAppContext = ApplicationProvider.getApplicationContext();
 
     @Rule
     public ActivityTestRule<WeatherBaseActivity> activityRule =
@@ -69,9 +74,18 @@ public class WeatherBaseActivityTest {
                 if (isGoogleApiClientConnected()) {
                     if (hasLocationPermission()) {
                         if (isDeviceLocationActive()) {
+                            mISettingsDAO = new SettingsDAO();
+                            String units = mISettingsDAO.getPrefUnitsFormatStorage(mAppContext);
+
+                            if (units.equals("metric")) {
+                                mUnitsFormat = "°C";
+                            } else if (units.equals("fahrenheit")) {
+                                mUnitsFormat = "°F";
+                            }
+
                             WeatherDTO weatherDTO = UserWeatherFragment.getUserWeatherDTO();
                             onView(withId(R.id.location_name)).check(matches(withText(weatherDTO.getLocationName())));
-                            onView(withId(R.id.temp_degree)).check(matches(withText(weatherDTO.getTempDegree() + mDegreeCalculation)));
+                            onView(withId(R.id.temp_degree)).check(matches(withText(weatherDTO.getTempDegree() + mUnitsFormat)));
                             onView(withId(R.id.description)).check(matches(withText(weatherDTO.getDescription())));
                         } else {
                             Assert.fail("Device location is not active for get user location");
@@ -92,8 +106,12 @@ public class WeatherBaseActivityTest {
 
     @Test
     public void clickUserWeatherTempDegreeLayoutAndVerifyDetailedWeatherFragment() {
-        onView(withId(R.id.weather_temp_degree_layout)).perform(click());
-        onView(withId(R.id.humidity_volume)).check(matches(isDisplayed()));
+        if (isOnline()) {
+            onView(withId(R.id.weather_temp_degree_layout)).perform(click());
+            onView(withId(R.id.humidity_volume)).check(matches(isDisplayed()));
+        } else {
+            Assert.fail("User internet connection is offline for verify detailed weather fragment");
+        }
     }
 
     @Test

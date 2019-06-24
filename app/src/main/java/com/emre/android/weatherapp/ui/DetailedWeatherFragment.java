@@ -1,7 +1,6 @@
 package com.emre.android.weatherapp.ui;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emre.android.weatherapp.R;
+import com.emre.android.weatherapp.dao.SettingsDAO;
 import com.emre.android.weatherapp.dao.WeatherDAO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 
@@ -38,12 +37,15 @@ public class DetailedWeatherFragment extends Fragment {
     private static final String ARG_LOCATION_DATA_INFO =
             "com.emre.android.weatherapp.locationdata";
 
-    private String mDegreeCalculation = "°C";
-    private int mSelectedDayIndex = 0;
-
     private static int sSelectedDayIndex;
     private static List<WeatherDTO> sWeatherDTOList;
     private static Location sLocation;
+
+    private String mUnitsFormat = "";
+    private SettingsDAO mSettingsDAO;
+
+    private int mSelectedDayIndex = 0;
+    private INetworkMessage mINetworkMessage;
 
     private Location mLocation;
     private ImageView mWeatherImageView;
@@ -83,18 +85,25 @@ public class DetailedWeatherFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mSettingsDAO = new SettingsDAO();
+
         if (getArguments() != null) {
             mLocation = getArguments().getParcelable(ARG_LOCATION_DATA_INFO);
             sLocation = mLocation;
         } else {
             Log.e(TAG, "getArgument is null");
+            issueLocationValuesToast();
+
             requireActivity().finish();
-            Toast.makeText(requireContext(),
-                    R.string.issue_location_values,
-                    Toast.LENGTH_SHORT)
-                    .show();
+         }
+
+        if (requireActivity().getClass().getSimpleName().equals("DetailedBookmarkWeatherActivity")) {
+            mINetworkMessage = (DetailedBookmarkWeatherActivity) requireContext();
+        } else if (requireActivity().getClass().getSimpleName().equals("DetailedUserWeatherActivity")) {
+            mINetworkMessage = (DetailedUserWeatherActivity) requireContext();
         }
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -196,8 +205,12 @@ public class DetailedWeatherFragment extends Fragment {
         refreshWeatherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mWeatherProgressBar.setVisibility(View.VISIBLE);
-                new ForecastDetailedWeatherTask().execute(mLocation);
+                if (isOnline()) {
+                    mWeatherProgressBar.setVisibility(View.VISIBLE);
+                    new ForecastDetailedWeatherTask().execute(mLocation);
+                } else {
+                    mINetworkMessage.showOfflineNetworkAlertMessage();
+                }
             }
         });
 
@@ -207,12 +220,29 @@ public class DetailedWeatherFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        String units = mSettingsDAO.getPrefUnitsFormatStorage(requireContext());
+
+        if (units.equals("metric")) {
+            mUnitsFormat = "°C";
+        } else if (units.equals("fahrenheit")) {
+            mUnitsFormat = "°F";
+        }
+
+        mTempDegree.setText(mUnitsFormat);
+
+        mFirstDayTempDegree.setText(mUnitsFormat);
+        mSecondDayTempDegree.setText(mUnitsFormat);
+        mThirdDayTempDegree.setText(mUnitsFormat);
+        mFourthDayTempDegree.setText(mUnitsFormat);
+        mFifthDayTempDegree.setText(mUnitsFormat);
+
         if (isOnline()) {
             mWeatherProgressBar.setVisibility(View.VISIBLE);
 
             new ForecastDetailedWeatherTask().execute(mLocation);
         } else {
-            showOfflineNetworkAlertDialog();
+            mINetworkMessage.showOfflineNetworkAlertMessage();
         }
     }
 
@@ -258,25 +288,27 @@ public class DetailedWeatherFragment extends Fragment {
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    private void showOfflineNetworkAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setMessage(getString(R.string.offline_network_alert_dialog_message));
-        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // Continue the process
-            }
-        });
+    private void issueLocationValuesToast() {
+        Toast.makeText(requireContext(),
+                R.string.issue_location_values,
+                Toast.LENGTH_SHORT)
+                .show();
+    }
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    private void failedWeatherInfoToast() {
+        if (isAdded()) {
+            Toast.makeText(requireContext(),
+                    R.string.issue_weather_load,
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     private void updateDetailedWeatherDescriptions(WeatherDTO weatherDTO) {
         if (isAdded()) {
             String detailedDayName = changeShortDateToLargeDate(weatherDTO.getDate());
             String tempDegree =
-                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
+                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mUnitsFormat);
 
             mLocationName.setText(weatherDTO.getLocationName());
             mDetailedDayName.setText(detailedDayName);
@@ -337,7 +369,7 @@ public class DetailedWeatherFragment extends Fragment {
             for (int i = 0; i < weatherForecastDaysLimit; i++) {
                 WeatherDTO weatherDTO = weatherDTOList.get(i);
                 String tempDegree =
-                        getString(R.string.temp_degree, weatherDTO.getTempDegree(), mDegreeCalculation);
+                        getString(R.string.temp_degree, weatherDTO.getTempDegree(), mUnitsFormat);
                 TextView tempDegreeTextView = weatherForecastDaysTempDegreeList.get(i);
                 tempDegreeTextView.setText(tempDegree);
             }
@@ -346,46 +378,56 @@ public class DetailedWeatherFragment extends Fragment {
 
     private void updateWeatherImage(WeatherDTO weatherDTO,
                                     ImageView weatherImageView) {
+        String mainDescription = weatherDTO.getMainDescription();
 
-        switch (weatherDTO.getMainDescription()) {
-            case "Clear":
-                weatherImageView.setImageResource(R.drawable.sun);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_sun));
-                break;
-            case "Clouds":
-                if (weatherDTO.getDescription().equals("few clouds")) {
-                    weatherImageView.setImageResource(R.drawable.sunny_cloud);
-                    weatherImageView.setContentDescription(getString(R.string.weather_image_is_sunny_cloud));
-                } else {
-                    weatherImageView.setImageResource(R.drawable.cloud);
-                    weatherImageView.setContentDescription(getString(R.string.weather_image_is_cloud));
-                }
-                break;
-            case "Drizzle":
-                weatherImageView.setImageResource(R.drawable.rain);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_rain));
-                break;
-            case "Rain":
-                weatherImageView.setImageResource(R.drawable.rain);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_rain));
-                break;
-            case "Thunderstorm":
-                weatherImageView.setImageResource(R.drawable.thunderstorm);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_thunderstorm));
-                break;
-            case "Snow":
-                weatherImageView.setImageResource(R.drawable.snow);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_snow));
-            default:
-                String[] atmosphereDescriptions = {"Mist", "Smoke", "Haze",
-                        "Dust", "Fog", "Sand", "Dust", "Ash", "Squall", "Tornado"};
+        if (mainDescription.equals(getString(R.string.clear))) {
+            weatherImageView.setImageResource(R.drawable.sun);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_sun)));
 
-                for (String atmosphereDescription : atmosphereDescriptions) {
-                    if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
-                        weatherImageView.setImageResource(R.drawable.mist);
-                        weatherImageView.setContentDescription(getString(R.string.weather_image_is_mist));
-                    }
+        } else if (mainDescription.equals(getString(R.string.clouds))) {
+            if (mainDescription.equals(getString(R.string.few_clouds))) {
+                weatherImageView.setImageResource(R.drawable.sunny_cloud);
+                weatherImageView.setContentDescription(getString(R.string.weather_image,
+                        getString(R.string.user_location), getString(R.string.weather_image_is_sunny_cloud)));
+            } else {
+                weatherImageView.setImageResource(R.drawable.cloud);
+                weatherImageView.setContentDescription(getString(R.string.weather_image,
+                        getString(R.string.user_location), getString(R.string.weather_image_is_cloud)));
+            }
+
+        } else if (mainDescription.equals(getString(R.string.drizzle))) {
+            weatherImageView.setImageResource(R.drawable.rain);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_rain)));
+
+        } else if (mainDescription.equals(getString(R.string.rain))) {
+            weatherImageView.setImageResource(R.drawable.rain);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_rain)));
+
+        } else if (mainDescription.equals(getString(R.string.thunderstorm))) {
+            weatherImageView.setImageResource(R.drawable.thunderstorm);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_thunderstorm)));
+
+        } else if (mainDescription.equals(getString(R.string.snow))) {
+            weatherImageView.setImageResource(R.drawable.snow);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_snow)));
+
+        } else {
+            String[] atmosphereDescriptions = {getString(R.string.mist), getString(R.string.smoke), getString(R.string.haze),
+                    getString(R.string.dust), getString(R.string.fog), getString(R.string.sand), getString(R.string.ash),
+                    getString(R.string.squall), getString(R.string.tornado)};
+
+            for (String atmosphereDescription : atmosphereDescriptions) {
+                if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
+                    weatherImageView.setImageResource(R.drawable.mist);
+                    weatherImageView.setContentDescription(getString(R.string.weather_image,
+                            getString(R.string.user_location), getString(R.string.weather_image_is_mist)));
                 }
+            }
         }
     }
 
@@ -393,7 +435,13 @@ public class DetailedWeatherFragment extends Fragment {
 
         @Override
         protected List<WeatherDTO> doInBackground(Location... location) {
-            return new WeatherDAO().getForecastDetailedWeatherList(location[0]);
+            if (isAdded()) {
+                return new WeatherDAO(requireContext()).getForecastDetailedWeatherList(location[0]);
+            } else {
+                Log.e(TAG, "Activity is not added");
+                return new ArrayList<>();
+            }
+
         }
 
         @Override
@@ -404,10 +452,7 @@ public class DetailedWeatherFragment extends Fragment {
                 updateDetailedWeatherDescriptions(weatherDTO);
                 updateWeatherForecastDays(result);
             } else {
-                Toast.makeText(requireContext(),
-                        R.string.issue_weather_load,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                failedWeatherInfoToast();
             }
 
             if (isAdded()) {

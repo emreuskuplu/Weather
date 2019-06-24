@@ -10,6 +10,8 @@ import android.webkit.WebView;
 
 import com.emre.android.weatherapp.R;
 
+import java.util.Locale;
+
 public class AppInfoPageFragment extends Fragment {
 
     public static AppInfoPageFragment newInstance() {
@@ -22,7 +24,11 @@ public class AppInfoPageFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_app_info_page, viewGroup, false);
 
         WebView webView = v.findViewById(R.id.web_view);
-        webView.loadUrl("file:///android_asset/weather_app_info.html");
+        if (Locale.getDefault().getLanguage().equals("tr")) {
+            webView.loadUrl("file:///android_asset/weather_app_info-tr");
+        } else {
+            webView.loadUrl("file:///android_asset/weather_app_info");
+        }
 
         return v;
     }

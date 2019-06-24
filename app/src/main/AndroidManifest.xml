@@ -33,27 +33,32 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".ui.DetailedBookmarkWeatherActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        </activity>
-        <activity
-            android:name=".ui.LocatorWeatherOnMapActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity
-            android:name=".ui.AppInfoPageActivity"
-            android:parentActivityName=".ui.WeatherBaseActivity"/>
-        <activity android:name=".ui.DetailedUserWeatherActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ui.WeatherBaseActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.DetailedBookmarkWeatherActivity"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".ui.DetailedUserWeatherActivity"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".ui.LocatorWeatherOnMapActivity"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".ui.AppInfoPageActivity"
+            android:theme="@style/AppActionBarTheme"
+            android:parentActivityName=".ui.WeatherBaseActivity"/>
+
+        <activity android:name=".ui.SettingsActivity"
+            android:theme="@style/AppActionBarTheme"
+            android:parentActivityName=".ui.WeatherBaseActivity"/>
     </application>
 
 </manifest>

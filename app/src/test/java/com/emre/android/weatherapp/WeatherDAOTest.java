@@ -2,6 +2,8 @@ package com.emre.android.weatherapp;
 
 import android.location.Location;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import com.emre.android.weatherapp.dao.IWeatherDAO;
 import com.emre.android.weatherapp.dao.WeatherDAO;
 import com.emre.android.weatherapp.dao.WeatherDAOStub;
@@ -55,7 +57,7 @@ public class WeatherDAOTest {
     }
 
     private void givenWeatherDAOAndLocationIsInitialized() {
-        mIWeatherDAO = new WeatherDAO();
+        mIWeatherDAO = new WeatherDAO(ApplicationProvider.getApplicationContext());
         mIWeatherDAOStub = new WeatherDAOStub();
         mLocation =  new Location("");
         double latitude = ThreadLocalRandom.current().nextDouble(90);
@@ -81,7 +83,7 @@ public class WeatherDAOTest {
     }
 
     private void givenWeatherDAOAndWeatherDTOListIsInitialized() {
-        mIWeatherDAO = new WeatherDAO();
+        mIWeatherDAO = new WeatherDAO(ApplicationProvider.getApplicationContext());
         mIWeatherDAOStub = new WeatherDAOStub();
         mWeatherDTOList = new ArrayList<>();
         mWeatherDTOListStub = new ArrayList<>();

@@ -106,6 +106,10 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         mMapView.onDestroy();
     }
 
+    public static LatLng getLatLngFromLongClickedOnMap() {
+        return sLatLng;
+    }
+
     private void setBookmarksFromList() {
         List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
         List<LatLng> latLngList = new ArrayList<>();
@@ -127,8 +131,11 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         }
     }
 
-    public static LatLng getLatLngFromLongClickedOnMap() {
-        return sLatLng;
+    private void showAddedBookmarkToast() {
+        Toast.makeText(getContext(),
+                R.string.location_added_message,
+                Toast.LENGTH_SHORT)
+                .show();
     }
 
     private class LocatorOnLongClick implements GoogleMap.OnMapLongClickListener {
@@ -146,10 +153,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             mMap.addMarker(bookmark);
 
-            Toast.makeText(getContext(),
-                    R.string.location_added_message,
-                    Toast.LENGTH_SHORT)
-                    .show();
+            showAddedBookmarkToast();
         }
     }
 }

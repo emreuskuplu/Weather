@@ -1,7 +1,10 @@
 package com.emre.android.weatherapp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dao.LocationDAO;
+import com.emre.android.weatherapp.dao.SettingsDAO;
 import com.emre.android.weatherapp.dao.WeatherDAO;
 import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
@@ -35,13 +39,17 @@ import java.util.List;
 public class BookmarkWeatherListFragment extends Fragment implements IRefreshWeather {
     private static final String TAG = BookmarkWeatherListFragment.class.getSimpleName();
 
-    private String mUnitsFormat = "°C";
-    private LocationDAO mLocationDAO;
+    private static List<LocationDTO> sLocationDTOList = new ArrayList<>();
+    private static List<WeatherDTO> sWeatherDTOList = new ArrayList<>();
 
-    private static List<LocationDTO> sLocationDTOList;
-    private static List<WeatherDTO> sWeatherDTOList;
+    private String mUnitsFormat = "";
+    private SettingsDAO mSettingsDAO;
+
+    private LocationDAO mLocationDAO;
+    private INetworkMessage mINetworkMessage;
 
     private RecyclerView mWeatherRecyclerView;
+    private WeatherAdapter mWeatherAdapter;
     private SearchView mBookmarkWeatherListSearchView;
     private TextView mAddBookmarkInfoMessage;
     private TextView mBookmarkNotFoundMessage;
@@ -55,7 +63,9 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mSettingsDAO = new SettingsDAO();
         mLocationDAO = new LocationDAO(getContext());
+        mINetworkMessage = (WeatherBaseActivity) requireActivity();
     }
 
     @Override
@@ -81,7 +91,7 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
         mBookmarkWeatherListSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Log.d(TAG, "QueryTextSubmit: " + s);
+                Log.i(TAG, "QueryTextSubmit: " + s);
 
                 List<WeatherDTO> weatherDTOList = new ArrayList<>();
 
@@ -127,15 +137,13 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
                         WeatherDTO weatherDTO = sWeatherDTOList.get(position);
                         String locationName = weatherDTO.getLocationName();
 
+                        showDeletedBookmarkToast(locationName);
+
                         mLocationDAO.
                                 LocationDbDeleteLocationData(weatherDTO.getLocationDTOId());
 
-                        Toast.makeText(getContext(),
-                                getString(R.string.location_deleted_message, locationName),
-                                Toast.LENGTH_SHORT)
-                                .show();
-
-                        executeWeatherListTask();
+                        sWeatherDTOList.remove(position);
+                        mWeatherAdapter.notifyDataSetChanged();
                     }
                 }
         );
@@ -149,7 +157,19 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
     public void onStart() {
         super.onStart();
 
-        executeWeatherListTask();
+        String units = mSettingsDAO.getPrefUnitsFormatStorage(requireContext());
+
+        if (units.equals("metric")) {
+            mUnitsFormat = "°C";
+        } else if (units.equals("fahrenheit")) {
+            mUnitsFormat = "°F";
+        }
+
+        if (isOnline()) {
+            executeWeatherListTask();
+        } else {
+            mINetworkMessage.showOfflineNetworkAlertMessage();
+        }
     }
 
     public static List<LocationDTO> getLocationDTOList() {
@@ -160,6 +180,29 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
         return sWeatherDTOList;
     }
 
+    private boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo;
+
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } else {
+            // If there is not default network then ignore isOnline condition
+            Log.i(TAG, "There is not default network");
+            return true;
+        }
+
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    private void showDeletedBookmarkToast(String locationName) {
+        Toast.makeText(getContext(),
+                getString(R.string.location_deleted_message, locationName),
+                Toast.LENGTH_SHORT)
+                .show();
+    }
+
     private void executeWeatherListTask() {
         Log.i(TAG, "Weather list task is executing");
 
@@ -168,7 +211,7 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
 
         WeatherDTOListBookmark weatherDTOListBookmark = getWeatherDTOListBookmark(locationDTOList);
 
-        if (weatherDTOListBookmark.getWeatherDTOList().isEmpty()) {
+        if (locationDTOList.isEmpty()) {
             mBookmarkNotFoundMessage.setVisibility(View.GONE);
             mAddBookmarkInfoMessage.setVisibility(View.VISIBLE);
         } else {
@@ -184,13 +227,13 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
         if (isAdded()) {
             sWeatherDTOList = weatherDTOList;
 
-            WeatherAdapter weatherAdapter = new WeatherAdapter(weatherDTOList);
-            mWeatherRecyclerView.setAdapter(weatherAdapter);
+            mWeatherAdapter = new WeatherAdapter(weatherDTOList);
+            mWeatherRecyclerView.setAdapter(mWeatherAdapter);
 
             mBookmarkWeatherListProgressBar.setVisibility(View.GONE);
 
-            IRatingBarDialog IRatingBarDialog = (WeatherBaseActivity) requireContext();
-            IRatingBarDialog.showRatingBarDialog();
+            IRatingBarDialog iRatingBarDialog = (WeatherBaseActivity) requireContext();
+            iRatingBarDialog.showRatingBarDialog();
         }
     }
 
@@ -214,61 +257,66 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
     private void updateListItemWeatherImage(WeatherDTO weatherDTO,
                                             ImageView weatherImageView, CardView weatherCardView) {
         ConstraintLayout weatherCardViewLayout = weatherCardView.findViewById(R.id.weather_card_view_layout);
+        String mainDescription = weatherDTO.getMainDescription();
 
-        switch (weatherDTO.getMainDescription()) {
-            case "Clear":
-                weatherImageView.setImageResource(R.drawable.sun_solid);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_sun));
-                weatherCardViewLayout.setBackgroundResource(R.drawable.sun_background);
-                break;
-            case "Clouds":
-                if (weatherDTO.getDescription().equals("few clouds")) {
-                    weatherImageView.setImageResource(R.drawable.sunny_cloud_solid);
-                    weatherImageView.setContentDescription(getString(R.string.weather_image_is_sunny_cloud));
-                    weatherCardViewLayout.setBackgroundResource(R.drawable.sunny_cloud_background);
-                } else {
-                    weatherImageView.setImageResource(R.drawable.cloud_solid);
-                    weatherImageView.setContentDescription(getString(R.string.weather_image_is_cloud));
-                    weatherCardViewLayout.setBackgroundResource(R.drawable.cloud_background);
-                }
-                break;
-            case "Drizzle":
-                weatherImageView.setImageResource(R.drawable.rain_solid);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_rain));
-                weatherCardViewLayout.setBackgroundResource(R.drawable.rain_background);
-                break;
-            case "Rain":
-                weatherImageView.setImageResource(R.drawable.rain_solid);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_rain));
-                weatherCardViewLayout.setBackgroundResource(R.drawable.rain_background);
-                break;
-            case "Thunderstorm":
-                weatherImageView.setImageResource(R.drawable.thunderstorm_solid);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_thunderstorm));
-                weatherCardViewLayout.setBackgroundResource(R.drawable.thunderstorm_background);
-                break;
-            case "Snow":
-                weatherImageView.setImageResource(R.drawable.snow_solid);
-                weatherImageView.setContentDescription(getString(R.string.weather_image_is_snow));
-                weatherCardViewLayout.setBackgroundResource(R.drawable.snow_background);
-                break;
-            default:
-                String[] atmosphereDescriptions = {"Mist", "Smoke", "Haze",
-                        "Dust", "Fog", "Sand", "Dust", "Ash", "Squall", "Tornado"};
+        if (mainDescription.equals(getString(R.string.clear))) {
+            weatherImageView.setImageResource(R.drawable.sun_solid);
+            weatherImageView.setContentDescription(getString(R.string.weather_image_is_sun));
+            weatherCardViewLayout.setBackgroundResource(R.drawable.sun_background);
 
-                for (String atmosphereDescription : atmosphereDescriptions) {
-                    if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
-                        weatherImageView.setImageResource(R.drawable.mist_solid);
-                        weatherImageView.setContentDescription(getString(R.string.weather_image_is_mist));
-                        weatherCardViewLayout.setBackgroundResource(R.drawable.mist_background);
-                    }
+        } else if (mainDescription.equals(getString(R.string.clouds))) {
+            if (mainDescription.equals(getString(R.string.few_clouds))) {
+                weatherImageView.setImageResource(R.drawable.sunny_cloud_solid);
+                weatherImageView.setContentDescription(getString(R.string.weather_image_is_sunny_cloud));
+                weatherCardViewLayout.setBackgroundResource(R.drawable.sunny_cloud_background);
+            } else {
+                weatherImageView.setImageResource(R.drawable.cloud_solid);
+                weatherImageView.setContentDescription(getString(R.string.weather_image_is_cloud));
+                weatherCardViewLayout.setBackgroundResource(R.drawable.cloud_background);
+            }
+
+        } else if (mainDescription.equals(getString(R.string.drizzle))) {
+            weatherImageView.setImageResource(R.drawable.rain_solid);
+            weatherImageView.setContentDescription(getString(R.string.weather_image_is_rain));
+            weatherCardViewLayout.setBackgroundResource(R.drawable.rain_background);
+
+        } else if (mainDescription.equals(getString(R.string.rain))) {
+            weatherImageView.setImageResource(R.drawable.rain_solid);
+            weatherImageView.setContentDescription(getString(R.string.weather_image_is_rain));
+            weatherCardViewLayout.setBackgroundResource(R.drawable.rain_background);
+
+        } else if (mainDescription.equals(getString(R.string.thunderstorm))) {
+            weatherImageView.setImageResource(R.drawable.thunderstorm_solid);
+            weatherImageView.setContentDescription(getString(R.string.weather_image_is_thunderstorm));
+            weatherCardViewLayout.setBackgroundResource(R.drawable.thunderstorm_background);
+
+        } else if (mainDescription.equals(getString(R.string.snow))) {
+            weatherImageView.setImageResource(R.drawable.snow_solid);
+            weatherImageView.setContentDescription(getString(R.string.weather_image_is_snow));
+            weatherCardViewLayout.setBackgroundResource(R.drawable.snow_background);
+
+        } else {
+            String[] atmosphereDescriptions = {getString(R.string.mist), getString(R.string.smoke), getString(R.string.haze),
+                    getString(R.string.dust), getString(R.string.fog), getString(R.string.sand), getString(R.string.ash),
+                    getString(R.string.squall), getString(R.string.tornado)};
+
+            for (String atmosphereDescription : atmosphereDescriptions) {
+                if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
+                    weatherImageView.setImageResource(R.drawable.mist_solid);
+                    weatherImageView.setContentDescription(getString(R.string.weather_image_is_mist));
+                    weatherCardViewLayout.setBackgroundResource(R.drawable.mist_background);
                 }
+            }
         }
     }
 
     @Override
     public void refreshWeather() {
-        executeWeatherListTask();
+        if (isOnline()) {
+            executeWeatherListTask();
+        } else {
+            mINetworkMessage.showOfflineNetworkAlertMessage();
+        }
     }
 
     private class WeatherHolder extends RecyclerView.ViewHolder
@@ -351,7 +399,13 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
         protected List<WeatherDTO> doInBackground(WeatherDTOListBookmark... weatherDTOListBookmarks) {
             List<WeatherDTO> weatherDTOList = weatherDTOListBookmarks[0].getWeatherDTOList();
 
-            return new WeatherDAO().getBookmarkWeatherList(weatherDTOList);
+            if (isAdded()) {
+                return new WeatherDAO(requireContext()).getBookmarkWeatherList(weatherDTOList);
+            } else {
+                Log.e(TAG, "Activity is not added");
+                return weatherDTOList;
+
+            }
         }
 
         @Override

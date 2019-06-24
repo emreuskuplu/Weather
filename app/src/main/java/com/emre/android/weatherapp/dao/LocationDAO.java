@@ -5,9 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.emre.android.weatherapp.persistence.LocationDbCursorWrapper;
-import com.emre.android.weatherapp.persistence.LocationDbHelper;
-import com.emre.android.weatherapp.persistence.LocationDbSchema.LocationTable;
+import com.emre.android.weatherapp.database.LocationDbCursorWrapper;
+import com.emre.android.weatherapp.database.LocationDbHelper;
+import com.emre.android.weatherapp.database.LocationDbSchema.LocationTable;
 import com.emre.android.weatherapp.dto.LocationDTO;
 
 import java.util.ArrayList;
@@ -36,21 +36,21 @@ public class LocationDAO implements ILocationDAO {
 
     @Override
     public List<LocationDTO> LocationDbExtract() {
-        List<LocationDTO> locations = new ArrayList<>();
+        List<LocationDTO> locationList = new ArrayList<>();
 
         LocationDbCursorWrapper cursor = queryLocations();
 
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                locations.add(cursor.getLocationData());
+                locationList.add(cursor.getLocationData());
                 cursor.moveToNext();
             }
         } finally {
             cursor.close();
         }
 
-        return locations;
+        return locationList;
     }
 
     @Override
@@ -60,6 +60,12 @@ public class LocationDAO implements ILocationDAO {
         mDatabase.delete(LocationTable.NAME,
                 LocationTable.Cols.UUID + " = ?",
                 new String[] { uuidString });
+    }
+
+    @Override
+    public void LocationDbDeleteAllLocationData() {
+        mDatabase.delete(LocationTable.NAME,
+                null, null);
     }
 
     private LocationDbCursorWrapper queryLocations() {

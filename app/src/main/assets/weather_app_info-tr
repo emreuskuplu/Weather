@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <title>WeatherApp</title>
+    </head>
+
+    <body style="background-color:#F2EBCF">
+        <font color="#00574B"><b>Yazan</b></font>
+        <br>
+        Emre Üsküplü
+        <br>
+        <br>
+        <font color="#00574B"><b>WeatherApp Hakkında</b></font>
+        <br>
+        Kendi lokasyonun hava durumunu görebilirsin ve yer imlerini google haritası ile ekleyip hava durumlarını görebilirsin.
+        <br>
+        Kendi lokasyonunda ve yer imlerinde detaylandırılmış hava durumunu ve tahmini hava durumu günlerini görebilirsin.
+        <br>
+        <br>
+        <font color="#00574B"><b>WeatherApp Kullanımı</b></font>
+        <br>
+        <font color="#008577">Ana Sayfa</font>
+        <br>
+        <font color="#008577">&gt</font> Kendi lokasyonun hava durumunu ana sayfanın üst kısmında görebilirsin.
+        <br>
+        <font color="#008577">&gt</font> Yer imlerini eklemek için haritayı (
+        <img src="file:///android_res/drawable/add_location.png" width="25" height="25">
+        ) buton vasıtasıyla açabilirsin.
+        <br>
+        <br>
+        <font color="#008577">&gt</font> Kendi lokasyonun detaylı hava durumunu hava durumu görseline veya sıcaklık derecesine tıklayarak görebilirsin.
+        <br>
+        <br>
+        <font color="#008577">&gt</font> Yer imlerin detaylı hava durumunu üzerlerine tıklayarak görebilirsin.
+        <br>
+        <br>
+        <font color="#008577">&gt</font> Yer imlerinin lokasyon isimleriyle büyüteç butonuna tıklayarak arayabilirsin.
+        <br>
+        <font color="#008577">&gt</font> Hava durumlarını (
+        <img src="file:///android_res/drawable/refresh.png" width="25" height="25">
+        ) buton vasıtasıyla yenileyebilirsin.
+        <br>
+        <br>
+        <font color="#008577">&gt</font> Yer imlerini sağa doğru sürükleyerek silebilirsin.
+        <br>
+        <font color="#008577">&gt</font> Ayarlar sayfasını (
+        <img src="file:///android_res/drawable/settings_flat.png" width="25" height="25">
+        ) buton vasıtasıyla açabilirsin.
+        <br>
+        <br>
+        <font color="#008577">Harita Sayfası</font>
+        <br>
+        <font color="#008577">&gt</font> Yer imlerini haritanın üzerinde 2 saniye basılı tutarak ekleyebilirsin.
+        <br>
+        <br>
+        <font color="#008577">Detaylı Hava Durumu Sayfası</font>
+        <br>
+        <font color="#008577">&gt</font> Tahmini hava durumu günlerin detaylı sayfasını üzerlerine tıklayarak görebilirsin.
+        <br>
+        <br>
+        <font color="#008577">&gt</font> Yer imlerin detaylı sayfasında sayfayı kaydırarak değiştirebilirsin.
+        <br>
+        <br>
+        <font color="#008577">Ayarlar sayfası</font>
+        <br>
+        <font color="#008577">&gt</font> Hava durumu değerlerinin metrik veya fahrenayt ile birimlerini değiştirebilirsin.
+        <br>
+        <br>
+        <font color="#008577">&gt</font> Tüm yer imlerini silebilirsin.
+    </body>
+</html>

@@ -1,6 +1,7 @@
 package com.emre.android.weatherapp.ui;
 
 import android.os.Bundle;
+
 import androidx.annotation.LayoutRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>WeatherApp</title>
+	</head>
+	
+	<body style="background-color:#F2EBCF">
+		<font color="#00574B"><b>Author</b></font>
+		<br>
+		Emre Üsküplü
+		<br>
+		<br>
+		<font color="#00574B"><b>About WeatherApp</b></font>
+		<br>
+		You can see weather of your location and you can add bookmarks with google map to see their weather.
+		<br>
+		You can see detailed weather and forecast weather days of your location or bookmarks.
+		<br>
+		<br>
+		<font color="#00574B"><b>Using WeatherApp</b></font>
+		<br>
+		<font color="#008577">Home Page</font>
+		<br>
+		<font color="#008577">&gt</font> Your location weather at top side in home page.
+		<br>
+		<font color="#008577">&gt</font> You can open the map via (
+		<img src="file:///android_res/drawable/add_location.png" width="25" height="25">
+		) button for adding bookmarks.
+		<br>
+		<br>
+		<font color="#008577">&gt</font> You can open your location detailed weather via click your location weather image or temp degree.
+		<br>
+		<br>
+		<font color="#008577">&gt</font> You can open your bookmarks detailed weather via click atop bookmarks in list.
+		<br>
+		<br>
+		<font color="#008577">&gt</font> You can search bookmarks with their location name via magnifying glass button.
+		<br>
+		<font color="#008577">&gt</font> You can refresh weather via (
+		<img src="file:///android_res/drawable/refresh.png" width="25" height="25">
+		) button.
+		<br>
+		<br>
+		<font color="#008577">&gt</font> You can delete your bookmarks in list with swipe to right.
+		<br>
+		<font color="#008577">&gt</font> You can open settings page via (
+		<img src="file:///android_res/drawable/settings_flat.png" width="25" height="25">
+		) button.
+		<br>
+		<br>
+		<font color="#008577">Map Page</font>
+		<br>
+		<font color="#008577">&gt</font> You can adding bookmarks with keep pressing 2 seconds on map.
+		<br>
+		<br>
+		<font color="#008577">Detailed Weather Page</font>
+		<br>
+		<font color="#008577">&gt</font> You can see detailed weather of forecast days via click atop them.
+		<br>
+		<br>
+		<font color="#008577">&gt</font> You can change the page with swipe in bookmarks detailed weather.
+		<br>
+		<br>
+		<font color="#008577">Settings Page</font>
+		<br>
+		<font color="#008577">&gt</font> You can switch units of your weather values with metric or fahrenheit.
+		<br>
+		<br>
+		<font color="#008577">&gt</font> You can delete all your bookmarks.
+	</body>
+</html>

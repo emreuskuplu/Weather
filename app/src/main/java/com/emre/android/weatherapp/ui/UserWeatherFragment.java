@@ -1,10 +1,13 @@
 package com.emre.android.weatherapp.ui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -21,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.emre.android.weatherapp.R;
+import com.emre.android.weatherapp.dao.SettingsDAO;
 import com.emre.android.weatherapp.dao.WeatherDAO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
 import com.google.android.gms.common.api.ApiException;
@@ -53,7 +57,8 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
     private static Location sUserLocation;
     private static GoogleApiClient sClient;
 
-    private String mUnitsFormat = "°C";
+    private String mUnitsFormat = "";
+    private SettingsDAO mSettingsDAO;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private ImageView mUserWeatherImageView;
@@ -70,16 +75,23 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mSettingsDAO = new SettingsDAO();
+
         sClient = new GoogleApiClient.Builder(requireActivity())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        if (hasLocationPermission()) {
+                        if (hasLocationPermission() && isOnline()) {
                             executeUserWeatherTask();
-                        } else {
+
+                        } else if (!hasLocationPermission()){
                             requestPermissions(LOCATION_PERMISSIONS,
                                     REQUEST_LOCATION_PERMISSIONS);
+
+                        } else if (!isOnline()) {
+                            INetworkMessage iNetworkMessage = (WeatherBaseActivity) requireActivity();
+                            iNetworkMessage.showOfflineNetworkAlertMessage();
                         }
                     }
 
@@ -125,6 +137,16 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
     public void onStart() {
         super.onStart();
 
+        String units = mSettingsDAO.getPrefUnitsFormatStorage(requireContext());
+
+        if (units.equals("metric")) {
+            mUnitsFormat = "°C";
+        } else if (units.equals("fahrenheit")) {
+            mUnitsFormat = "°F";
+        }
+
+        mTempDegree.setText(mUnitsFormat);
+
         sClient.connect();
     }
 
@@ -159,6 +181,23 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
         return sUserWeatherDTO;
     }
 
+    private boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo;
+
+        if (connMgr != null) {
+            networkInfo = connMgr.getActiveNetworkInfo();
+        } else {
+            // If there is not default network then ignore isOnline condition
+            Log.i(TAG, "There is not default network");
+            return true;
+        }
+
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+
     private boolean hasLocationPermission() {
         return ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -185,6 +224,8 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
                 } catch (ApiException exception) {
                     if (exception.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
                         try {
+                            WeatherBaseActivity.deactivateRatingBarDialog();
+
                             ResolvableApiException resolvable = (ResolvableApiException) exception;
                             resolvable.startResolutionForResult(
                                     getActivity(), REQUEST_LOCATION);
@@ -251,74 +292,82 @@ public class UserWeatherFragment extends Fragment implements IRefreshWeather{
 
             mUserWeatherProgressBar.setVisibility(View.GONE);
 
-            IRatingBarDialog IRatingBarDialog = (WeatherBaseActivity) requireContext();
+            IRatingBarDialog IRatingBarDialog = (WeatherBaseActivity) requireActivity();
             IRatingBarDialog.showRatingBarDialog();
         }
     }
 
     private void updateUserWeatherImage(WeatherDTO weatherDTO,
                                         ImageView weatherImageView) {
-        switch (weatherDTO.getMainDescription()) {
-            case "Clear":
-                weatherImageView.setImageResource(R.drawable.sun);
-                weatherImageView.setContentDescription(getString(R.string.weather_image,
-                        getString(R.string.user_location), getString(R.string.weather_image_is_sun)));
-                break;
-            case "Clouds":
-                if (weatherDTO.getDescription().equals("few clouds")) {
-                    weatherImageView.setImageResource(R.drawable.sunny_cloud);
-                    weatherImageView.setContentDescription(getString(R.string.weather_image,
-                            getString(R.string.user_location), getString(R.string.weather_image_is_sunny_cloud)));
-                } else {
-                    weatherImageView.setImageResource(R.drawable.cloud);
-                    weatherImageView.setContentDescription(getString(R.string.weather_image,
-                            getString(R.string.user_location), getString(R.string.weather_image_is_cloud)));
-                }
-                break;
-            case "Drizzle":
-                weatherImageView.setImageResource(R.drawable.rain);
-                weatherImageView.setContentDescription(getString(R.string.weather_image,
-                        getString(R.string.user_location), getString(R.string.weather_image_is_rain)));
-                break;
-            case "Rain":
-                weatherImageView.setImageResource(R.drawable.rain);
-                weatherImageView.setContentDescription(getString(R.string.weather_image,
-                        getString(R.string.user_location), getString(R.string.weather_image_is_rain)));
-                break;
-            case "Thunderstorm":
-                weatherImageView.setImageResource(R.drawable.thunderstorm);
-                weatherImageView.setContentDescription(getString(R.string.weather_image,
-                        getString(R.string.user_location), getString(R.string.weather_image_is_thunderstorm)));
-                break;
-            case "Snow":
-                weatherImageView.setImageResource(R.drawable.snow);
-                weatherImageView.setContentDescription(getString(R.string.weather_image,
-                        getString(R.string.user_location), getString(R.string.weather_image_is_snow)));
-                break;
-            default:
-                String[] atmosphereDescriptions = {"Mist", "Smoke", "Haze",
-                        "Dust", "Fog", "Sand", "Dust", "Ash", "Squall", "Tornado"};
+        String mainDescription = weatherDTO.getMainDescription();
 
-                for (String atmosphereDescription : atmosphereDescriptions) {
-                    if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
-                        weatherImageView.setImageResource(R.drawable.mist);
-                        weatherImageView.setContentDescription(getString(R.string.weather_image,
-                                getString(R.string.user_location), getString(R.string.weather_image_is_mist)));
-                    }
+        if (mainDescription.equals(getString(R.string.clear))) {
+            weatherImageView.setImageResource(R.drawable.sun);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_sun)));
+
+        } else if (mainDescription.equals(getString(R.string.clouds))) {
+            if (mainDescription.equals(getString(R.string.few_clouds))) {
+                weatherImageView.setImageResource(R.drawable.sunny_cloud);
+                weatherImageView.setContentDescription(getString(R.string.weather_image,
+                        getString(R.string.user_location), getString(R.string.weather_image_is_sunny_cloud)));
+            } else {
+                weatherImageView.setImageResource(R.drawable.cloud);
+                weatherImageView.setContentDescription(getString(R.string.weather_image,
+                        getString(R.string.user_location), getString(R.string.weather_image_is_cloud)));
+            }
+
+        } else if (mainDescription.equals(getString(R.string.drizzle))) {
+            weatherImageView.setImageResource(R.drawable.rain);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_rain)));
+
+        } else if (mainDescription.equals(getString(R.string.rain))) {
+            weatherImageView.setImageResource(R.drawable.rain);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_rain)));
+
+        } else if (mainDescription.equals(getString(R.string.thunderstorm))) {
+            weatherImageView.setImageResource(R.drawable.thunderstorm);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_thunderstorm)));
+
+        } else if (mainDescription.equals(getString(R.string.snow))) {
+            weatherImageView.setImageResource(R.drawable.snow);
+            weatherImageView.setContentDescription(getString(R.string.weather_image,
+                    getString(R.string.user_location), getString(R.string.weather_image_is_snow)));
+
+        } else {
+            String[] atmosphereDescriptions = {getString(R.string.mist), getString(R.string.smoke), getString(R.string.haze),
+                    getString(R.string.dust), getString(R.string.fog), getString(R.string.sand), getString(R.string.ash),
+                    getString(R.string.squall), getString(R.string.tornado)};
+
+            for (String atmosphereDescription : atmosphereDescriptions) {
+                if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
+                    weatherImageView.setImageResource(R.drawable.mist);
+                    weatherImageView.setContentDescription(getString(R.string.weather_image,
+                            getString(R.string.user_location), getString(R.string.weather_image_is_mist)));
                 }
+            }
         }
     }
 
     @Override
     public void refreshWeather() {
-        executeUserWeatherTask();
+        sClient.reconnect();
     }
 
     private class UserWeatherTask extends AsyncTask<Location, Void, WeatherDTO> {
 
         @Override
         protected WeatherDTO doInBackground(Location... locations) {
-            return new WeatherDAO().getUserWeather(locations[0]);
+            if (isAdded()) {
+                return new WeatherDAO(requireContext()).getUserWeather(locations[0]);
+            } else {
+                Log.e(TAG, "Activity is not added");
+                return new WeatherDTO();
+
+            }
         }
 
         @Override
