@@ -1,5 +1,7 @@
 package com.emre.android.weatherapp.dto;
 
+import androidx.annotation.NonNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,6 +12,8 @@ public class WeatherDTO {
     private static final String TAG = WeatherDTO.class.getSimpleName();
 
     private UUID mLocationDTOId;
+    private double mLocationDTOLatitude;
+    private double mLocationDTOLongitude;
     private String mLocationName = "";
     private String mMainDescription = "";
     private String mTempDegree = "";
@@ -26,6 +30,22 @@ public class WeatherDTO {
 
     public void setLocationDTOId(UUID mLocationDataID) {
         this.mLocationDTOId = mLocationDataID;
+    }
+
+    public double getLocationDTOLatitude() {
+        return mLocationDTOLatitude;
+    }
+
+    public void setLocationDTOLatitude(double locationDTOLatitude) {
+        mLocationDTOLatitude = locationDTOLatitude;
+    }
+
+    public double getLocationDTOLongitude() {
+        return mLocationDTOLongitude;
+    }
+
+    public void setLocationDTOLongitude(double locationDTOLongitude) {
+        mLocationDTOLongitude = locationDTOLongitude;
     }
 
     public String getLocationName() {
@@ -117,6 +137,7 @@ public class WeatherDTO {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return mLocationName + " " + mMainDescription + " " + mTempDegree + " "

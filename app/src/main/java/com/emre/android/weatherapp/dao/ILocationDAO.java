@@ -10,4 +10,5 @@ public interface ILocationDAO {
     void LocationDbInserting(UUID id, Double latitude, Double longitude);
     List<LocationDTO> LocationDbExtract();
     void LocationDbDeleteLocationData(UUID uuid);
+    void LocationDbDeleteAllLocationData();
 }

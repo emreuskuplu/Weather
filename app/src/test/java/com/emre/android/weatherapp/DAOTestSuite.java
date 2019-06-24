@@ -1,7 +1,5 @@
 package com.emre.android.weatherapp;
 
-import com.emre.android.weatherapp.dao.LocationDAO;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

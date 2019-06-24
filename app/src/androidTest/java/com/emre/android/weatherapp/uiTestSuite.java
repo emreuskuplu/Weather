@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        WeatherListFragmentTest.class,
+        WeatherBaseActivityTest.class,
         LocatorWeatherOnMapFragmentTest.class,
         DetailedWeatherFragmentTest.class
 })

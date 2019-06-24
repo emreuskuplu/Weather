@@ -1,8 +1,8 @@
 package com.emre.android.weatherapp.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +27,13 @@ import java.util.UUID;
 public class LocatorWeatherOnMapFragment extends Fragment {
     private static final String TAG = LocatorWeatherOnMapFragment.class.getSimpleName();
 
+    private static LatLng sLatLng;
+
     private LocationDAO mLocationDAO;
 
     private GoogleMap mMap;
-    protected MapView mMapView;
+    private MapView mMapView;
     private LocatorOnLongClick mLocatorOnLongClick;
-    private static LatLng sLatLng;
 
     public static LocatorWeatherOnMapFragment newInstance() {
         return new LocatorWeatherOnMapFragment();
@@ -41,6 +42,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mLocatorOnLongClick = new LocatorOnLongClick();
         mLocationDAO = new LocationDAO(getContext());
     }
@@ -49,6 +51,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup viewGroup,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_locator_weather_on_map, viewGroup, false);
+
         mMapView = v.findViewById(R.id.map_view);
         ImageButton backButton = v.findViewById(R.id.back_button);
 
@@ -66,7 +69,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
 
@@ -103,7 +106,11 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         mMapView.onDestroy();
     }
 
-    public void setBookmarksFromList() {
+    public static LatLng getLatLngFromLongClickedOnMap() {
+        return sLatLng;
+    }
+
+    private void setBookmarksFromList() {
         List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
         List<LatLng> latLngList = new ArrayList<>();
         double latitude;
@@ -124,15 +131,19 @@ public class LocatorWeatherOnMapFragment extends Fragment {
         }
     }
 
-    public static LatLng getLatLngFromLongClickedOnMap() {
-        return sLatLng;
+    private void showAddedBookmarkToast() {
+        Toast.makeText(getContext(),
+                R.string.location_added_message,
+                Toast.LENGTH_SHORT)
+                .show();
     }
 
-    public class LocatorOnLongClick implements GoogleMap.OnMapLongClickListener {
+    private class LocatorOnLongClick implements GoogleMap.OnMapLongClickListener {
 
         @Override
         public void onMapLongClick(LatLng latLng) {
             sLatLng = latLng;
+
             mLocationDAO.LocationDbInserting(UUID.randomUUID(), latLng.latitude, latLng.longitude);
             Log.i(TAG, "New location is inserted to database (" +
                     latLng.latitude + " " + latLng.longitude + ")");
@@ -142,10 +153,7 @@ public class LocatorWeatherOnMapFragment extends Fragment {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             mMap.addMarker(bookmark);
 
-            Toast.makeText(getContext(),
-                    R.string.location_added_message,
-                    Toast.LENGTH_SHORT)
-                    .show();
+            showAddedBookmarkToast();
         }
     }
 }

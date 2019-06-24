@@ -1,32 +1,32 @@
 package com.emre.android.weatherapp;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
-import com.emre.android.weatherapp.ui.LocatorWeatherOnMapActivity;
+import com.emre.android.weatherapp.ui.BookmarkWeatherListFragment;
 import com.emre.android.weatherapp.ui.LocatorWeatherOnMapFragment;
-import com.emre.android.weatherapp.ui.WeatherListActivity;
-import com.emre.android.weatherapp.ui.WeatherListFragment;
+import com.emre.android.weatherapp.ui.WeatherBaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -34,11 +34,17 @@ import static org.hamcrest.Matchers.is;
 public class LocatorWeatherOnMapFragmentTest {
     private static final String TAG = LocatorWeatherOnMapFragmentTest.class.getSimpleName();
 
-    private Context mAppContext = InstrumentationRegistry.getTargetContext();
+    private Context mAppContext = ApplicationProvider.getApplicationContext();
 
     @Rule
-    public ActivityTestRule<WeatherListActivity> activityRule =
-            new ActivityTestRule<>(WeatherListActivity.class);
+    public ActivityTestRule<WeatherBaseActivity> activityRule =
+            new ActivityTestRule<>(WeatherBaseActivity.class);
+
+    @BeforeClass
+    public static void deactivateRatingBarDialog() {
+        WeatherBaseActivity.deactivateRatingBarDialog();
+    }
+
 
     @Test
     public void longClickOnMapForInsertingLocationOnDatabaseAndValidateLocationIsAddedInLocationDTOListAndItsIdInWeatherDTOList() {
@@ -50,8 +56,8 @@ public class LocatorWeatherOnMapFragmentTest {
 
             onView(withId(R.id.back_button)).perform(click());
 
-            List<LocationDTO> locationDTOList = WeatherListFragment.getLocationDTOList();
-            List<WeatherDTO> weatherDTOList = WeatherListFragment.getWeatherDTOList();
+            List<LocationDTO> locationDTOList = BookmarkWeatherListFragment.getLocationDTOList();
+            List<WeatherDTO> weatherDTOList = BookmarkWeatherListFragment.getWeatherDTOList();
 
             LocationDTO locationDTO = locationDTOList.get(locationDTOList.size() - 1);
             WeatherDTO weatherDTO = weatherDTOList.get(weatherDTOList.size() - 1);

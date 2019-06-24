@@ -2,9 +2,7 @@ package com.emre.android.weatherapp.dao;
 
 import android.location.Location;
 
-import com.emre.android.weatherapp.dto.LocationDTO;
 import com.emre.android.weatherapp.dto.WeatherDTO;
-import com.emre.android.weatherapp.dto.WeatherForecastDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ public class WeatherDAOStub implements IWeatherDAO {
     }
 
     @Override
-    public List<WeatherDTO> getWeatherList(List<LocationDTO> locationDTOList) {
+    public List<WeatherDTO> getBookmarkWeatherList(List<WeatherDTO> weatherDTOList) {
         String[] locationNames =
                 {"İstanbul", "Kağıthane", "Amsterdam", "Schipol", "Germany", "Berlin", "", "", "", ""};
         String[] mainDescriptions =
@@ -32,8 +30,6 @@ public class WeatherDAOStub implements IWeatherDAO {
                 {"10", "25", "6", "100", "2000", "0", "10000", "10", "10", "0"};
         String[] descriptions =
                 {"clear sky", "few clouds", "light rain", "snow", "", "", "", "", "", ""};
-
-        List<WeatherDTO> weatherDTOList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             WeatherDTO weatherDTO = new WeatherDTO();
@@ -49,7 +45,7 @@ public class WeatherDAOStub implements IWeatherDAO {
     }
 
     @Override
-    public WeatherForecastDTO getDetailedWeather(Location location) {
+    public List<WeatherDTO> getForecastDetailedWeatherList(Location location) {
         String locationName = "İstanbul";
         String[] mainDescriptions =
                 {"Clear", "Clouds", "Rain", "Thunderstorm", "Snow"};
@@ -68,7 +64,6 @@ public class WeatherDAOStub implements IWeatherDAO {
         String[] dates =
                 {"2019-05-01", "2019-05-02", "2019-05-03", "2019-05-04", "2019-05-05"};
 
-        WeatherForecastDTO weatherForecastDTO = new WeatherForecastDTO();
         List<WeatherDTO> weatherDTOList = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
@@ -86,7 +81,6 @@ public class WeatherDAOStub implements IWeatherDAO {
             weatherDTOList.add(weatherDTO);
         }
 
-        weatherForecastDTO.setWeatherDTOList(weatherDTOList);
-        return weatherForecastDTO;
+        return weatherDTOList;
     }
 }

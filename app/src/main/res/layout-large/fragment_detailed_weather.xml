@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F2EBCF">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/location_name"
@@ -55,7 +54,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="31dp"
             android:gravity="center"
-            android:text="@string/celsius_sign"
             android:textSize="55sp" />
     </LinearLayout>
 
@@ -199,7 +197,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/celsius_sign"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -233,7 +230,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/celsius_sign"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -267,7 +263,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/celsius_sign"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -301,7 +296,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/celsius_sign"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -335,7 +329,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/celsius_sign"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -344,8 +337,8 @@
 
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="10dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -356,8 +349,8 @@
 
     <ImageButton
         android:id="@+id/refresh_weather_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -376,4 +369,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

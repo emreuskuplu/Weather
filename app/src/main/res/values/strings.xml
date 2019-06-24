@@ -5,16 +5,67 @@
     <string name="default_volume">0</string>
     <string name="temp_degree">%1$s%2$s</string>
     <string name="weather_image">%1$s%2$s</string>
+    <string name="map_hint_message">Keep pressing for 2 seconds to add a place to your bookmarks</string>
+    <string name="few_clouds">few clouds</string>
+
+    <!-- WEATHER MAIN DESCRIPTIONS -->
+    <string name="clear" translatable="false">Clear</string>
+    <string name="clouds" translatable="false">Clouds</string>
+    <string name="drizzle" translatable="false">Drizzle</string>
+    <string name="rain" translatable="false">Rain</string>
+    <string name="thunderstorm" translatable="false">Thunderstorm</string>
+    <string name="snow" translatable="false">Snow</string>
+    <string name="mist" translatable="false">Mist</string>
+    <string name="smoke" translatable="false">Smoke</string>
+    <string name="haze" translatable="false">Haze</string>
+    <string name="dust" translatable="false">Dust</string>
+    <string name="fog" translatable="false">Fog</string>
+    <string name="sand" translatable="false">Sand</string>
+    <string name="ash" translatable="false">Ash</string>
+    <string name="squall" translatable="false">Squall</string>
+    <string name="tornado" translatable="false">Tornado</string>
+
+    <!-- TOAST -->
+    <string name="location_added_message">Your selected location is added to your bookmarks</string>
+    <string name="location_deleted_message">%1$s is deleted from your bookmarks</string>
+    <string name="add_bookmark_info_message">There are not added bookmarks</string>
+    <string name="bookmark_not_found_message">Matching bookmarks not found</string>
+    <string name="offline_network_alert_message">Internet connection is not found, please check your internet connectivity and try again</string>
+    <string name="issue_location_values">There is a issue about bookmark location values</string>
+    <string name="issue_weather_load">Failed to load weather information</string>
+    <string name="all_bookmarks_deleted">All bookmarks are deleted from your list</string>
+
+    <!-- DIALOG -->
+    <string name="review_app">Would you like to review our application?</string>
+    <string name="send">SEND</string>
+    <string name="delete_all_bookmarks">Are you sure delete all bookmarks in your list?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+
+    <!-- SETTINGS -->
+    <string name="units_category_title">UNITS</string>
+    <string name="celsius_title">Metric  (°C)</string>
+    <string name="celsius_summary">Convert all weather values to metric</string>
+    <string name="fahrenheit_title">Fahrenheit  (°F)</string>
+    <string name="fahrenheit_summary">Convert all weather values to fahrenheit</string>
+    <string name="bookmarks_category_title">BOOKMARKS</string>
+    <string name="bookmarks_title">Delete all bookmarks</string>
+    <string name="bookmarks_summary">Delete all bookmarks from your list</string>
+
+    <!-- CONTENT DESCRIPTIONS -->
     <string name="user_location">Your location</string>
-    <string name="weather_image_is_not_set">Weather image is not set</string>
+    <string name="app_info">Info about application</string>
+    <string name="weather_image_is_not_set">Weather image is not found</string>
     <string name="weather_image_is_sun">Weather image is sun</string>
-    <string name="weather_image_is_sunny_cloud">Weather image is sunny cloud</string>
+    <string name="weather_image_is_sunny_cloud">Weather image is few clouds</string>
     <string name="weather_image_is_cloud">Weather image is cloud</string>
     <string name="weather_image_is_rain">Weather image is rain</string>
     <string name="weather_image_is_thunderstorm">Weather image is thunderstorm</string>
     <string name="weather_image_is_snow">Weather image is snow</string>
     <string name="weather_image_is_mist">Weather image is mist</string>
-    <string name="app_info">Info about application</string>
+    <string name="add_locations">Open google map and adding locations to your bookmark list</string>
+    <string name="swipe_left">Swipe to left available</string>
+    <string name="swipe_right">Swipe to right available</string>
     <string name="humidity">Humidity</string>
     <string name="wind_volume">Wind volume</string>
     <string name="rain_volume">Rain volume</string>
@@ -24,15 +75,9 @@
     <string name="third_day_layout">Third day</string>
     <string name="fourth_day_layout">Fourth day</string>
     <string name="fifth_day_layout">Fifth day</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="refresh_locations">Refreshing weather of your added bookmarks and weather of your location</string>
+    <string name="refresh_locations">Refreshing weather of your location and your bookmarks</string>
     <string name="refresh_weather">Refreshing weather</string>
-    <string name="add_locations">Open google map and adding locations to your bookmark list</string>
-    <string name="map_hint_message">Keep pressing for 2 seconds to add a place to your bookmarks</string>
     <string name="back_button">Back previous screen</string>
-    <string name="location_added_message">This location is added to your bookmarks</string>
-    <string name="location_deleted_message">%1$s is deleted from your bookmarks</string>
-    <string name="add_bookmark_info_message">There are not added bookmarks</string>
-    <string name="bookmark_not_found_message">Matching bookmarks not found</string>
-    <string name="offline_network_alert_dialog_message">Internet connection is not found, please check your internet connectivity and try again</string>
+    <string name="warning">Warning</string>
+
 </resources>
