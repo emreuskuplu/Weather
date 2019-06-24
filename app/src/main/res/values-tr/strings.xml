@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="current_weather">Güncel</string>
+    <string name="celsius_sign">°C</string>
+    <string name="default_volume">0</string>
+    <string name="temp_degree">%1$s%2$s</string>
+    <string name="weather_image">%1$s%2$s</string>
+    <string name="map_hint_message">Bir yeri yer imlerinize eklemek için 2 saniye basılı tutabilirsiniz</string>
+    <string name="few_clouds">az bulutlu</string>
+
+    <!-- TOAST -->
+    <string name="location_added_message">Seçtiğiniz lokasyon yer imleri listesine eklendi</string>
+    <string name="location_deleted_message">%1$s yer imlerinden silindi</string>
+    <string name="add_bookmark_info_message">Eklenen yer imi yoktur</string>
+    <string name="bookmark_not_found_message">Eşleşen yer imleri bulunamadı</string>
+    <string name="offline_network_alert_message">İnternet bağlantısı bulunamadı, lütfen internet bağlantınızı kontrol edip tekrar deneyin</string>
+    <string name="issue_location_values">Yer imleri lokasyon değerlerinde bir sorun meydana geldi</string>
+    <string name="issue_weather_load">Hava durumu bilgilerini yüklenirken hata meydana geldi</string>
+    <string name="all_bookmarks_deleted">Tüm yer imlerin listenden silindi</string>
+
+    <!-- DIALOG -->
+    <string name="review_app">Uygulamamızı değerlendirmek ister misin?</string>
+    <string name="send">GÖNDER</string>
+    <string name="delete_all_bookmarks">Listendeki tüm yer imlerini silmek istediğinden emin misin?</string>
+    <string name="yes">EVET</string>
+    <string name="no">HAYIR</string>
+
+    <!-- SETTINGS -->
+    <string name="units_category_title">BİRİMLER</string>
+    <string name="celsius_title">Metrik  (°C)</string>
+    <string name="celsius_summary">Tüm hava durumu değerlerini metrik birimine dönüştür</string>
+    <string name="fahrenheit_title">Fahrenayt  (°F)</string>
+    <string name="fahrenheit_summary">Tüm hava durumu değerlerini fahrenayt birimine dönüştür</string>
+    <string name="bookmarks_category_title">YER İMLERİ</string>
+    <string name="bookmarks_title">Tüm yer imlerini sil</string>
+    <string name="bookmarks_summary">Listendeki tüm yer imlelerini sil</string>
+
+    <!-- CONTENT DESCRIPTIONS -->
+    <string name="user_location">Lokasyonuz</string>
+    <string name="app_info">Uygulama hakkında bilgi</string>
+    <string name="weather_image_is_not_set">Hava durumu görseli bulunamadı</string>
+    <string name="weather_image_is_sun">Hava durumu görseli güneşli</string>
+    <string name="weather_image_is_sunny_cloud">Hava durumu görseli az bulutlu</string>
+    <string name="weather_image_is_cloud">Hava durumu görseli bulutlu</string>
+    <string name="weather_image_is_rain">Hava durumu görseli yağmurlu</string>
+    <string name="weather_image_is_thunderstorm">Hava durumu görseli gök gürültülü</string>
+    <string name="weather_image_is_snow">Hava durumu görseli karlı</string>
+    <string name="weather_image_is_mist">Hava durumu görseli sisli</string>
+    <string name="add_locations">Haritayı aç ve yer imlerini listene ekle</string>
+    <string name="swipe_left">Sola doğru kaydırma mümkün</string>
+    <string name="swipe_right">Sağa doğru kaydırma mümkün</string>
+    <string name="humidity">Nem oranı</string>
+    <string name="wind_volume">Rüzgar oranı</string>
+    <string name="rain_volume">Yağış oranı</string>
+    <string name="snow_volume">Kar oranı</string>
+    <string name="first_day_layout">İlk gün</string>
+    <string name="second_day_layout">İkinci gün</string>
+    <string name="third_day_layout">Üçüncü gün</string>
+    <string name="fourth_day_layout">Dördüncü gün</string>
+    <string name="fifth_day_layout">Beşinci gün</string>
+    <string name="refresh_weather">Hava durumunu yenile</string>
+    <string name="back_button">Önceki sayfaya dön</string>
+    <string name="warning">Uyarı</string>
+    <string name="refresh_locations">Lokasyonuzun ve yer imlerinizin hava durumunu yenileme</string>
+
+</resources>

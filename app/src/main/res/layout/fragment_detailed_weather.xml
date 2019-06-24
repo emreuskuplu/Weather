@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F2EBCF">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/location_name"
@@ -59,7 +58,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="31dp"
             android:gravity="center"
-            android:text="@string/celsius_sign"
             android:textSize="40sp" />
     </LinearLayout>
 
@@ -207,8 +205,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="@string/celsius_sign" />
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -239,8 +236,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="@string/celsius_sign" />
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -271,8 +267,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="@string/celsius_sign" />
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -303,8 +298,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="@string/celsius_sign" />
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -335,8 +329,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="@string/celsius_sign" />
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -382,4 +375,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

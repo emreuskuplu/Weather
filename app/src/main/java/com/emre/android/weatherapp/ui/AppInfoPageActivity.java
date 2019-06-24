@@ -2,13 +2,20 @@ package com.emre.android.weatherapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
-public class AppInfoPageActivity extends SingleFragmentActivity {
+import java.util.List;
+
+public class AppInfoPageActivity extends MainFragmentActivity {
 
     @Override
-    protected Fragment createFragment() {
+    protected Fragment createSingleFragment() {
         return AppInfoPageFragment.newInstance();
+    }
+
+    @Override
+    protected List<Fragment> createWeatherBaseFragment() {
+        return null;
     }
 
     public static Intent newIntent(Context packageContext) {

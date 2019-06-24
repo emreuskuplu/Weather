@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/units_category_title">
+        <SwitchPreference
+            android:key="metric"
+            android:title="@string/celsius_title"
+            android:summary="@string/celsius_summary"
+            android:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="fahrenheit"
+            android:title="@string/fahrenheit_title"
+            android:summary="@string/fahrenheit_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/bookmarks_category_title">
+        <PreferenceScreen
+            android:key="bookmarks"
+            android:title="@string/bookmarks_title"
+            android:summary="@string/bookmarks_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
