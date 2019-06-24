@@ -144,6 +144,10 @@ public class BookmarkWeatherListFragment extends Fragment implements IRefreshWea
 
                         sWeatherDTOList.remove(position);
                         mWeatherAdapter.notifyDataSetChanged();
+
+                        if (sWeatherDTOList.size() == 0) {
+                            mAddBookmarkInfoMessage.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
         );
