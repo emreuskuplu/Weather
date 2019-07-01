@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2019. Emre Üsküplü
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ */
+
 package com.emre.android.weatherapp;
 
 import android.content.Context;
@@ -7,12 +24,12 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.emre.android.weatherapp.dao.ISettingsDAO;
-import com.emre.android.weatherapp.dao.SettingsDAO;
-import com.emre.android.weatherapp.dto.WeatherDTO;
-import com.emre.android.weatherapp.ui.DetailedWeatherFragment;
-import com.emre.android.weatherapp.ui.UserWeatherFragment;
-import com.emre.android.weatherapp.ui.WeatherBaseActivity;
+import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.ISettingsDAO;
+import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.scenes.detailedweather.DetailedWeatherFragment;
+import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
+import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -31,6 +48,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * @author Emre Üsküplü
+ */
 @RunWith(AndroidJUnit4.class)
 public class DetailedWeatherFragmentTest {
 
@@ -39,12 +59,12 @@ public class DetailedWeatherFragmentTest {
     private Context mAppContext = ApplicationProvider.getApplicationContext();
 
     @Rule
-    public ActivityTestRule<WeatherBaseActivity> activityRule =
-            new ActivityTestRule<>(WeatherBaseActivity.class);
+    public ActivityTestRule<MainWeatherActivity> activityRule =
+            new ActivityTestRule<>(MainWeatherActivity.class);
 
     @BeforeClass
     public static void deactivateRatingBarDialog() {
-        WeatherBaseActivity.deactivateRatingBarDialog();
+        MainWeatherActivity.deactivateRatingBarDialog();
     }
 
 
@@ -62,38 +82,38 @@ public class DetailedWeatherFragmentTest {
 
     @Test
     public void doubleVerifyIncomingWeatherListDTOWithRefreshWeatherButton() {
-        int selectedDayIndex;
+        int selectedDay;
 
         onView(withId(R.id.weather_temp_degree_layout)).perform(click());
 
         for (int i = 0; i < 2; i++) {
-            selectedDayIndex = DetailedWeatherFragment.getSelectedDayIndex();
-            verifyDetailedWeatherDTOOfFiveDays(selectedDayIndex);
+            selectedDay = DetailedWeatherFragment.getSelectedDay();
+            verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
             onView(withId(R.id.first_day_layout)).perform(click());
 
-            selectedDayIndex = DetailedWeatherFragment.getSelectedDayIndex();
-            verifyDetailedWeatherDTOOfFiveDays(selectedDayIndex);
+            selectedDay = DetailedWeatherFragment.getSelectedDay();
+            verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
             onView(withId(R.id.second_day_layout)).perform(click());
 
-            selectedDayIndex = DetailedWeatherFragment.getSelectedDayIndex();
-            verifyDetailedWeatherDTOOfFiveDays(selectedDayIndex);
+            selectedDay = DetailedWeatherFragment.getSelectedDay();
+            verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
             onView(withId(R.id.third_day_layout)).perform(click());
 
-            selectedDayIndex = DetailedWeatherFragment.getSelectedDayIndex();
-            verifyDetailedWeatherDTOOfFiveDays(selectedDayIndex);
+            selectedDay = DetailedWeatherFragment.getSelectedDay();
+            verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
             onView(withId(R.id.fourth_day_layout)).perform(click());
 
-            selectedDayIndex = DetailedWeatherFragment.getSelectedDayIndex();
-            verifyDetailedWeatherDTOOfFiveDays(selectedDayIndex);
+            selectedDay = DetailedWeatherFragment.getSelectedDay();
+            verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
             onView(withId(R.id.fifth_day_layout)).perform(click());
 
-            selectedDayIndex = DetailedWeatherFragment.getSelectedDayIndex();
-            verifyDetailedWeatherDTOOfFiveDays(selectedDayIndex);
+            selectedDay = DetailedWeatherFragment.getSelectedDay();
+            verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
             onView(withId(R.id.refresh_weather_button)).perform(click());
         }
