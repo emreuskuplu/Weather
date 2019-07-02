@@ -156,7 +156,10 @@ public class WeatherDTO {
         try {
             Date date = inFormat.parse(dateString);
             SimpleDateFormat outFormat = new SimpleDateFormat("EE", Locale.getDefault());
-            mDate = outFormat.format(date);
+
+            if (date != null) {
+                mDate = outFormat.format(date);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }

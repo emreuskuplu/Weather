@@ -31,6 +31,11 @@ import com.emre.android.weatherapp.scenes.bookmarklistweather.BookmarkListWeathe
 
 import java.util.List;
 
+/**
+ * @author Emre Üsküplü
+ *
+ * Executes task for fetch weather of bookmark list from api
+ */
 public class BookmarkListWeatherTask extends AsyncTask<WeatherDTOListBookmark, Void, List<WeatherDTO>> {
     private static final String TAG = BookmarkListWeatherTask.class.getSimpleName();
 

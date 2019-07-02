@@ -108,8 +108,6 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
     private View.OnClickListener mDayLayoutOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            mWeatherProgressBar.setVisibility(View.VISIBLE);
-
             Object tag = view.getTag();
 
             if (tag.equals(mFirstDayLayout.getTag())) {
@@ -140,13 +138,7 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
     private View.OnClickListener mRefreshWeatherOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (mINetworkStatus.isOnlineNetworkConnection()) {
-                mWeatherProgressBar.setVisibility(View.VISIBLE);
-                executeForecastDetailedWeatherTask();
-
-            } else {
-                mINetworkStatus.showOfflineNetworkAlertMessage();
-            }
+            executeForecastDetailedWeatherTask();
         }
     };
 
@@ -259,14 +251,7 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         mFourthDayTempDegree.setText(mUnitsFormat);
         mFifthDayTempDegree.setText(mUnitsFormat);
 
-        if (mINetworkStatus.isOnlineNetworkConnection()) {
-            mWeatherProgressBar.setVisibility(View.VISIBLE);
-
-            executeForecastDetailedWeatherTask();
-
-        } else {
-            mINetworkStatus.showOfflineNetworkAlertMessage();
-        }
+        executeForecastDetailedWeatherTask();
     }
 
     public static Location getLocation() {
@@ -306,8 +291,13 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
     }
 
     private void executeForecastDetailedWeatherTask() {
-        new ForecastDetailedWeatherTask(requireContext(),
-                this, mSelectedDay).execute(mLocation);
+        if (mINetworkStatus.isOnlineNetworkConnection()) {
+            mWeatherProgressBar.setVisibility(View.VISIBLE);
+            new ForecastDetailedWeatherTask(requireContext(),
+                    this, mSelectedDay).execute(mLocation);
+        } else {
+            mINetworkStatus.showOfflineNetworkAlertMessage();
+        }
     }
 
     private void updateForecastDaysName(List<WeatherDTO> weatherDTOList) {

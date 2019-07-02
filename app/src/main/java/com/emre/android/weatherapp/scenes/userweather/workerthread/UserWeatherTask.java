@@ -29,6 +29,11 @@ import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.Weath
 import com.emre.android.weatherapp.scenes.IUpdateWeather;
 import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
 
+/**
+ * @author Emre Üsküplü
+ *
+ * Executes task for fetch weather of user from api
+ */
 public class UserWeatherTask extends AsyncTask<Location, Void, WeatherDTO> {
     private static final String TAG = UserWeatherTask.class.getSimpleName();
 

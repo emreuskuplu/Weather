@@ -225,7 +225,9 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
                                     getActivity(), REQUEST_LOCATION);
 
                         } catch (IntentSender.SendIntentException e) {
-                            Log.e(TAG, e.getMessage());
+                            if (e.getMessage() != null) {
+                                Log.e(TAG, e.getMessage());
+                            }
                         }
                     }
                 }

@@ -28,8 +28,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
-        android:layout_toEndOf="@id/back_button"
-        android:gravity="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toStartOf="@+id/detailed_weather_row_one"
         app:layout_constraintStart_toEndOf="@+id/back_button"
@@ -42,7 +40,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:gravity="center"
         android:textColor="#B8B8B8"
         android:textStyle="italic"
         android:textSize="23sp"
@@ -56,7 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginTop="40dp"
-        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailed_day">
 
@@ -64,9 +60,9 @@
             android:id="@+id/weather_image"
             android:layout_width="160dp"
             android:layout_height="160dp"
+            android:src="@drawable/thermometer"
             android:contentDescription="@string/weather_image_is_not_set"
             android:focusable="true"
-            android:src="@drawable/thermometer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -77,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="31dp"
-            android:gravity="center"
             android:textSize="55sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/weather_image"
@@ -104,7 +99,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="60dp"
-        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/weather_temp_degree_layout"
         app:layout_constraintTop_toTopOf="parent">
@@ -113,9 +107,9 @@
             android:id="@+id/humidity_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:src="@drawable/humidity"
             android:contentDescription="@string/humidity"
             android:focusable="true"
-            android:src="@drawable/humidity"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -136,9 +130,9 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="10dp"
+            android:src="@drawable/wind"
             android:contentDescription="@string/wind_volume"
             android:focusable="true"
-            android:src="@drawable/wind"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/wind_volume"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -162,7 +156,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
-        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/weather_temp_degree_layout"
         app:layout_constraintTop_toBottomOf="@+id/detailed_weather_row_one">
@@ -171,9 +164,9 @@
             android:id="@+id/rain_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:src="@drawable/rain_volume"
             android:contentDescription="@string/rain_volume"
             android:focusable="true"
-            android:src="@drawable/rain_volume"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -194,9 +187,9 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginEnd="10dp"
+            android:src="@drawable/snow_volume"
             android:contentDescription="@string/snow_volume"
             android:focusable="true"
-            android:src="@drawable/snow_volume"
             app:layout_constraintEnd_toStartOf="@+id/snow_volume"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -221,7 +214,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/weather_temp_degree_layout"
@@ -232,16 +224,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/first_day_layout"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/first_day_date"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:textStyle="italic"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -253,18 +243,17 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="5dp"
-                android:contentDescription="@string/weather_image_is_not_set"
                 android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/first_day_date"/>
 
             <TextView
                 android:id="@+id/first_day_temp_degree"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -278,16 +267,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/second_day_layout"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/first_day_layout">
 
             <TextView
                 android:id="@+id/second_day_date"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:textStyle="italic"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -299,18 +286,17 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="5dp"
-                android:contentDescription="@string/weather_image_is_not_set"
                 android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/second_day_date"/>
 
             <TextView
                 android:id="@+id/second_day_temp_degree"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -324,16 +310,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/third_day_layout"
-            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/second_day_layout">
 
             <TextView
                 android:id="@+id/third_day_date"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:textStyle="italic"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -353,10 +337,9 @@
 
             <TextView
                 android:id="@+id/third_day_temp_degree"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -370,16 +353,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/fourth_day_layout"
-            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/third_day_layout">
 
             <TextView
                 android:id="@+id/fourth_day_date"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:textStyle="italic"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -399,10 +380,9 @@
 
             <TextView
                 android:id="@+id/fourth_day_temp_degree"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -416,7 +396,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/fifth_day_layout"
-            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -424,7 +403,7 @@
 
             <TextView
                 android:id="@+id/fifth_day_date"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textStyle="italic"
@@ -438,18 +417,17 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="5dp"
-                android:contentDescription="@string/weather_image_is_not_set"
                 android:src="@drawable/thermometer"
+                android:contentDescription="@string/weather_image_is_not_set"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fifth_day_date"/>
 
             <TextView
                 android:id="@+id/fifth_day_temp_degree"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -476,7 +454,6 @@
         android:id="@+id/refresh_weather_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

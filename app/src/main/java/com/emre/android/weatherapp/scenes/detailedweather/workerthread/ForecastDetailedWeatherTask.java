@@ -31,6 +31,11 @@ import com.emre.android.weatherapp.scenes.detailedweather.DetailedWeatherFragmen
 
 import java.util.List;
 
+/**
+ * @author Emre Üsküplü
+ *
+ * Executes task for fetch weather of forecast days from api
+ */
 public class ForecastDetailedWeatherTask extends AsyncTask<Location, Void, List<WeatherDTO>> {
     private static final String TAG = ForecastDetailedWeatherTask.class.getSimpleName();
 

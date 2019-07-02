@@ -90,7 +90,7 @@ public class MainWeatherActivityTest {
     }
 
     @Test
-    public void verifyIncomingUserWeatherDataOnView() {
+    public void verifyIncomingUserWeatherDataOnView() throws InterruptedException {
         if (isAvailableGooglePlayServices()) {
             if (isOnline()) {
                 if (hasLocationPermission()) {
@@ -103,6 +103,8 @@ public class MainWeatherActivityTest {
                         } else if (units.equals("fahrenheit")) {
                             mUnitsFormat = "°F";
                         }
+
+                        Thread.sleep(1000);
 
                         WeatherDTO weatherDTO = UserWeatherFragment.getUserWeatherDTO();
                         onView(withId(R.id.location_name)).check(matches(withText(weatherDTO.getLocationName())));

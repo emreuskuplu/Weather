@@ -21,7 +21,22 @@ import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.Weath
 
 import java.util.List;
 
+/**
+ * Emre Üsküplü
+ *
+ * Updates weather of user, bookmark list and forecast days
+ */
 public interface IUpdateWeather {
+
+    /**
+     * Updates weather of user
+     * @param weatherDTO values is fetched from api
+     */
     void updateWeather(WeatherDTO weatherDTO);
+
+    /**
+     * Updates weather of bookmark list and forecast days
+     * @param weatherDTOList values is fetched from api
+     */
     void updateListWeather(List<WeatherDTO> weatherDTOList);
 }
