@@ -1,13 +1,30 @@
+/*
+ * Copyright (c) 2019. Emre Üsküplü
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ */
+
 package com.emre.android.weatherapp;
 
 import android.location.Location;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import com.emre.android.weatherapp.dao.IWeatherDAO;
-import com.emre.android.weatherapp.dao.WeatherDAO;
-import com.emre.android.weatherapp.dao.WeatherDAOStub;
-import com.emre.android.weatherapp.dto.WeatherDTO;
+import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.IWeatherDAO;
+import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAO;
+import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAOStub;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +39,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 
+/**
+ * @author Emre Üsküplü
+ */
 @RunWith(RobolectricTestRunner.class)
 public class WeatherDAOTest {
 
@@ -102,8 +122,8 @@ public class WeatherDAOTest {
     }
 
     private void whenBookmarkWeatherListTaskExecuted() {
-        mWeatherDTOList = mIWeatherDAO.getBookmarkWeatherList(mWeatherDTOList);
-        mWeatherDTOListStub = mIWeatherDAOStub.getBookmarkWeatherList(mWeatherDTOList);
+        mWeatherDTOList = mIWeatherDAO.getBookmarkListWeather(mWeatherDTOList);
+        mWeatherDTOListStub = mIWeatherDAOStub.getBookmarkListWeather(mWeatherDTOList);
         System.out.println("Stub: " + mWeatherDTOList);
         System.out.println("Real: " + mWeatherDTOListStub);
     }
