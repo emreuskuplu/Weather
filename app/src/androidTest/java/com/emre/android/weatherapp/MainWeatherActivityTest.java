@@ -127,7 +127,7 @@ public class MainWeatherActivityTest {
     @Test
     public void clickUserWeatherTempDegreeLayoutAndVerifyDetailedWeatherFragment() {
         if (isOnline()) {
-            onView(withId(R.id.weather_temp_degree_layout)).perform(click());
+            onView(withId(R.id.weather_temp_degree_view)).perform(click());
             onView(withId(R.id.humidity_volume)).check(matches(isDisplayed()));
         } else {
             Assert.fail("User internet connection is offline for verify detailed weather fragment");

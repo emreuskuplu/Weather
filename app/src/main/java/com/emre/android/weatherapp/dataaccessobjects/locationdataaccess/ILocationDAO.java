@@ -35,22 +35,22 @@ public interface ILocationDAO {
      * @param latitude generated on map
      * @param longitude generated on map
      */
-    void LocationDbInserting(UUID id, Double latitude, Double longitude);
+    void locationDbInserting(UUID id, Double latitude, Double longitude);
 
     /**
      * Extract location data list
      * @return locations from database
      */
-    List<LocationDTO> LocationDbExtract();
+    List<LocationDTO> locationDbExtract();
 
     /**
      * Deletes a location data
      * @param uuid gets id
      */
-    void LocationDbDeleteLocationData(UUID uuid);
+    void locationDbDeleteLocationData(UUID uuid);
 
     /**
      * Deletes all location data
      */
-    void LocationDbDeleteAllLocationData();
+    void locationDbDeleteAllLocationData();
 }

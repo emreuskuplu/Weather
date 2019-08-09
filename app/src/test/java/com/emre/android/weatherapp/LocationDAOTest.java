@@ -17,6 +17,8 @@
 
 package com.emre.android.weatherapp;
 
+import android.os.Build;
+
 import androidx.test.core.app.ApplicationProvider;
 
 import com.emre.android.weatherapp.dataaccessobjects.locationdataaccess.ILocationDAO;
@@ -26,6 +28,7 @@ import com.emre.android.weatherapp.datatransferobjects.locationdatatransfer.Loca
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.P)
 public class LocationDAOTest {
 
     private ILocationDAO mILocationDAO;
@@ -83,16 +87,16 @@ public class LocationDAOTest {
     }
 
     private void whenInsertingAndGettingLocationValuesInDatabase() {
-        mILocationDAO.LocationDbInserting(UUID.randomUUID(), mExpectedLatitude, mExpectedLongitude);
-        mLocationDTOList = mILocationDAO.LocationDbExtract();
+        mILocationDAO.locationDbInserting(UUID.randomUUID(), mExpectedLatitude, mExpectedLongitude);
+        mLocationDTOList = mILocationDAO.locationDbExtract();
     }
 
     private void whenInsertingAndGettingLocationValuesListInDatabase() {
         for (int i = 0; i < 10; i++) {
-            mILocationDAO.LocationDbInserting(UUID.randomUUID(), mExpectedLatitudeList.get(i), mExpectedLongitudeList.get(i));
+            mILocationDAO.locationDbInserting(UUID.randomUUID(), mExpectedLatitudeList.get(i), mExpectedLongitudeList.get(i));
         }
 
-        mLocationDTOList = mILocationDAO.LocationDbExtract();
+        mLocationDTOList = mILocationDAO.locationDbExtract();
     }
 
     private void thenVerifyInsertedLocationValuesAndDeletingLocationValuesInDatabase() {
@@ -103,8 +107,8 @@ public class LocationDAOTest {
         assertThat(mExpectedLatitude, is(equalTo(actualLatitude)));
         assertThat(mExpectedLongitude, is(equalTo(actualLongitude)));
 
-        mILocationDAO.LocationDbDeleteLocationData(locationDTO.getId());
-        mLocationDTOList = mILocationDAO.LocationDbExtract();
+        mILocationDAO.locationDbDeleteLocationData(locationDTO.getId());
+        mLocationDTOList = mILocationDAO.locationDbExtract();
 
         assertThat(mLocationDTOList, is(empty()));
     }
@@ -119,8 +123,8 @@ public class LocationDAOTest {
             assertThat(mExpectedLongitudeList.get(i), is(equalTo(actualLongitude)));
         }
 
-        mILocationDAO.LocationDbDeleteAllLocationData();
-        mLocationDTOList = mILocationDAO.LocationDbExtract();
+        mILocationDAO.locationDbDeleteAllLocationData();
+        mLocationDTOList = mILocationDAO.locationDbExtract();
 
         assertThat(mLocationDTOList, is(empty()));
     }

@@ -20,7 +20,6 @@ package com.emre.android.weatherapp.scenes.detailedweather;
 import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,23 +83,23 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
     private ImageButton mRefreshWeatherButton;
     private ProgressBar mWeatherProgressBar;
 
-    private ConstraintLayout mFirstDayLayout;
+    private View mFirstDayView;
     private TextView mFirstDayName;
     private ImageView mFirstDayWeatherImage;
     private TextView mFirstDayTempDegree;
-    private ConstraintLayout mSecondDayLayout;
+    private View mSecondDayView;
     private TextView mSecondDayName;
     private ImageView mSecondDayWeatherImage;
     private TextView mSecondDayTempDegree;
-    private ConstraintLayout mThirdDayLayout;
+    private View mThirdDayView;
     private TextView mThirdDayName;
     private ImageView mThirdDayWeatherImage;
     private TextView mThirdDayTempDegree;
-    private ConstraintLayout mFourthDayLayout;
+    private View mFourthDayView;
     private TextView mFourthDayName;
     private ImageView mFourthDayWeatherImage;
     private TextView mFourthDayTempDegree;
-    private ConstraintLayout mFifthDayLayout;
+    private View mFifthDayView;
     private TextView mFifthDayName;
     private ImageView mFifthDayWeatherImage;
     private TextView mFifthDayTempDegree;
@@ -110,15 +109,15 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         public void onClick(View view) {
             Object tag = view.getTag();
 
-            if (tag.equals(mFirstDayLayout.getTag())) {
+            if (tag.equals(mFirstDayView.getTag())) {
                 mSelectedDay = 0;
-            } else if (tag.equals(mSecondDayLayout.getTag())) {
+            } else if (tag.equals(mSecondDayView.getTag())) {
                 mSelectedDay = 1;
-            } else if (tag.equals(mThirdDayLayout.getTag())) {
+            } else if (tag.equals(mThirdDayView.getTag())) {
                 mSelectedDay = 2;
-            } else if (tag.equals(mFourthDayLayout.getTag())) {
+            } else if (tag.equals(mFourthDayView.getTag())) {
                 mSelectedDay = 3;
-            } else if (tag.equals(mFifthDayLayout.getTag())) {
+            } else if (tag.equals(mFifthDayView.getTag())) {
                 mSelectedDay = 4;
             }
 
@@ -191,38 +190,38 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         mRefreshWeatherButton = v.findViewById(R.id.refresh_weather_button);
         mWeatherProgressBar = v.findViewById(R.id.weather_progress_bar);
 
-        mFirstDayLayout = v.findViewById(R.id.first_day_layout);
+        mFirstDayView = v.findViewById(R.id.first_day_view);
         mFirstDayName = v.findViewById(R.id.first_day_date);
         mFirstDayWeatherImage = v.findViewById(R.id.first_day_weather_image);
         mFirstDayTempDegree = v.findViewById(R.id.first_day_temp_degree);
-        mSecondDayLayout = v.findViewById(R.id.second_day_layout);
+        mSecondDayView = v.findViewById(R.id.second_day_view);
         mSecondDayName = v.findViewById(R.id.second_day_date);
         mSecondDayWeatherImage = v.findViewById(R.id.second_day_weather_image);
         mSecondDayTempDegree = v.findViewById(R.id.second_day_temp_degree);
-        mThirdDayLayout = v.findViewById(R.id.third_day_layout);
+        mThirdDayView = v.findViewById(R.id.third_day_view);
         mThirdDayName = v.findViewById(R.id.third_day_date);
         mThirdDayWeatherImage = v.findViewById(R.id.third_day_weather_image);
         mThirdDayTempDegree = v.findViewById(R.id.third_day_temp_degree);
-        mFourthDayLayout = v.findViewById(R.id.fourth_day_layout);
+        mFourthDayView = v.findViewById(R.id.fourth_day_view);
         mFourthDayName = v.findViewById(R.id.fourth_day_date);
         mFourthDayWeatherImage = v.findViewById(R.id.fourth_day_weather_image);
         mFourthDayTempDegree = v.findViewById(R.id.fourth_day_temp_degree);
-        mFifthDayLayout = v.findViewById(R.id.fifth_day_layout);
+        mFifthDayView = v.findViewById(R.id.fifth_day_view);
         mFifthDayName = v.findViewById(R.id.fifth_day_date);
         mFifthDayWeatherImage = v.findViewById(R.id.fifth_day_weather_image);
         mFifthDayTempDegree = v.findViewById(R.id.fifth_day_temp_degree);
 
-        mFirstDayLayout.setTag(mFirstDayLayout);
-        mSecondDayLayout.setTag(mSecondDayLayout);
-        mThirdDayLayout.setTag(mThirdDayLayout);
-        mFourthDayLayout.setTag(mFourthDayLayout);
-        mFifthDayLayout.setTag(mFifthDayLayout);
+        mFirstDayView.setTag(mFirstDayView);
+        mSecondDayView.setTag(mSecondDayView);
+        mThirdDayView.setTag(mThirdDayView);
+        mFourthDayView.setTag(mFourthDayView);
+        mFifthDayView.setTag(mFifthDayView);
 
-        mFirstDayLayout.setOnClickListener(mDayLayoutOnClickListener);
-        mSecondDayLayout.setOnClickListener(mDayLayoutOnClickListener);
-        mThirdDayLayout.setOnClickListener(mDayLayoutOnClickListener);
-        mFourthDayLayout.setOnClickListener(mDayLayoutOnClickListener);
-        mFifthDayLayout.setOnClickListener(mDayLayoutOnClickListener);
+        mFirstDayView.setOnClickListener(mDayLayoutOnClickListener);
+        mSecondDayView.setOnClickListener(mDayLayoutOnClickListener);
+        mThirdDayView.setOnClickListener(mDayLayoutOnClickListener);
+        mFourthDayView.setOnClickListener(mDayLayoutOnClickListener);
+        mFifthDayView.setOnClickListener(mDayLayoutOnClickListener);
 
         mBackButton.setOnClickListener(mBackButtonOnClickListener);
         mRefreshWeatherButton.setOnClickListener(mRefreshWeatherOnClickListener);
