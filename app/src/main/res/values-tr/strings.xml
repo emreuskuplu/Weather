@@ -69,11 +69,6 @@
     <string name="wind_volume">Rüzgar oranı</string>
     <string name="rain_volume">Yağış oranı</string>
     <string name="snow_volume">Kar oranı</string>
-    <string name="first_day_layout">İlk gün</string>
-    <string name="second_day_layout">İkinci gün</string>
-    <string name="third_day_layout">Üçüncü gün</string>
-    <string name="fourth_day_layout">Dördüncü gün</string>
-    <string name="fifth_day_layout">Beşinci gün</string>
     <string name="refresh_weather">Hava durumunu yenile</string>
     <string name="back_button">Önceki sayfaya dön</string>
     <string name="warning">Uyarı</string>

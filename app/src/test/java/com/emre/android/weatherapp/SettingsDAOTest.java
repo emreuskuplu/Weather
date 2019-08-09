@@ -18,6 +18,7 @@
 package com.emre.android.weatherapp;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -27,6 +28,7 @@ import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.Settings
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Emre Üsküplü
  */
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.P)
 public class SettingsDAOTest {
 
     private Context mContext = ApplicationProvider.getApplicationContext();

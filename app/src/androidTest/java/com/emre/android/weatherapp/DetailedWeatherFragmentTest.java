@@ -72,7 +72,7 @@ public class DetailedWeatherFragmentTest {
     public void verifyLocationDTOInWeatherListFragmentMatchesLocationDTOInDetailedWeatherFragment() {
         Location weatherListFragmentLocation = UserWeatherFragment.getUserLocation();
 
-        onView(withId(R.id.weather_temp_degree_layout)).perform(click());
+        onView(withId(R.id.weather_temp_degree_view)).perform(click());
 
         Location detailedWeatherFragmentLocationDTO = DetailedWeatherFragment.getLocation();
 
@@ -84,33 +84,33 @@ public class DetailedWeatherFragmentTest {
     public void doubleVerifyIncomingWeatherListDTOWithRefreshWeatherButton() {
         int selectedDay;
 
-        onView(withId(R.id.weather_temp_degree_layout)).perform(click());
+        onView(withId(R.id.weather_temp_degree_view)).perform(click());
 
         for (int i = 0; i < 2; i++) {
             selectedDay = DetailedWeatherFragment.getSelectedDay();
             verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
-            onView(withId(R.id.first_day_layout)).perform(click());
+            onView(withId(R.id.first_day_view)).perform(click());
 
             selectedDay = DetailedWeatherFragment.getSelectedDay();
             verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
-            onView(withId(R.id.second_day_layout)).perform(click());
+            onView(withId(R.id.second_day_view)).perform(click());
 
             selectedDay = DetailedWeatherFragment.getSelectedDay();
             verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
-            onView(withId(R.id.third_day_layout)).perform(click());
+            onView(withId(R.id.third_day_view)).perform(click());
 
             selectedDay = DetailedWeatherFragment.getSelectedDay();
             verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
-            onView(withId(R.id.fourth_day_layout)).perform(click());
+            onView(withId(R.id.fourth_day_view)).perform(click());
 
             selectedDay = DetailedWeatherFragment.getSelectedDay();
             verifyDetailedWeatherDTOOfFiveDays(selectedDay);
 
-            onView(withId(R.id.fifth_day_layout)).perform(click());
+            onView(withId(R.id.fifth_day_view)).perform(click());
 
             selectedDay = DetailedWeatherFragment.getSelectedDay();
             verifyDetailedWeatherDTOOfFiveDays(selectedDay);
@@ -121,7 +121,7 @@ public class DetailedWeatherFragmentTest {
 
     @Test
     public void clickBackButtonAndVerifyWeatherListFragment() {
-        onView(withId(R.id.weather_temp_degree_layout)).perform(click());
+        onView(withId(R.id.weather_temp_degree_view)).perform(click());
         onView(withId(R.id.back_button)).perform(click());
         onView(withId(R.id.weather_list_recycler_view)).check(matches(isDisplayed()));
     }

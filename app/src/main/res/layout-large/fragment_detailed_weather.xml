@@ -4,424 +4,377 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/location_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:textSize="30sp"
+        android:textSize="@dimen/location_name_text_size"
+        app:layout_constraintBottom_toTopOf="@id/detailed_day"
         app:layout_constraintEnd_toStartOf="@+id/refresh_weather_button"
         app:layout_constraintStart_toEndOf="@+id/back_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/detailed_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         android:textColor="#B8B8B8"
         android:textStyle="italic"
-        android:textSize="23sp"
+        android:textSize="@dimen/detailed_day_text_size"
+        app:layout_constraintBottom_toTopOf="@id/weather_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location_name" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/weather_temp_degree_layout"
-        android:layout_width="340dp"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/weather_image"
+        android:layout_width="@dimen/weather_image_width"
+        android:layout_height="@dimen/weather_image_height"
+        android:contentDescription="@string/weather_image_is_not_set"
+        android:focusable="true"
+        android:src="@drawable/thermometer"
+        app:layout_constraintBottom_toTopOf="@id/description"
+        app:layout_constraintEnd_toStartOf="@id/temp_degree"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/humidity_image"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_day" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/temp_degree"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_day">
+        android:layout_marginStart="30dp"
+        android:textSize="@dimen/temp_degree_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/weather_image"
+        app:layout_constraintStart_toEndOf="@+id/weather_image"
+        app:layout_constraintTop_toTopOf="@id/weather_image"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <ImageView
-            android:id="@+id/weather_image"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:src="@drawable/thermometer"
-            android:contentDescription="@string/weather_image_is_not_set"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/temp_degree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="31dp"
-            android:textSize="55sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/weather_image"
-            app:layout_constraintTop_toTopOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="30dp"
         android:layout_marginEnd="8dp"
-        android:textSize="23sp"
+        android:textSize="@dimen/description_text_size"
+        app:layout_constraintBottom_toTopOf="@id/humidity_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weather_temp_degree_layout" />
+        app:layout_constraintTop_toBottomOf="@id/weather_image" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/detailed_weather_row_one"
-        android:layout_width="340dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/humidity_image"
+        android:layout_width="@dimen/volume_image_width"
+        android:layout_height="@dimen/volume_image_height"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/humidity"
+        android:focusable="true"
+        android:src="@drawable/humidity"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@id/rain_image"
+        app:layout_constraintEnd_toStartOf="@+id/humidity_volume"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description">
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
-        <ImageView
-            android:id="@+id/humidity_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/humidity"
-            android:contentDescription="@string/humidity"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/humidity_volume"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/default_volume"
-            android:textSize="40sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/humidity_image"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <ImageView
-            android:id="@+id/wind_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/wind"
-            android:contentDescription="@string/wind_volume"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/wind_volume"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/wind_volume"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/default_volume"
-            android:textSize="40sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/detailed_weather_row_two"
-        android:layout_width="340dp"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/humidity_volume"
+        android:layout_width="@dimen/volume_text_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_weather_row_one">
+        android:layout_marginStart="24dp"
+        android:text="@string/default_volume"
+        android:textSize="@dimen/volume_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/humidity_image"
+        app:layout_constraintEnd_toStartOf="@+id/wind_image"
+        app:layout_constraintStart_toEndOf="@+id/humidity_image"
+        app:layout_constraintTop_toTopOf="@id/humidity_image" />
 
-        <ImageView
-            android:id="@+id/rain_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/rain_volume"
-            android:contentDescription="@string/rain_volume"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/wind_image"
+        android:layout_width="@dimen/volume_image_width"
+        android:layout_height="@dimen/volume_image_height"
+        android:layout_marginStart="24dp"
+        android:contentDescription="@string/wind_volume"
+        android:focusable="true"
+        android:src="@drawable/wind"
+        app:layout_constraintBottom_toBottomOf="@id/humidity_volume"
+        app:layout_constraintEnd_toStartOf="@+id/wind_volume"
+        app:layout_constraintStart_toEndOf="@+id/humidity_volume"
+        app:layout_constraintTop_toTopOf="@id/humidity_volume" />
 
-        <TextView
-            android:id="@+id/rain_volume"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/default_volume"
-            android:textSize="40sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rain_image"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <ImageView
-            android:id="@+id/snow_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/snow_volume"
-            android:contentDescription="@string/snow_volume"
-            android:focusable="true"
-            app:layout_constraintEnd_toStartOf="@+id/snow_volume"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/snow_volume"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/default_volume"
-            android:textSize="40sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="400dp"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/wind_volume"
+        android:layout_width="@dimen/volume_text_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/default_volume"
+        android:textSize="@dimen/volume_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/wind_image"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/wind_image"
+        app:layout_constraintTop_toTopOf="@id/wind_image" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/rain_image"
+        android:layout_width="@dimen/volume_image_width"
+        android:layout_height="@dimen/volume_image_height"
+        android:contentDescription="@string/rain_volume"
+        android:focusable="true"
+        android:src="@drawable/rain_volume"
+        app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="@+id/humidity_image"
+        app:layout_constraintStart_toStartOf="@+id/humidity_image"
+        app:layout_constraintTop_toBottomOf="@id/humidity_image" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/rain_volume"
+        android:layout_width="@dimen/volume_text_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/default_volume"
+        android:textSize="@dimen/volume_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/rain_image"
+        app:layout_constraintStart_toEndOf="@+id/rain_image"
+        app:layout_constraintTop_toBottomOf="@id/humidity_image"
+        app:layout_constraintTop_toTopOf="@id/rain_image" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/snow_image"
+        android:layout_width="@dimen/volume_image_width"
+        android:layout_height="@dimen/volume_image_height"
+        android:layout_marginStart="24dp"
+        android:contentDescription="@string/snow_volume"
+        android:focusable="true"
+        android:src="@drawable/snow_volume"
+        app:layout_constraintBottom_toBottomOf="@id/rain_volume"
+        app:layout_constraintStart_toEndOf="@+id/rain_volume"
+        app:layout_constraintTop_toTopOf="@id/rain_volume" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/snow_volume"
+        android:layout_width="@dimen/volume_text_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/default_volume"
+        android:textSize="@dimen/volume_text_size"
+        app:layout_constraintBottom_toBottomOf="@id/snow_image"
+        app:layout_constraintStart_toEndOf="@+id/snow_image"
+        app:layout_constraintTop_toBottomOf="@id/wind_image"
+        app:layout_constraintTop_toTopOf="@id/snow_image" />
+
+    <View
+        android:id="@+id/first_day_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/first_day_temp_degree"
+        app:layout_constraintEnd_toEndOf="@id/first_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/first_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/first_day_date"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/first_day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="@id/first_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/first_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintBottom_toTopOf="@id/first_day_weather_image"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/first_day_weather_image"
+        android:layout_width="@dimen/day_weather_image_width"
+        android:layout_height="@dimen/day_weather_image_height"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/weather_image_is_not_set"
+        android:src="@drawable/thermometer"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_weather_row_two">
+        app:layout_constraintTop_toBottomOf="@id/first_day_date"
+        app:layout_constraintBottom_toTopOf="@id/first_day_temp_degree"
+        app:layout_constraintEnd_toStartOf="@id/second_day_weather_image"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/first_day_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/first_day_layout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/first_day_temp_degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/first_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/first_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/first_day_weather_image"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <TextView
-                android:id="@+id/first_day_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="italic"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+    <View
+        android:id="@+id/second_day_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/second_day_temp_degree"
+        app:layout_constraintEnd_toEndOf="@id/second_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/second_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/second_day_date" />
 
-            <ImageView
-                android:id="@+id/first_day_weather_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/thermometer"
-                android:contentDescription="@string/weather_image_is_not_set"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/first_day_date"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/second_day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/second_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/second_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/first_day_date" />
 
-            <TextView
-                android:id="@+id/first_day_temp_degree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/first_day_weather_image"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/second_day_weather_image"
+        android:layout_width="@dimen/day_weather_image_width"
+        android:layout_height="@dimen/day_weather_image_height"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/weather_image_is_not_set"
+        android:src="@drawable/thermometer"
+        app:layout_constraintStart_toEndOf="@id/first_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/second_day_date"
+        app:layout_constraintEnd_toStartOf="@id/third_day_weather_image"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/second_day_temp_degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/second_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/second_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/second_day_weather_image" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/second_day_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/second_day_layout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/first_day_layout">
+    <View
+        android:id="@+id/third_day_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/third_day_temp_degree"
+        app:layout_constraintEnd_toEndOf="@id/third_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/third_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/third_day_date" />
 
-            <TextView
-                android:id="@+id/second_day_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="italic"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/third_day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/third_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/third_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/second_day_date" />
 
-            <ImageView
-                android:id="@+id/second_day_weather_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/thermometer"
-                android:contentDescription="@string/weather_image_is_not_set"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/second_day_date"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/third_day_weather_image"
+        android:layout_width="@dimen/day_weather_image_width"
+        android:layout_height="@dimen/day_weather_image_height"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/weather_image_is_not_set"
+        android:src="@drawable/thermometer"
+        app:layout_constraintStart_toEndOf="@id/second_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/third_day_date"
+        app:layout_constraintEnd_toStartOf="@id/fourth_day_weather_image"/>
 
-            <TextView
-                android:id="@+id/second_day_temp_degree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/second_day_weather_image"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/third_day_temp_degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/third_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/third_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/third_day_weather_image" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/fourth_day_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/fourth_day_temp_degree"
+        app:layout_constraintEnd_toEndOf="@id/fourth_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/fourth_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/fourth_day_date" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/third_day_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/third_day_layout"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/second_day_layout">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fourth_day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/fourth_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/fourth_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/third_day_date" />
 
-            <TextView
-                android:id="@+id/third_day_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="italic"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fourth_day_weather_image"
+        android:layout_width="@dimen/day_weather_image_width"
+        android:layout_height="@dimen/day_weather_image_height"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/weather_image_is_not_set"
+        android:src="@drawable/thermometer"
+        app:layout_constraintStart_toEndOf="@id/third_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/fourth_day_date"
+        app:layout_constraintEnd_toStartOf="@id/fifth_day_weather_image"/>
 
-            <ImageView
-                android:id="@+id/third_day_weather_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/thermometer"
-                android:contentDescription="@string/weather_image_is_not_set"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/third_day_date"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fourth_day_temp_degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/fourth_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/fourth_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/fourth_day_weather_image" />
 
-            <TextView
-                android:id="@+id/third_day_temp_degree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/third_day_weather_image"/>
+    <View
+        android:id="@+id/fifth_day_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/fifth_day_temp_degree"
+        app:layout_constraintEnd_toEndOf="@id/fifth_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/fifth_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/fifth_day_date" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fifth_day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/fifth_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/fifth_day_weather_image"
+        app:layout_constraintTop_toTopOf="@id/fourth_day_date" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fourth_day_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/fourth_day_layout"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/third_day_layout">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fifth_day_weather_image"
+        android:layout_width="@dimen/day_weather_image_width"
+        android:layout_height="@dimen/day_weather_image_height"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/weather_image_is_not_set"
+        android:src="@drawable/thermometer"
+        app:layout_constraintStart_toEndOf="@id/fourth_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/fifth_day_date"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-            <TextView
-                android:id="@+id/fourth_day_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="italic"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fifth_day_temp_degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/day_text_size"
+        app:layout_constraintEnd_toEndOf="@id/fifth_day_weather_image"
+        app:layout_constraintStart_toStartOf="@id/fifth_day_weather_image"
+        app:layout_constraintTop_toBottomOf="@id/fifth_day_weather_image" />
 
-            <ImageView
-                android:id="@+id/fourth_day_weather_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/thermometer"
-                android:contentDescription="@string/weather_image_is_not_set"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fourth_day_date"/>
-
-            <TextView
-                android:id="@+id/fourth_day_temp_degree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fourth_day_weather_image"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fifth_day_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/fifth_day_layout"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/fourth_day_layout">
-
-            <TextView
-                android:id="@+id/fifth_day_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="italic"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <ImageView
-                android:id="@+id/fifth_day_weather_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/thermometer"
-                android:contentDescription="@string/weather_image_is_not_set"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fifth_day_date"/>
-
-            <TextView
-                android:id="@+id/fifth_day_temp_degree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fifth_day_weather_image"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/back_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/image_button_width"
+        android:layout_height="@dimen/image_button_height"
         android:layout_margin="10dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -430,10 +383,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/refresh_weather_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/image_button_width"
+        android:layout_height="@dimen/image_button_height"
         android:layout_margin="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -451,5 +404,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

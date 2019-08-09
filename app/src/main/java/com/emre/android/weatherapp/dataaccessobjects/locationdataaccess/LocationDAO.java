@@ -52,7 +52,7 @@ public class LocationDAO implements ILocationDAO {
     }
 
     @Override
-    public void LocationDbInserting(UUID id, Double latitude, Double longitude) {
+    public void locationDbInserting(UUID id, Double latitude, Double longitude) {
         ContentValues values = new ContentValues();
         values.put(LocationTable.Cols.UUID, id.toString());
         values.put(LocationTable.Cols.LATITUDE, latitude);
@@ -62,7 +62,7 @@ public class LocationDAO implements ILocationDAO {
     }
 
     @Override
-    public List<LocationDTO> LocationDbExtract() {
+    public List<LocationDTO> locationDbExtract() {
         List<LocationDTO> locationList = new ArrayList<>();
 
         try (LocationDbCursorWrapper cursor = queryLocations()) {
@@ -77,7 +77,7 @@ public class LocationDAO implements ILocationDAO {
     }
 
     @Override
-    public void LocationDbDeleteLocationData(UUID uuid) {
+    public void locationDbDeleteLocationData(UUID uuid) {
         String uuidString = uuid.toString();
 
         mDatabase.delete(LocationTable.NAME,
@@ -86,7 +86,7 @@ public class LocationDAO implements ILocationDAO {
     }
 
     @Override
-    public void LocationDbDeleteAllLocationData() {
+    public void locationDbDeleteAllLocationData() {
         mDatabase.delete(LocationTable.NAME,
                 null, null);
     }

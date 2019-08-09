@@ -16,13 +16,13 @@
   ~
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="220dp"
     android:background="@drawable/border_shape">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -40,7 +40,7 @@
         android:numStars="5">
     </androidx.appcompat.widget.AppCompatRatingBar>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/send_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,4 +51,4 @@
         android:textColor="@color/colorAccent"
         android:layout_gravity="center"/>
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -18,6 +18,7 @@
 package com.emre.android.weatherapp;
 
 import android.location.Location;
+import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -29,6 +30,7 @@ import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.Weath
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ import static org.junit.Assert.fail;
  * @author Emre Üsküplü
  */
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.P)
 public class WeatherDAOTest {
 
     private IWeatherDAO mIWeatherDAO;
