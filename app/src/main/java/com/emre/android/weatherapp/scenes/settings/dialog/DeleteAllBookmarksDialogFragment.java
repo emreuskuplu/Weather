@@ -58,7 +58,7 @@ public class DeleteAllBookmarksDialogFragment extends DialogFragment {
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locationDAO.LocationDbDeleteAllLocationData();
+                locationDAO.locationDbDeleteAllLocationData();
                 showAllBookmarksDeletedToast();
 
                 if (getDialog() != null) {

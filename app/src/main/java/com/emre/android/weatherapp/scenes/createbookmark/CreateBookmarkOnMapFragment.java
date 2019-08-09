@@ -138,7 +138,7 @@ public class CreateBookmarkOnMapFragment extends Fragment {
     }
 
     private void setBookmarksFromList() {
-        List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
+        List<LocationDTO> locationDTOList = mLocationDAO.locationDbExtract();
         List<LatLng> latLngList = new ArrayList<>();
         double latitude;
         double longitude;
@@ -171,7 +171,7 @@ public class CreateBookmarkOnMapFragment extends Fragment {
         public void onMapLongClick(LatLng latLng) {
             sLatLng = latLng;
 
-            mLocationDAO.LocationDbInserting(UUID.randomUUID(), latLng.latitude, latLng.longitude);
+            mLocationDAO.locationDbInserting(UUID.randomUUID(), latLng.latitude, latLng.longitude);
             Log.i(TAG, "New location is inserted to database (" +
                     latLng.latitude + " " + latLng.longitude + ")");
 

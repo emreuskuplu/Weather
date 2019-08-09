@@ -26,7 +26,7 @@
         android:layout_height="match_parent">
     </com.google.android.gms.maps.MapView>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/hint_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,10 +36,10 @@
         android:background="#FBFBFB"
         android:textSize="20sp"/>
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/back_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/image_button_width"
+        android:layout_height="@dimen/image_button_height"
         android:layout_below="@+id/hint_message"
         android:background="@drawable/orange_button_shaped"
         android:layout_margin="10dp"

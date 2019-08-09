@@ -24,7 +24,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
@@ -87,7 +86,7 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
     private SettingsDAO mSettingsDAO;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private ConstraintLayout mTempDegreeLayout;
+    private View mTempDegreeView;
     private ImageView mWeatherImageView;
     private TextView mLocationName;
     private TextView mTempDegree;
@@ -145,14 +144,14 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_weather, viewGroup, false);
 
-        mTempDegreeLayout = v.findViewById(R.id.weather_temp_degree_layout);
+        mTempDegreeView = v.findViewById(R.id.weather_temp_degree_view);
         mLocationName = v.findViewById(R.id.location_name);
         mWeatherImageView = v.findViewById(R.id.weather_image);
         mTempDegree = v.findViewById(R.id.temp_degree);
         mDescription = v.findViewById(R.id.description);
         mWeatherProgressBar = v.findViewById(R.id.weather_progress_bar);
 
-        mTempDegreeLayout.setOnClickListener(weatherTempDegreeLayoutClickListener);
+        mTempDegreeView.setOnClickListener(weatherTempDegreeLayoutClickListener);
 
         return v;
     }

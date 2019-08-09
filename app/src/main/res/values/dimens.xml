@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TEXT VIEW DIMENSIONS -->
+    <dimen name="location_name_text_size">20sp</dimen>
+    <dimen name="list_item_text_size">20sp</dimen>
+    <dimen name="temp_degree_text_size">40sp</dimen>
+    <dimen name="description_text_size">15sp</dimen>
+    <dimen name="volume_text_width">60dp</dimen>
+    <dimen name="volume_text_size">30sp</dimen>
+
+    <!-- IMAGE VIEW DIMENSIONS -->
+    <dimen name="weather_image_width">120dp</dimen>
+    <dimen name="weather_image_height">120dp</dimen>
+    <dimen name="list_item_weather_image_width">40dp</dimen>
+    <dimen name="list_item_weather_image_height">40dp</dimen>
+    <dimen name="volume_image_width">60dp</dimen>
+    <dimen name="volume_image_height">60dp</dimen>
+    <dimen name="day_weather_image_width">60dp</dimen>
+    <dimen name="day_weather_image_height">60dp</dimen>
+    <dimen name="chevron_image_width">30dp</dimen>
+    <dimen name="chevron_image_height">30dp</dimen>
+
+    <!-- IMAGE BUTTON DIMENSIONS -->
+    <dimen name="image_button_width">40dp</dimen>
+    <dimen name="image_button_height">40dp</dimen>
+</resources>

@@ -141,7 +141,7 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
                     showDeletedBookmarkToast(locationName);
 
                     mLocationDAO.
-                            LocationDbDeleteLocationData(weatherDTO.getLocationDTOId());
+                            locationDbDeleteLocationData(weatherDTO.getLocationDTOId());
 
                     sWeatherDTOList.remove(position);
                     mWeatherAdapter.notifyDataSetChanged();
@@ -225,7 +225,7 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
      * Executes bookmark list weather task with weather list
      */
     private void executeWeatherListTask() {
-        List<LocationDTO> locationDTOList = mLocationDAO.LocationDbExtract();
+        List<LocationDTO> locationDTOList = mLocationDAO.locationDbExtract();
         sLocationDTOList = locationDTOList;
 
         WeatherDTOListBookmark weatherDTOListBookmark = getWeatherDTOListBookmark(locationDTOList);
