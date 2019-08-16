@@ -25,9 +25,10 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
-import com.emre.android.weatherapp.scenes.IUpdateWeather;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
 import com.emre.android.weatherapp.scenes.detailedweather.DetailedWeatherFragment;
+import com.emre.android.weatherapp.scenes.detailedweather.IUpdateDetailedWeather;
+import com.emre.android.weatherapp.scenes.detailedweather.IUpdateForecastDayListWeather;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ import java.util.List;
  *
  * Executes task for fetch weather of forecast days from api
  */
-public class ForecastDetailedWeatherTask extends AsyncTask<Location, Void, List<WeatherDTO>> {
+public class ForecastDetailedWeatherTask extends AsyncTask<Location, Void, List<DetailedWeatherDTO>> {
     private static final String TAG = ForecastDetailedWeatherTask.class.getSimpleName();
 
     private Context mDetailedWeatherContext;
@@ -52,20 +53,22 @@ public class ForecastDetailedWeatherTask extends AsyncTask<Location, Void, List<
     }
 
     @Override
-    protected List<WeatherDTO> doInBackground(Location... locations) {
-        return new WeatherDAO(mDetailedWeatherContext).getForecastDetailedWeatherList(locations[0]);
+    protected List<DetailedWeatherDTO> doInBackground(Location... locations) {
+        return new WeatherDAO(mDetailedWeatherContext).getDetailedWeatherList(locations[0]);
     }
 
     @Override
-    protected void onPostExecute(List<WeatherDTO> result) {
+    protected void onPostExecute(List<DetailedWeatherDTO> result) {
         Log.i(TAG, "is executed");
 
         if (!result.isEmpty()) {
-            WeatherDTO selectedDayWeatherDTO = result.get(mSelectedDay);
+            DetailedWeatherDTO selectedDayWeatherDTO = result.get(mSelectedDay);
 
-            IUpdateWeather iUpdateWeather = (DetailedWeatherFragment) mDetailedWeatherFragment;
-            iUpdateWeather.updateWeather(selectedDayWeatherDTO);
-            iUpdateWeather.updateListWeather(result);
+            IUpdateDetailedWeather iUpdateDetailedWeather = (DetailedWeatherFragment) mDetailedWeatherFragment;
+            iUpdateDetailedWeather.updateDetailedWeather(selectedDayWeatherDTO);
+
+            IUpdateForecastDayListWeather iUpdateForecastDayListWeather = (DetailedWeatherFragment) mDetailedWeatherFragment;
+            iUpdateForecastDayListWeather.updateForecastDayListWeather(result);
         }
     }
 }

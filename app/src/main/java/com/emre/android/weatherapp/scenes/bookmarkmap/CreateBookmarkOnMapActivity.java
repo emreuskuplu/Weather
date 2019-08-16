@@ -15,7 +15,7 @@
  *
  */
 
-package com.emre.android.weatherapp.scenes.createbookmark;
+package com.emre.android.weatherapp.scenes.bookmarkmap;
 
 import android.app.Dialog;
 import android.content.Context;

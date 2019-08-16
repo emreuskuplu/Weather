@@ -34,7 +34,8 @@ import android.util.Log;
 
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.ISettingsDAO;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 import com.emre.android.weatherapp.scenes.bookmarklistweather.BookmarkListWeatherFragment;
 import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
 import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
@@ -91,36 +92,22 @@ public class MainWeatherActivityTest {
 
     @Test
     public void verifyIncomingUserWeatherDataOnView() throws InterruptedException {
-        if (isAvailableGooglePlayServices()) {
-            if (isOnline()) {
-                if (hasLocationPermission()) {
-                    if (isDeviceLocationActive()) {
-                        mISettingsDAO = new SettingsDAO();
-                        String units = mISettingsDAO.getPrefUnitsFormatStorage(mAppContext);
+        if (isProvidingNecessaryConditionsOfDeviceLocation()) {
+            mISettingsDAO = new SettingsDAO();
+            String units = mISettingsDAO.getPrefUnitsFormatStorage(mAppContext);
 
-                        if (units.equals("metric")) {
-                            mUnitsFormat = "°C";
-                        } else if (units.equals("fahrenheit")) {
-                            mUnitsFormat = "°F";
-                        }
-
-                        Thread.sleep(1000);
-
-                        WeatherDTO weatherDTO = UserWeatherFragment.getUserWeatherDTO();
-                        onView(withId(R.id.location_name)).check(matches(withText(weatherDTO.getLocationName())));
-                        onView(withId(R.id.temp_degree)).check(matches(withText(weatherDTO.getTempDegree() + mUnitsFormat)));
-                        onView(withId(R.id.description)).check(matches(withText(weatherDTO.getDescription())));
-                    } else {
-                        Assert.fail("Device location is not active for get user location");
-                    }
-                } else {
-                    Assert.fail("Location permissions is not available for get user location");
-                }
-            } else {
-                Assert.fail("User internet connection is offline for get userWeatherDTO data");
+            if (units.equals("metric")) {
+                mUnitsFormat = "°C";
+            } else if (units.equals("fahrenheit")) {
+                mUnitsFormat = "°F";
             }
-        } else {
-            Assert.fail("Google play services is not available for get user location");
+
+            Thread.sleep(1000);
+
+            UserWeatherDTO userWeatherDTO = UserWeatherFragment.getUserWeatherDTO();
+            onView(withId(R.id.location_name)).check(matches(withText(userWeatherDTO.getLocationName())));
+            onView(withId(R.id.temp_degree)).check(matches(withText(userWeatherDTO.getTempDegree() + mUnitsFormat)));
+            onView(withId(R.id.description)).check(matches(withText(userWeatherDTO.getDescription())));
         }
     }
 
@@ -136,13 +123,13 @@ public class MainWeatherActivityTest {
 
     @Test
     public void verifyWeatherDTOListItemsHasLocationDTOValues() {
-        List<WeatherDTO> weatherDTOList = BookmarkListWeatherFragment.getWeatherDTOList();
+        List<BookmarkWeatherDTO> bookmarkWeatherDTOList = BookmarkListWeatherFragment.getBookmarkWeatherDTOList();
 
-        for (int i = 0; i < weatherDTOList.size(); i++) {
-            WeatherDTO weatherDTO = weatherDTOList.get(i);
+        for (int i = 0; i < bookmarkWeatherDTOList.size(); i++) {
+            BookmarkWeatherDTO bookmarkWeatherDTO = bookmarkWeatherDTOList.get(i);
 
-            if (weatherDTO.getLocationDTOId() == null ||
-                    weatherDTO.getLocationDTOLatitude() == 0 || weatherDTO.getLocationDTOLongitude() == 0) {
+            if (bookmarkWeatherDTO.getLocationDTOId() == null ||
+                    bookmarkWeatherDTO.getLocationDTOLatitude() == 0 || bookmarkWeatherDTO.getLocationDTOLongitude() == 0) {
                 Assert.fail(i + ". item in WeatherDTOList has not locationDTO values");
             }
         }
@@ -150,28 +137,28 @@ public class MainWeatherActivityTest {
 
     @Test
     public void verifyRefreshWeatherButtonIsWorkingCorrectly() {
-        List<WeatherDTO> weatherDTOList = BookmarkListWeatherFragment.getWeatherDTOList();
-        int weatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked = weatherDTOList.hashCode();
+        List<BookmarkWeatherDTO> bookmarkWeatherDTOList = BookmarkListWeatherFragment.getBookmarkWeatherDTOList();
+        int bookmarkWeatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked = bookmarkWeatherDTOList.hashCode();
 
         onView(withId(R.id.refresh_weather_button)).perform(click());
 
-        weatherDTOList = BookmarkListWeatherFragment.getWeatherDTOList();
-        int weatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked = weatherDTOList.hashCode();
+        bookmarkWeatherDTOList = BookmarkListWeatherFragment.getBookmarkWeatherDTOList();
+        int bookmarkWeatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked = bookmarkWeatherDTOList.hashCode();
 
-        if (!weatherDTOList.isEmpty()) {
-            assertThat(weatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked,
-                    not(equalTo(weatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked)));
+        if (!bookmarkWeatherDTOList.isEmpty()) {
+            assertThat(bookmarkWeatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked,
+                    not(equalTo(bookmarkWeatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked)));
         } else {
-            assertThat(weatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked,
-                    equalTo(weatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked));
+            assertThat(bookmarkWeatherDTOListHashCodeBeforeRefreshWeatherButtonIsClicked,
+                    equalTo(bookmarkWeatherDTOListHashCodeAfterRefreshWeatherButtonIsClicked));
         }
     }
 
     @Test
     public void verifyAddLocationBookmarkMessageIsWorkingCorrectly() {
-        List<WeatherDTO> weatherDTOList = BookmarkListWeatherFragment.getWeatherDTOList();
+        List<BookmarkWeatherDTO> bookmarkWeatherDTOList = BookmarkListWeatherFragment.getBookmarkWeatherDTOList();
 
-        if (weatherDTOList.isEmpty()) {
+        if (bookmarkWeatherDTOList.isEmpty()) {
             onView(withId(R.id.add_bookmark_info)).check(matches(isDisplayed()));
         } else {
             onView(withId(R.id.add_bookmark_info)).check(matches(not(isDisplayed())));
@@ -179,7 +166,7 @@ public class MainWeatherActivityTest {
 
         onView(withId(R.id.refresh_weather_button)).perform(click());
 
-        if (weatherDTOList.isEmpty()) {
+        if (bookmarkWeatherDTOList.isEmpty()) {
             onView(withId(R.id.add_bookmark_info)).check(matches(isDisplayed()));
         } else {
             onView(withId(R.id.add_bookmark_info)).check(matches(not(isDisplayed())));
@@ -197,6 +184,29 @@ public class MainWeatherActivityTest {
         onView(withId(R.id.app_info_button)).perform(click());
         onView(withId(R.id.web_view)).check(matches(isDisplayed()));
     }
+
+    private boolean isProvidingNecessaryConditionsOfDeviceLocation() {
+        if (isAvailableGooglePlayServices()) {
+            if (isOnline()) {
+                if (hasLocationPermission()) {
+                    if (isDeviceLocationActive()) {
+                        return true;
+                    } else {
+                        Assert.fail("Device location is not active for get user location");
+                    }
+                } else {
+                    Assert.fail("Location permissions is not available for get user location");
+                }
+            } else {
+                Assert.fail("User internet connection is offline for get userWeatherDTO data");
+            }
+        } else {
+            Assert.fail("Google play services is not available for get user location");
+        }
+
+        return false;
+    }
+
 
     private boolean isAvailableGooglePlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();

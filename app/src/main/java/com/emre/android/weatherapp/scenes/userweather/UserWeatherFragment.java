@@ -36,10 +36,9 @@ import android.widget.TextView;
 
 import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 import com.emre.android.weatherapp.scenes.INetworkStatus;
 import com.emre.android.weatherapp.scenes.IRefreshWeather;
-import com.emre.android.weatherapp.scenes.IUpdateWeather;
 import com.emre.android.weatherapp.scenes.detailedweather.DetailedUserWeatherActivity;
 import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
 import com.emre.android.weatherapp.scenes.userweather.workerthread.UserWeatherTask;
@@ -56,17 +55,15 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.List;
-
 /**
  * @author Emre Üsküplü
  *
  * Shows weather of user
  * If device location is active and location permissions is given from user then get user location
- * If user location is taken and user network connection is available then gets weather from api
+ * If device location is taken and device network connection is available then gets weather from api
  * When user clicks weather temp degree layout then starts detailed user weather activity
  */
-public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRefreshWeather {
+public class UserWeatherFragment extends Fragment implements IUpdateUserWeather, IRefreshWeather {
     private static final String TAG = UserWeatherFragment.class.getSimpleName();
 
     private static final String[] LOCATION_PERMISSIONS = new String[]{
@@ -77,7 +74,7 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
     private static final int REQUEST_LOCATION = 0;
 
-    private static WeatherDTO sUserWeatherDTO;
+    private static UserWeatherDTO sUserWeatherDTO;
 
     private static Location sLocation;
 
@@ -189,7 +186,7 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
         return sLocation;
     }
 
-    public static WeatherDTO getUserWeatherDTO() {
+    public static UserWeatherDTO getUserWeatherDTO() {
         return sUserWeatherDTO;
     }
 
@@ -236,7 +233,7 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
 
     /**
      * If device location is active and location permissions is given from user then get user location
-     * If user location is taken and user network connection is available then gets weather from api
+     * If device location is taken and device network connection is available then gets weather from api
      * Executes user weather task with user location in location callback
      */
     private void executeUserWeatherTask() {
@@ -262,9 +259,9 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
         }
     }
 
-    private void updateUserWeatherImage(WeatherDTO weatherDTO,
+    private void updateUserWeatherImage(UserWeatherDTO userWeatherDTO,
                                         ImageView weatherImageView) {
-        String mainDescription = weatherDTO.getMainDescription();
+        String mainDescription = userWeatherDTO.getMainDescription();
 
         if (mainDescription.equals(getString(R.string.clear))) {
             weatherImageView.setImageResource(R.drawable.sun);
@@ -308,7 +305,7 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
                     getString(R.string.squall), getString(R.string.tornado)};
 
             for (String atmosphereDescription : atmosphereDescriptions) {
-                if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
+                if (userWeatherDTO.getMainDescription().equals(atmosphereDescription)) {
                     weatherImageView.setImageResource(R.drawable.mist);
                     weatherImageView.setContentDescription(getString(R.string.weather_image,
                             getString(R.string.user_location), getString(R.string.weather_image_is_mist)));
@@ -323,25 +320,20 @@ public class UserWeatherFragment extends Fragment implements IUpdateWeather, IRe
     }
 
     @Override
-    public void updateWeather(WeatherDTO weatherDTO) {
+    public void updateUserWeather(UserWeatherDTO userWeatherDTO) {
         if (isAdded()) {
-            sUserWeatherDTO = weatherDTO;
+            sUserWeatherDTO = userWeatherDTO;
 
             String tempDegree =
-                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mUnitsFormat);
+                    getString(R.string.temp_degree, userWeatherDTO.getTempDegree(), mUnitsFormat);
 
-            mLocationName.setText(weatherDTO.getLocationName());
+            mLocationName.setText(userWeatherDTO.getLocationName());
             mTempDegree.setText(tempDegree);
-            mDescription.setText(weatherDTO.getDescription());
+            mDescription.setText(userWeatherDTO.getDescription());
 
-            updateUserWeatherImage(weatherDTO, mWeatherImageView);
+            updateUserWeatherImage(userWeatherDTO, mWeatherImageView);
 
             mWeatherProgressBar.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void updateListWeather(List<WeatherDTO> weatherDTOList) {
-
     }
 }

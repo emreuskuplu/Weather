@@ -23,22 +23,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 /**
  * @author Emre Üsküplü
  *
- * Sets location values from locationdto
- * Sets weather values from api
+ * Sets values from weather api
  */
-public class WeatherDTO {
-    private static final String TAG = WeatherDTO.class.getSimpleName();
+public class DetailedWeatherDTO {
+    private static final String TAG = DetailedWeatherDTO.class.getSimpleName();
 
-    // Location values
-    private UUID mLocationDTOId;
-    private double mLocationDTOLatitude;
-    private double mLocationDTOLongitude;
-    // Weather values
     private String mLocationName = "";
     private String mMainDescription = "";
     private String mTempDegree = "";
@@ -48,30 +41,6 @@ public class WeatherDTO {
     private String mRainVolume = "0";
     private String mSnowVolume = "0";
     private String mDate = "";
-
-    public UUID getLocationDTOId() {
-        return mLocationDTOId;
-    }
-
-    public void setLocationDTOId(UUID mLocationDataID) {
-        this.mLocationDTOId = mLocationDataID;
-    }
-
-    public double getLocationDTOLatitude() {
-        return mLocationDTOLatitude;
-    }
-
-    public void setLocationDTOLatitude(double locationDTOLatitude) {
-        mLocationDTOLatitude = locationDTOLatitude;
-    }
-
-    public double getLocationDTOLongitude() {
-        return mLocationDTOLongitude;
-    }
-
-    public void setLocationDTOLongitude(double locationDTOLongitude) {
-        mLocationDTOLongitude = locationDTOLongitude;
-    }
 
     public String getLocationName() {
         return mLocationName;
@@ -172,4 +141,5 @@ public class WeatherDTO {
                 + mDescription + " " + mHumidity + " " + mWindVolume + " " + mRainVolume + " "
                 + mSnowVolume + " " + mDate;
     }
+
 }

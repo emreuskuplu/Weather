@@ -69,7 +69,7 @@
         <activity android:name=".scenes.detailedweather.DetailedUserWeatherActivity"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name=".scenes.createbookmark.CreateBookmarkOnMapActivity"
+            android:name=".scenes.bookmarkmap.CreateBookmarkOnMapActivity"
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".scenes.appinfopage.AppInfoPageActivity"

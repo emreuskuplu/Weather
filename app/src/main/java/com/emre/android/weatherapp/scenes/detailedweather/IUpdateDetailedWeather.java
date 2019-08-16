@@ -15,20 +15,20 @@
  *
  */
 
-package com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.weatherjsonschema;
+package com.emre.android.weatherapp.scenes.detailedweather;
+
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
 
 /**
- * @author Emre Üsküplü
+ * Emre Üsküplü
+ *
+ * Updates detailed weather
  */
-public class Coord {
-    private double lon;
-    private double lat;
+public interface IUpdateDetailedWeather {
+    /**
+     * Updates detailed weather
+     * @param detailedWeatherDTO values is fetched from api
+     */
+    void updateDetailedWeather(DetailedWeatherDTO detailedWeatherDTO);
 
-    public double getLon() {
-        return lon;
-    }
-
-    public double getLat() {
-        return lat;
-    }
 }
