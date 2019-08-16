@@ -19,7 +19,9 @@ package com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess;
 
 import android.location.Location;
 
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +34,18 @@ import java.util.List;
 public class WeatherDAOStub implements IWeatherDAO {
 
     @Override
-    public WeatherDTO getUserWeather(Location location) {
-        WeatherDTO weatherDTO = new WeatherDTO();
-        weatherDTO.setLocationName("İstanbul");
-        weatherDTO.setMainDescription("Clear");
-        weatherDTO.setTempDegree("20");
-        weatherDTO.setDescription("clear sky");
+    public UserWeatherDTO getUserWeather(Location location) {
+        UserWeatherDTO userWeatherDTO = new UserWeatherDTO();
+        userWeatherDTO.setLocationName("İstanbul");
+        userWeatherDTO.setMainDescription("Clear");
+        userWeatherDTO.setTempDegree("20");
+        userWeatherDTO.setDescription("clear sky");
 
-        return weatherDTO;
+        return userWeatherDTO;
     }
 
     @Override
-    public List<WeatherDTO> getBookmarkListWeather(List<WeatherDTO> weatherDTOList) {
+    public List<BookmarkWeatherDTO> getBookmarkListWeather(List<BookmarkWeatherDTO> bookmarkWeatherDTOList) {
         String[] locationNames =
                 {"İstanbul", "Kağıthane", "Amsterdam", "Schipol", "Germany", "Berlin", "", "", "", ""};
         String[] mainDescriptions =
@@ -54,20 +56,18 @@ public class WeatherDAOStub implements IWeatherDAO {
                 {"clear sky", "few clouds", "light rain", "snow", "", "", "", "", "", ""};
 
         for (int i = 0; i < 10; i++) {
-            WeatherDTO weatherDTO = new WeatherDTO();
-            weatherDTO.setLocationName(locationNames[i]);
-            weatherDTO.setMainDescription(mainDescriptions[i]);
-            weatherDTO.setTempDegree(tempDegrees[i]);
-            weatherDTO.setDescription(descriptions[i]);
-
-            weatherDTOList.add(weatherDTO);
+            bookmarkWeatherDTOList.get(i).setLocationName(locationNames[i]);
+            bookmarkWeatherDTOList.get(i).setLocationName(locationNames[i]);
+            bookmarkWeatherDTOList.get(i).setMainDescription(mainDescriptions[i]);
+            bookmarkWeatherDTOList.get(i).setTempDegree(tempDegrees[i]);
+            bookmarkWeatherDTOList.get(i).setDescription(descriptions[i]);
         }
 
-        return weatherDTOList;
+        return bookmarkWeatherDTOList;
     }
 
     @Override
-    public List<WeatherDTO> getForecastDetailedWeatherList(Location location) {
+    public List<DetailedWeatherDTO> getDetailedWeatherList(Location location) {
         String locationName = "İstanbul";
         String[] mainDescriptions =
                 {"Clear", "Clouds", "Rain", "Thunderstorm", "Snow"};
@@ -86,23 +86,23 @@ public class WeatherDAOStub implements IWeatherDAO {
         String[] dates =
                 {"2019-05-01", "2019-05-02", "2019-05-03", "2019-05-04", "2019-05-05"};
 
-        List<WeatherDTO> weatherDTOList = new ArrayList<>();
+        List<DetailedWeatherDTO> detailedWeatherDTOList = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            WeatherDTO weatherDTO = new WeatherDTO();
-            weatherDTO.setLocationName(locationName);
-            weatherDTO.setMainDescription(mainDescriptions[i]);
-            weatherDTO.setTempDegree(tempDegrees[i]);
-            weatherDTO.setDescription(descriptions[i]);
-            weatherDTO.setHumidity(humidities[i]);
-            weatherDTO.setWindVolume(windVolumes[i]);
-            weatherDTO.setRainVolume(rainVolumes[i]);
-            weatherDTO.setSnowVolume(snowVolumes[i]);
-            weatherDTO.setDate(dates[i]);
+            DetailedWeatherDTO detailedWeatherDTO = new DetailedWeatherDTO();
+            detailedWeatherDTO.setLocationName(locationName);
+            detailedWeatherDTO.setMainDescription(mainDescriptions[i]);
+            detailedWeatherDTO.setTempDegree(tempDegrees[i]);
+            detailedWeatherDTO.setDescription(descriptions[i]);
+            detailedWeatherDTO.setHumidity(humidities[i]);
+            detailedWeatherDTO.setWindVolume(windVolumes[i]);
+            detailedWeatherDTO.setRainVolume(rainVolumes[i]);
+            detailedWeatherDTO.setSnowVolume(snowVolumes[i]);
+            detailedWeatherDTO.setDate(dates[i]);
 
-            weatherDTOList.add(weatherDTO);
+            detailedWeatherDTOList.add(detailedWeatherDTO);
         }
 
-        return weatherDTOList;
+        return detailedWeatherDTOList;
     }
 }

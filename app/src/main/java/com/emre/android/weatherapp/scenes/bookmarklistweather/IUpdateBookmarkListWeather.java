@@ -15,30 +15,21 @@
  *
  */
 
-package com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.weatherjsonschema;
+package com.emre.android.weatherapp.scenes.bookmarklistweather;
+
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+
+import java.util.List;
 
 /**
- * @author Emre Üsküplü
+ * Emre Üsküplü
+ *
+ * Updates weather of bookmark list
  */
-public class Main {
-    private double temp;
-    private double pressure;
-    private int humidity;
-    private double temp_min;
-
-    public double getTemp() {
-        return temp;
-    }
-
-    public double getPressure() {
-        return pressure;
-    }
-
-    public int getHumidity() {
-        return humidity;
-    }
-
-    public double getTemp_min() {
-        return temp_min;
-    }
+public interface IUpdateBookmarkListWeather {
+    /**
+     * Updates weather of bookmark list
+     * @param bookmarkWeatherDTOList values is fetched from api
+     */
+    void updateBookmarkListWeather(List<BookmarkWeatherDTO> bookmarkWeatherDTOList);
 }

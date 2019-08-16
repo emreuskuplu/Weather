@@ -25,8 +25,8 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
-import com.emre.android.weatherapp.scenes.IUpdateWeather;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
+import com.emre.android.weatherapp.scenes.userweather.IUpdateUserWeather;
 import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
 
 /**
@@ -34,7 +34,7 @@ import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
  *
  * Executes task for fetch weather of user from api
  */
-public class UserWeatherTask extends AsyncTask<Location, Void, WeatherDTO> {
+public class UserWeatherTask extends AsyncTask<Location, Void, UserWeatherDTO> {
     private static final String TAG = UserWeatherTask.class.getSimpleName();
 
     private Context mUserWeatherContext;
@@ -49,15 +49,15 @@ public class UserWeatherTask extends AsyncTask<Location, Void, WeatherDTO> {
     }
 
     @Override
-    protected WeatherDTO doInBackground(Location... locations) {
+    protected UserWeatherDTO doInBackground(Location... locations) {
         return new WeatherDAO(mUserWeatherContext).getUserWeather(locations[0]);
     }
 
     @Override
-    protected void onPostExecute(WeatherDTO result) {
+    protected void onPostExecute(UserWeatherDTO result) {
         Log.i(TAG, "is executed");
 
-        IUpdateWeather iUpdateWeather = (UserWeatherFragment) mUserWeatherFragment;
-        iUpdateWeather.updateWeather(result);
+        IUpdateUserWeather iUpdateUserWeather = (UserWeatherFragment) mUserWeatherFragment;
+        iUpdateUserWeather.updateUserWeather(result);
     }
 }

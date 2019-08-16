@@ -42,14 +42,13 @@ import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dataaccessobjects.locationdataaccess.LocationDAO;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
 import com.emre.android.weatherapp.datatransferobjects.locationdatatransfer.LocationDTO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTOListBookmark;
-import com.emre.android.weatherapp.scenes.IUpdateWeather;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTOListSafe;
 import com.emre.android.weatherapp.scenes.bookmarklistweather.workerthread.BookmarkListWeatherTask;
 import com.emre.android.weatherapp.scenes.detailedweather.DetailedBookmarkListWeatherActivity;
 import com.emre.android.weatherapp.scenes.INetworkStatus;
 import com.emre.android.weatherapp.scenes.IRefreshWeather;
-import com.emre.android.weatherapp.scenes.createbookmark.CreateBookmarkOnMapActivity;
+import com.emre.android.weatherapp.scenes.bookmarkmap.CreateBookmarkOnMapActivity;
 import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
 
 import java.util.ArrayList;
@@ -59,16 +58,16 @@ import java.util.List;
  * @author Emre Üsküplü
  *
  * Shows weather of bookmark list
- * When user clicks add bookmark button then starts locator weather on map activity
+ * When user clicks add bookmark button then starts create bookmark on map activity
  * If user network connection is available then get weather from api
  * Search bookmarks with location name
  * Delete bookmarks with swipe to right
  */
-public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeather, IRefreshWeather {
+public class BookmarkListWeatherFragment extends Fragment implements IUpdateBookmarkListWeather, IRefreshWeather {
     private static final String TAG = BookmarkListWeatherFragment.class.getSimpleName();
 
     private static List<LocationDTO> sLocationDTOList = new ArrayList<>();
-    private static List<WeatherDTO> sWeatherDTOList = new ArrayList<>();
+    private static List<BookmarkWeatherDTO> sBookmarkWeatherDTOList = new ArrayList<>();
 
     private String mUnitsFormat = "";
     private SettingsDAO mSettingsDAO;
@@ -96,22 +95,22 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
         public boolean onQueryTextSubmit(String query) {
             Log.i(TAG, "QueryTextSubmit: " + query);
 
-            List<WeatherDTO> weatherDTOList = new ArrayList<>();
+            List<BookmarkWeatherDTO> bookmarkWeatherDTOList = new ArrayList<>();
 
-            for (WeatherDTO weatherDTO : sWeatherDTOList) {
-                if (query.equalsIgnoreCase(weatherDTO.getLocationName())) {
-                    weatherDTOList.add(weatherDTO);
+            for (BookmarkWeatherDTO bookmarkWeatherDTO : sBookmarkWeatherDTOList) {
+                if (query.equalsIgnoreCase(bookmarkWeatherDTO.getLocationName())) {
+                    bookmarkWeatherDTOList.add(bookmarkWeatherDTO);
                 }
             }
 
-            if (weatherDTOList.isEmpty()) {
+            if (bookmarkWeatherDTOList.isEmpty()) {
                 mAddBookmarkInfoMessage.setVisibility(View.GONE);
                 mBookmarkNotFoundMessage.setVisibility(View.VISIBLE);
             } else {
                 mBookmarkNotFoundMessage.setVisibility(View.GONE);
             }
 
-            updateBookmarkListWeather(weatherDTOList);
+            updateBookmarkListWeather(bookmarkWeatherDTOList);
             mBookmarkListWeatherSearchView.clearFocus();
 
             return true;
@@ -135,18 +134,18 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                     int position = viewHolder.getAdapterPosition();
-                    WeatherDTO weatherDTO = sWeatherDTOList.get(position);
-                    String locationName = weatherDTO.getLocationName();
+                    BookmarkWeatherDTO bookmarkWeatherDTO = sBookmarkWeatherDTOList.get(position);
+                    String locationName = bookmarkWeatherDTO.getLocationName();
 
                     showDeletedBookmarkToast(locationName);
 
                     mLocationDAO.
-                            locationDbDeleteLocationData(weatherDTO.getLocationDTOId());
+                            locationDbDeleteLocationData(bookmarkWeatherDTO.getLocationDTOId());
 
-                    sWeatherDTOList.remove(position);
+                    sBookmarkWeatherDTOList.remove(position);
                     mWeatherAdapter.notifyDataSetChanged();
 
-                    if (sWeatherDTOList.size() == 0 && mBookmarkListWeatherSearchView.getQuery().length() < 1) {
+                    if (sBookmarkWeatherDTOList.size() == 0 && mBookmarkListWeatherSearchView.getQuery().length() < 1) {
                         mAddBookmarkInfoMessage.setVisibility(View.VISIBLE);
                     }
                 }
@@ -209,8 +208,8 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
         return sLocationDTOList;
     }
 
-    public static List<WeatherDTO> getWeatherDTOList() {
-        return sWeatherDTOList;
+    public static List<BookmarkWeatherDTO> getBookmarkWeatherDTOList() {
+        return sBookmarkWeatherDTOList;
     }
 
     private void showDeletedBookmarkToast(String locationName) {
@@ -222,13 +221,13 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
 
     /**
      * Gets location values from database
-     * Executes bookmark list weather task with weather list
+     * Executes bookmark list weather task
      */
     private void executeWeatherListTask() {
         List<LocationDTO> locationDTOList = mLocationDAO.locationDbExtract();
         sLocationDTOList = locationDTOList;
 
-        WeatherDTOListBookmark weatherDTOListBookmark = getWeatherDTOListBookmark(locationDTOList);
+        BookmarkWeatherDTOListSafe bookmarkWeatherDTOListSafe = getBookmarkWeatherDTOList(locationDTOList);
 
         if (locationDTOList.isEmpty()) {
             mBookmarkNotFoundMessage.setVisibility(View.GONE);
@@ -240,47 +239,37 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
         }
 
         new BookmarkListWeatherTask(requireContext(),
-                this).execute(weatherDTOListBookmark);
-    }
-
-    private void updateBookmarkListWeather(List<WeatherDTO> weatherDTOList) {
-        if (isAdded()) {
-            sWeatherDTOList = weatherDTOList;
-
-            mWeatherAdapter = new WeatherAdapter(weatherDTOList);
-            mWeatherRecyclerView.setAdapter(mWeatherAdapter);
-
-            mBookmarkListWeatherProgressBar.setVisibility(View.GONE);
-        }
+                this).execute(bookmarkWeatherDTOListSafe);
     }
 
     /**
-     * Sets location values to weather list
-     * Sets weather list to class for prevent possible heap pollution in async task
+     * Sets location values to bookmark list
+     * Sets bookmark list to class for prevent possible heap pollution in async task
      * @param locationDTOList the location values from database
-     * @return weather list that contain location values
+     * @return bookmark list that contain location values
      */
-    private WeatherDTOListBookmark getWeatherDTOListBookmark(List<LocationDTO> locationDTOList) {
-        WeatherDTOListBookmark weatherDTOListBookmark = new WeatherDTOListBookmark();
-        List<WeatherDTO> weatherDTOList = new ArrayList<>();
+    private BookmarkWeatherDTOListSafe getBookmarkWeatherDTOList(List<LocationDTO> locationDTOList) {
+        BookmarkWeatherDTOListSafe bookmarkWeatherDTOListSafe = new BookmarkWeatherDTOListSafe();
+        List<BookmarkWeatherDTO> bookmarkWeatherDTOList= new ArrayList<>();
 
         for (LocationDTO locationDTO : locationDTOList) {
-            WeatherDTO weatherDTO = new WeatherDTO();
-            weatherDTO.setLocationDTOId(locationDTO.getId());
-            weatherDTO.setLocationDTOLatitude(locationDTO.getLatitude());
-            weatherDTO.setLocationDTOLongitude(locationDTO.getLongitude());
-            weatherDTOList.add(weatherDTO);
+            BookmarkWeatherDTO bookmarkWeatherDTO = new BookmarkWeatherDTO(
+                    locationDTO.getId(),
+                    locationDTO.getLatitude(),
+                    locationDTO.getLongitude());
+
+            bookmarkWeatherDTOList.add(bookmarkWeatherDTO);
         }
 
-        weatherDTOListBookmark.setWeatherDTOList(weatherDTOList);
+        bookmarkWeatherDTOListSafe.setBookmarkWeatherDTOList(bookmarkWeatherDTOList);
 
-        return weatherDTOListBookmark;
+        return bookmarkWeatherDTOListSafe;
     }
 
-    private void updateListItemWeatherImage(WeatherDTO weatherDTO,
+    private void updateListItemWeatherImage(BookmarkWeatherDTO bookmarkWeatherDTO,
                                             ImageView weatherImageView, CardView weatherCardView) {
         ConstraintLayout weatherCardViewLayout = weatherCardView.findViewById(R.id.weather_card_view_layout);
-        String mainDescription = weatherDTO.getMainDescription();
+        String mainDescription = bookmarkWeatherDTO.getMainDescription();
 
         if (mainDescription.equals(getString(R.string.clear))) {
             weatherImageView.setImageResource(R.drawable.sun_solid);
@@ -324,7 +313,7 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
                     getString(R.string.squall), getString(R.string.tornado)};
 
             for (String atmosphereDescription : atmosphereDescriptions) {
-                if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
+                if (bookmarkWeatherDTO.getMainDescription().equals(atmosphereDescription)) {
                     weatherImageView.setImageResource(R.drawable.mist_solid);
                     weatherImageView.setContentDescription(getString(R.string.weather_image_is_mist));
                     weatherCardViewLayout.setBackgroundResource(R.drawable.mist_background);
@@ -343,16 +332,11 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
     }
 
     @Override
-    public void updateWeather(WeatherDTO weatherDTO) {
-
-    }
-
-    @Override
-    public void updateListWeather(List<WeatherDTO> weatherDTOList) {
+    public void updateBookmarkListWeather(List<BookmarkWeatherDTO> bookmarkWeatherDTOList) {
         if (isAdded()) {
-            sWeatherDTOList = weatherDTOList;
+            sBookmarkWeatherDTOList = bookmarkWeatherDTOList;
 
-            mWeatherAdapter = new WeatherAdapter(weatherDTOList);
+            mWeatherAdapter = new WeatherAdapter(bookmarkWeatherDTOList);
             mWeatherRecyclerView.setAdapter(mWeatherAdapter);
 
             mBookmarkListWeatherProgressBar.setVisibility(View.GONE);
@@ -376,15 +360,15 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
             tempDegreeTextView = weatherCardView.findViewById(R.id.list_item_temp_degree);
         }
 
-        private void bind(WeatherDTO weatherDTO) {
+        private void bind(BookmarkWeatherDTO bookmarkWeatherDTO) {
             String tempDegree =
-                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mUnitsFormat);
+                    getString(R.string.temp_degree, bookmarkWeatherDTO.getTempDegree(), mUnitsFormat);
 
-            locationNameTextView.setText(weatherDTO.getLocationName());
+            locationNameTextView.setText(bookmarkWeatherDTO.getLocationName());
             tempDegreeTextView.setText(tempDegree);
 
-            if (weatherDTO.getMainDescription() != null && weatherDTO.getDescription() != null) {
-                updateListItemWeatherImage(weatherDTO, weatherImageView, weatherCardView);
+            if (bookmarkWeatherDTO.getMainDescription() != null && bookmarkWeatherDTO.getDescription() != null) {
+                updateListItemWeatherImage(bookmarkWeatherDTO, weatherImageView, weatherCardView);
             }
         }
 
@@ -392,10 +376,10 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
         public void onClick(View view) {
             List<Location> locationList = new ArrayList<>();
 
-            for (WeatherDTO weatherDTO : sWeatherDTOList) {
+            for (BookmarkWeatherDTO bookmarkWeatherDTO : sBookmarkWeatherDTOList) {
                 Location location = new Location("");
-                location.setLatitude(weatherDTO.getLocationDTOLatitude());
-                location.setLongitude(weatherDTO.getLocationDTOLongitude());
+                location.setLatitude(bookmarkWeatherDTO.getLocationDTOLatitude());
+                location.setLongitude(bookmarkWeatherDTO.getLocationDTOLongitude());
                 locationList.add(location);
             }
 
@@ -407,10 +391,10 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
     }
 
     private class WeatherAdapter extends RecyclerView.Adapter<WeatherHolder> {
-        private List<WeatherDTO> weatherDTOList;
+        private List<BookmarkWeatherDTO> mBookmarkWeatherDTOList;
 
-        private WeatherAdapter(List<WeatherDTO> weatherDTOList) {
-            this.weatherDTOList = weatherDTOList;
+        private WeatherAdapter(List<BookmarkWeatherDTO> mBookmarkWeatherDTOList) {
+            this.mBookmarkWeatherDTOList = mBookmarkWeatherDTOList;
         }
 
         @NonNull
@@ -423,13 +407,13 @@ public class BookmarkListWeatherFragment extends Fragment implements IUpdateWeat
 
         @Override
         public void onBindViewHolder(@NonNull WeatherHolder weatherHolder, int position) {
-            WeatherDTO weatherDTO = weatherDTOList.get(position);
-            weatherHolder.bind(weatherDTO);
+            BookmarkWeatherDTO bookmarkWeatherDTO = mBookmarkWeatherDTOList.get(position);
+            weatherHolder.bind(bookmarkWeatherDTO);
         }
 
         @Override
         public int getItemCount() {
-            return weatherDTOList.size();
+            return mBookmarkWeatherDTOList.size();
         }
     }
 }

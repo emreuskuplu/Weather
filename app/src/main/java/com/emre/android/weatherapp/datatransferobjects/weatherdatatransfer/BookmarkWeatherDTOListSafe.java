@@ -15,23 +15,25 @@
  *
  */
 
-package com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.weatherjsonschema;
+package com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Emre Üsküplü
+ *
+ * Prevent possible heap pollution for async task
  */
-public class Snow {
-    @SerializedName("1h")
-    private double oneH;
-    @SerializedName("3h")
-    private double threeH;
+public class BookmarkWeatherDTOListSafe {
 
-    public double getOneH() {
-        return oneH;
+    private List<BookmarkWeatherDTO> mBookmarkWeatherDTOList = new ArrayList<>();
+
+    public List<BookmarkWeatherDTO> getBookmarkWeatherDTOList() {
+        return mBookmarkWeatherDTOList;
     }
-    public double getThreeH() {
-        return threeH;
+
+    public void setBookmarkWeatherDTOList(List<BookmarkWeatherDTO> bookmarkWeatherDTOList) {
+        mBookmarkWeatherDTOList = bookmarkWeatherDTOList;
     }
 }
