@@ -23,9 +23,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.emre.android.weatherapp.datatransferobjects.locationdatatransfer.LocationDTO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
 import com.emre.android.weatherapp.scenes.bookmarklistweather.BookmarkListWeatherFragment;
-import com.emre.android.weatherapp.scenes.createbookmark.CreateBookmarkOnMapFragment;
+import com.emre.android.weatherapp.scenes.bookmarkmap.CreateBookmarkOnMapFragment;
 import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -67,7 +67,7 @@ public class CreateBookmarkOnMapFragmentTest {
 
 
     @Test
-    public void longClickOnMapForInsertingLocationOnDatabaseAndValidateLocationIsAddedInLocationDTOListAndItsIdInWeatherDTOList() {
+    public void longClickOnMapForInsertingLocationOnDatabaseAndValidateLocationValuesIsAddedInLocationDTOListAndWeatherDTOList() {
         if (isAvailableGooglePlayServices()) {
             onView(withId(R.id.add_location_button)).perform(click());
             onView(withId(R.id.map_view)).perform(longClick());
@@ -77,14 +77,16 @@ public class CreateBookmarkOnMapFragmentTest {
             onView(withId(R.id.back_button)).perform(click());
 
             List<LocationDTO> locationDTOList = BookmarkListWeatherFragment.getLocationDTOList();
-            List<WeatherDTO> weatherDTOList = BookmarkListWeatherFragment.getWeatherDTOList();
+            List<BookmarkWeatherDTO> bookmarkWeatherDTOList = BookmarkListWeatherFragment.getBookmarkWeatherDTOList();
 
             LocationDTO locationDTO = locationDTOList.get(locationDTOList.size() - 1);
-            WeatherDTO weatherDTO = weatherDTOList.get(weatherDTOList.size() - 1);
+            BookmarkWeatherDTO bookmarkWeatherDTO = bookmarkWeatherDTOList.get(bookmarkWeatherDTOList.size() - 1);
 
             assertThat(latLng.latitude, is(equalTo(locationDTO.getLatitude())));
             assertThat(latLng.longitude, is(equalTo(locationDTO.getLongitude())));
-            assertThat(weatherDTO.getLocationDTOId(), is(equalTo(locationDTO.getId())));
+            assertThat(latLng.latitude, is(equalTo(bookmarkWeatherDTO.getLocationDTOLatitude())));
+            assertThat(latLng.longitude, is(equalTo(bookmarkWeatherDTO.getLocationDTOLongitude())));
+            assertThat(bookmarkWeatherDTO.getLocationDTOId(), is(equalTo(locationDTO.getId())));
 
         } else {
             Assert.fail("Google play services is not available for use google map");

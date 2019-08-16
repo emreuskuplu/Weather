@@ -26,7 +26,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.ISettingsDAO;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
 import com.emre.android.weatherapp.scenes.detailedweather.DetailedWeatherFragment;
 import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
 import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
@@ -66,7 +66,6 @@ public class DetailedWeatherFragmentTest {
     public static void deactivateRatingBarDialog() {
         MainWeatherActivity.deactivateRatingBarDialog();
     }
-
 
     @Test
     public void verifyLocationDTOInWeatherListFragmentMatchesLocationDTOInDetailedWeatherFragment() {
@@ -127,8 +126,8 @@ public class DetailedWeatherFragmentTest {
     }
 
     private void verifyDetailedWeatherDTOOfFiveDays(int selectedDayIndex) {
-        List<WeatherDTO> weatherDTOList = DetailedWeatherFragment.getWeatherDTOList();
-        WeatherDTO detailedWeatherDTO = weatherDTOList.get(selectedDayIndex);
+        List<DetailedWeatherDTO> detailedWeatherDTOList = DetailedWeatherFragment.getDetailedWeatherDTOList();
+        DetailedWeatherDTO detailedWeatherDTO = detailedWeatherDTOList.get(selectedDayIndex);
         String detailedDayName = DetailedWeatherFragment.changeShortDateToLargeDate(detailedWeatherDTO.getDate());
 
         mISettingsDAO = new SettingsDAO();
@@ -141,11 +140,11 @@ public class DetailedWeatherFragmentTest {
             mUnitsFormat = "°F";
         }
 
-        WeatherDTO firstDayLayoutWeatherDTO = weatherDTOList.get(0);
-        WeatherDTO secondDayLayoutWeatherDTO = weatherDTOList.get(1);
-        WeatherDTO thirdDayLayoutWeatherDTO = weatherDTOList.get(2);
-        WeatherDTO fourthDayLayoutWeatherDTO = weatherDTOList.get(3);
-        WeatherDTO fifthDayLayoutWeatherDTO = weatherDTOList.get(4);
+        DetailedWeatherDTO firstDayDetailedWeatherDTO = detailedWeatherDTOList.get(0);
+        DetailedWeatherDTO secondDayDetailedWeatherDTO = detailedWeatherDTOList.get(1);
+        DetailedWeatherDTO thirdDayDetailedWeatherDTO = detailedWeatherDTOList.get(2);
+        DetailedWeatherDTO fourthDayDetailedWeatherDTO = detailedWeatherDTOList.get(3);
+        DetailedWeatherDTO fifthDayDetailedWeatherDTO = detailedWeatherDTOList.get(4);
 
         onView(withId(R.id.location_name)).check(matches(withText(detailedWeatherDTO.getLocationName())));
         onView(withId(R.id.detailed_day)).check(matches(withText(detailedDayName)));
@@ -156,15 +155,15 @@ public class DetailedWeatherFragmentTest {
         onView(withId(R.id.rain_volume)).check(matches(withText(detailedWeatherDTO.getRainVolume())));
         onView(withId(R.id.snow_volume)).check(matches(withText(detailedWeatherDTO.getSnowVolume())));
 
-        onView(withId(R.id.first_day_date)).check(matches(withText(firstDayLayoutWeatherDTO.getDate())));
-        onView(withId(R.id.first_day_temp_degree)).check(matches(withText(firstDayLayoutWeatherDTO.getTempDegree() + mUnitsFormat)));
-        onView(withId(R.id.second_day_date)).check(matches(withText(secondDayLayoutWeatherDTO.getDate())));
-        onView(withId(R.id.second_day_temp_degree)).check(matches(withText(secondDayLayoutWeatherDTO.getTempDegree() + mUnitsFormat)));
-        onView(withId(R.id.third_day_date)).check(matches(withText(thirdDayLayoutWeatherDTO.getDate())));
-        onView(withId(R.id.third_day_temp_degree)).check(matches(withText(thirdDayLayoutWeatherDTO.getTempDegree() + mUnitsFormat)));
-        onView(withId(R.id.fourth_day_date)).check(matches(withText(fourthDayLayoutWeatherDTO.getDate())));
-        onView(withId(R.id.fourth_day_temp_degree)).check(matches(withText(fourthDayLayoutWeatherDTO.getTempDegree() + mUnitsFormat)));
-        onView(withId(R.id.fifth_day_date)).check(matches(withText(fifthDayLayoutWeatherDTO.getDate())));
-        onView(withId(R.id.fifth_day_temp_degree)).check(matches(withText(fifthDayLayoutWeatherDTO.getTempDegree() + mUnitsFormat)));
+        onView(withId(R.id.first_day_date)).check(matches(withText(firstDayDetailedWeatherDTO.getDate())));
+        onView(withId(R.id.first_day_temp_degree)).check(matches(withText(firstDayDetailedWeatherDTO.getTempDegree() + mUnitsFormat)));
+        onView(withId(R.id.second_day_date)).check(matches(withText(secondDayDetailedWeatherDTO.getDate())));
+        onView(withId(R.id.second_day_temp_degree)).check(matches(withText(secondDayDetailedWeatherDTO.getTempDegree() + mUnitsFormat)));
+        onView(withId(R.id.third_day_date)).check(matches(withText(thirdDayDetailedWeatherDTO.getDate())));
+        onView(withId(R.id.third_day_temp_degree)).check(matches(withText(thirdDayDetailedWeatherDTO.getTempDegree() + mUnitsFormat)));
+        onView(withId(R.id.fourth_day_date)).check(matches(withText(fourthDayDetailedWeatherDTO.getDate())));
+        onView(withId(R.id.fourth_day_temp_degree)).check(matches(withText(fourthDayDetailedWeatherDTO.getTempDegree() + mUnitsFormat)));
+        onView(withId(R.id.fifth_day_date)).check(matches(withText(fifthDayDetailedWeatherDTO.getDate())));
+        onView(withId(R.id.fifth_day_temp_degree)).check(matches(withText(fifthDayDetailedWeatherDTO.getTempDegree() + mUnitsFormat)));
     }
 }

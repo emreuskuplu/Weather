@@ -14,11 +14,13 @@
  *   limitations under the License.
  *
  */
+package com.emre.android.weatherapp.webservice.weather;
 
-package com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.weatherjsonschema.ForecastBody;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.weatherjsonschema.WeatherBody;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -27,10 +29,19 @@ import retrofit2.http.Query;
 /**
  * @author Emre Üsküplü
  */
-interface IRetrofitWeatherDAO {
+interface IWeatherRetrofitService {
 
     @GET("weather")
-    Call<WeatherBody> getCurrentWeatherDTO(
+    Call<UserWeatherDTO> getCurrentWeather(
+            @Query("appId") String appId,
+            @Query("units") String units,
+            @Query("lang") String lang,
+            @Query("lat") Double lat,
+            @Query("lon") Double lon
+    );
+
+    @GET("weather")
+    Call<BookmarkWeatherDTO> getBookmarkWeather(
             @Query("appId") String appId,
             @Query("units") String units,
             @Query("lang") String lang,
@@ -39,7 +50,7 @@ interface IRetrofitWeatherDAO {
     );
 
     @GET("forecast")
-    Call<ForecastBody> getForecastWeatherDTO(
+    Call<List<DetailedWeatherDTO>> getDetailedWeather(
             @Query("appId") String appId,
             @Query("units") String units,
             @Query("lang") String lang,

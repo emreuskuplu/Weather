@@ -15,37 +15,19 @@
  *
  */
 
-package com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.weatherjsonschema;
+package com.emre.android.weatherapp;
 
-import java.util.List;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * @author Emre Üsküplü
  */
-public class ForecastBody {
-    private String cod;
-    private double message;
-    private int cnt;
-    private List<ForecastDayBody> list;
-    private City city;
-
-    public String getCod() {
-        return cod;
-    }
-
-    public double getMessage() {
-        return message;
-    }
-
-    public int getCnt() {
-        return cnt;
-    }
-
-    public List<ForecastDayBody> getList() {
-        return list;
-    }
-
-    public City getCity() {
-        return city;
-    }
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+        MainWeatherActivityTest.class,
+        CreateBookmarkOnMapFragmentTest.class,
+        DetailedWeatherFragmentTest.class
+})
+public class scenesTestSuite {
 }
