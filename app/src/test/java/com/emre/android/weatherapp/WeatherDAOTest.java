@@ -25,7 +25,9 @@ import androidx.test.core.app.ApplicationProvider;
 import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.IWeatherDAO;
 import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAO;
 import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAOStub;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +36,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,12 +54,14 @@ public class WeatherDAOTest {
     private IWeatherDAO mIWeatherDAO;
     private IWeatherDAO mIWeatherDAOStub;
     private Location mLocation;
-    private WeatherDTO mWeatherDTO;
-    private List<WeatherDTO> mWeatherDTOList;
-    private List<WeatherDTO> mWeatherDTOListStub;
+    private UserWeatherDTO mUserWeatherDTO;
+    private List<BookmarkWeatherDTO> mBookmarkWeatherDTOList;
+    private List<BookmarkWeatherDTO> mBookmarkWeatherDTOListStub;
+    private List<DetailedWeatherDTO> mDetailedWeatherDTOList;
+    private List<DetailedWeatherDTO> mDetailedWeatherDTOListStub;
 
     @Test
-    public void UserWeatherTaskShouldReturnAllWeatherValuesThatAllOfNotNullForUserWeather() {
+    public void userWeatherTaskShouldReturnAllWeatherValuesThatAllOfNotNullForUserWeather() {
         System.out.println("\nUserWeatherTaskShouldReturnAllWeatherValuesThatAllOfNotNullForUserWeather()");
         givenWeatherDAOAndLocationIsInitialized();
         whenUserWeatherTaskExecuted();
@@ -64,18 +69,18 @@ public class WeatherDAOTest {
     }
 
     @Test
-    public void BookmarkWeatherListTaskShouldReturnAllWeatherValuesThatAllOfNotNullForWeatherList() {
+    public void bookmarkWeatherListTaskShouldReturnAllWeatherValuesThatAllOfNotNullForWeatherList() {
         System.out.println("\nBookmarkWeatherListTaskShouldReturnAllWeatherValuesThatAllOfNotNullForWeatherList()");
         givenWeatherDAOAndWeatherDTOListIsInitialized();
         whenBookmarkWeatherListTaskExecuted();
-        thenVerifyAllWeatherValuesInWeatherDTOListAllOfAreNotNull();
+        thenVerifyAllValuesInWeatherDTOListAllOfAreNotNull();
     }
 
     @Test
-    public void ForecastDetailedWeatherTaskShouldReturnAllWeatherValuesThatAllOfNotNullAndVerifyCorrectDateFormatForDetailedWeather() {
+    public void forecastDetailedWeatherTaskShouldReturnAllWeatherValuesThatAllOfNotNullAndVerifyCorrectDateFormatForDetailedWeather() {
         System.out.println("\nForecastDetailedWeatherTaskShouldReturnAllWeatherValuesThatAllOfNotNullAndVerifyCorrectDateFormatForDetailedWeather()");
         givenWeatherDAOAndLocationIsInitialized();
-        whenForecastDetailedWeatherTaskExecuted();
+        whenDetailedWeatherTaskExecuted();
         thenVerifyAllWeatherValuesInWeatherDTOListAllOfAreNotNullAndCorrectDateFormat();
     }
 
@@ -93,14 +98,14 @@ public class WeatherDAOTest {
     }
 
     private void whenUserWeatherTaskExecuted() {
-        mWeatherDTO = mIWeatherDAO.getUserWeather(mLocation);
-        WeatherDTO weatherDTOStub = mIWeatherDAOStub.getUserWeather(mLocation);
-        System.out.println("Stub: " + weatherDTOStub);
-        System.out.println("Real: " + mWeatherDTO);
+        mUserWeatherDTO = mIWeatherDAO.getUserWeather(mLocation);
+        UserWeatherDTO userWeatherDTOStub = mIWeatherDAOStub.getUserWeather(mLocation);
+        System.out.println("Stub: " + userWeatherDTOStub);
+        System.out.println("Real: " + mUserWeatherDTO);
     }
 
     private void thenVerifyAllWeatherValuesInWeatherDTOAllOfAreNotNull() {
-        if (mWeatherDTO.toString().equals("null null null null")) {
+        if (mUserWeatherDTO.toString().equals("null null null null")) {
             fail("All weather values for user weather are null");
         }
     }
@@ -108,54 +113,59 @@ public class WeatherDAOTest {
     private void givenWeatherDAOAndWeatherDTOListIsInitialized() {
         mIWeatherDAO = new WeatherDAO(ApplicationProvider.getApplicationContext());
         mIWeatherDAOStub = new WeatherDAOStub();
-        mWeatherDTOList = new ArrayList<>();
-        mWeatherDTOListStub = new ArrayList<>();
+        mBookmarkWeatherDTOList = new ArrayList<>();
+        mBookmarkWeatherDTOListStub = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            WeatherDTO weatherDTO = new WeatherDTO();
             double latitude = ThreadLocalRandom.current().nextDouble(90);
             double longitude = ThreadLocalRandom.current().nextDouble(180);
 
             System.out.println("Generated random values: " +
                     "latitude = " + latitude + " longitude = " + longitude);
-            weatherDTO.setLocationDTOLatitude(latitude);
-            weatherDTO.setLocationDTOLongitude(longitude);
-            mWeatherDTOList.add(weatherDTO);
+
+            BookmarkWeatherDTO bookmarkWeatherDTO = new BookmarkWeatherDTO(
+                    UUID.randomUUID(),
+                    latitude,
+                    longitude
+            );
+
+            mBookmarkWeatherDTOList.add(bookmarkWeatherDTO);
+            mBookmarkWeatherDTOListStub.add(bookmarkWeatherDTO);
         }
     }
 
     private void whenBookmarkWeatherListTaskExecuted() {
-        mWeatherDTOList = mIWeatherDAO.getBookmarkListWeather(mWeatherDTOList);
-        mWeatherDTOListStub = mIWeatherDAOStub.getBookmarkListWeather(mWeatherDTOList);
-        System.out.println("Stub: " + mWeatherDTOList);
-        System.out.println("Real: " + mWeatherDTOListStub);
+        mBookmarkWeatherDTOList = mIWeatherDAO.getBookmarkListWeather(mBookmarkWeatherDTOList);
+        mBookmarkWeatherDTOListStub = mIWeatherDAOStub.getBookmarkListWeather(mBookmarkWeatherDTOListStub);
+        System.out.println("Stub: " + mBookmarkWeatherDTOList);
+        System.out.println("Real: " + mBookmarkWeatherDTOListStub);
     }
 
-    private void thenVerifyAllWeatherValuesInWeatherDTOListAllOfAreNotNull() {
+    private void thenVerifyAllValuesInWeatherDTOListAllOfAreNotNull() {
         for (int i = 0; i < 10; i++) {
-            WeatherDTO weatherDTO = mWeatherDTOList.get(i);
-            if (weatherDTO.toString().equals("null null null null")) {
-                fail("All weather values for list item weather are null");
+            BookmarkWeatherDTO bookmarkWeatherDTO = mBookmarkWeatherDTOList.get(i);
+            if (bookmarkWeatherDTO.toString().equals("null null null null null null null")) {
+                fail("All values for list item weather are null");
             }
         }
     }
 
-    private void whenForecastDetailedWeatherTaskExecuted() {
-        mWeatherDTOList = mIWeatherDAO.getForecastDetailedWeatherList(mLocation);
-        mWeatherDTOListStub = mIWeatherDAOStub.getForecastDetailedWeatherList(mLocation);
-        System.out.println("Stub: " + mWeatherDTOListStub);
-        System.out.println("Real: " + mWeatherDTOList);
+    private void whenDetailedWeatherTaskExecuted() {
+        mDetailedWeatherDTOList = mIWeatherDAO.getDetailedWeatherList(mLocation);
+        mDetailedWeatherDTOListStub = mIWeatherDAOStub.getDetailedWeatherList(mLocation);
+        System.out.println("Stub: " + mDetailedWeatherDTOListStub);
+        System.out.println("Real: " + mDetailedWeatherDTOList);
     }
 
     private void thenVerifyAllWeatherValuesInWeatherDTOListAllOfAreNotNullAndCorrectDateFormat() {
         for (int i = 0; i < 5; i++) {
-            WeatherDTO weatherDTO = mWeatherDTOListStub.get(i);
-            if (weatherDTO.toString().equals("null null null null 0 0 0 0 null")) {
+            DetailedWeatherDTO detailedWeatherDTO = mDetailedWeatherDTOList.get(i);
+            if (detailedWeatherDTO.toString().equals("null null null null 0 0 0 0 null")) {
                 fail("All weather values for detailed weather are null and zero");
             }
 
-            System.out.println("weatherDTO.getDate() =  " + weatherDTO.getDate());
-            assertThat(weatherDTO.getDate().length(), is(equalTo(3)));
+            System.out.println("weatherDTO.getDate() =  " + detailedWeatherDTO.getDate());
+            assertThat(detailedWeatherDTO.getDate().length(), is(equalTo(3)));
         }
     }
 }

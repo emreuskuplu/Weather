@@ -19,7 +19,9 @@ package com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess;
 
 import android.location.Location;
 
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 
 import java.util.List;
 
@@ -35,19 +37,19 @@ public interface IWeatherDAO {
      * @param location of device
      * @return weather of user
      */
-    WeatherDTO getUserWeather(Location location);
+    UserWeatherDTO getUserWeather(Location location);
 
     /**
      * Gets bookmark list weather from api
-     * @param weatherDTOList of bookmark list
+     * @param bookmarkWeatherDTOList of bookmark list
      * @return weather of bookmark list
      */
-    List<WeatherDTO> getBookmarkListWeather(List<WeatherDTO> weatherDTOList);
+    List<BookmarkWeatherDTO> getBookmarkListWeather(List<BookmarkWeatherDTO> bookmarkWeatherDTOList);
 
     /**
-     * Gets forecast detailed weather list from api
+     * Gets detailed weather of forecast days from api
      * @param location of user or bookmark list
-     * @return forecast detailed weather list
+     * @return detailed weather of forecast days
      */
-    List<WeatherDTO> getForecastDetailedWeatherList(Location location);
+    List<DetailedWeatherDTO> getDetailedWeatherList(Location location);
 }

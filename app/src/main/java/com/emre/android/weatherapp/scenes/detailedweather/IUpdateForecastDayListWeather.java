@@ -15,28 +15,21 @@
  *
  */
 
-package com.emre.android.weatherapp.scenes;
+package com.emre.android.weatherapp.scenes.detailedweather;
 
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
 
 import java.util.List;
 
 /**
  * Emre Üsküplü
  *
- * Updates weather of user, bookmark list and forecast days
+ * Updates weather of forecast days
  */
-public interface IUpdateWeather {
-
+public interface IUpdateForecastDayListWeather {
     /**
-     * Updates weather of user
-     * @param weatherDTO values is fetched from api
+     * Updates weather of forecast day list
+     * @param detailedWeatherDTOList values is fetched from api
      */
-    void updateWeather(WeatherDTO weatherDTO);
-
-    /**
-     * Updates weather of bookmark list and forecast days
-     * @param weatherDTOList values is fetched from api
-     */
-    void updateListWeather(List<WeatherDTO> weatherDTOList);
+    void updateForecastDayListWeather(List<DetailedWeatherDTO> detailedWeatherDTOList);
 }

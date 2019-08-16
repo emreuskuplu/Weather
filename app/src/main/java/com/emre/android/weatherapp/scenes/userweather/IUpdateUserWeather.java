@@ -15,19 +15,19 @@
  *
  */
 
-package com.emre.android.weatherapp;
+package com.emre.android.weatherapp.scenes.userweather;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.UserWeatherDTO;
 
 /**
- * @author Emre Üsküplü
+ * Emre Üsküplü
+ *
+ * Updates weather of user
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        MainWeatherActivityTest.class,
-        CreateBookmarkOnMapFragmentTest.class,
-        DetailedWeatherFragmentTest.class
-})
-public class uiTestSuite {
+public interface IUpdateUserWeather {
+    /**
+     * Updates weather of user
+     * @param userWeatherDTO values is fetched from api
+     */
+    void updateUserWeather(UserWeatherDTO userWeatherDTO);
 }

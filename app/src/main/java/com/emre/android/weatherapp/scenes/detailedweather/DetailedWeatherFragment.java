@@ -33,9 +33,8 @@ import android.widget.Toast;
 
 import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
 import com.emre.android.weatherapp.scenes.INetworkStatus;
-import com.emre.android.weatherapp.scenes.IUpdateWeather;
 import com.emre.android.weatherapp.scenes.detailedweather.workerthread.ForecastDetailedWeatherTask;
 
 import java.text.ParseException;
@@ -48,19 +47,19 @@ import java.util.Locale;
 /**
  * @author Emre Üsküplü
  *
- * Shows detailed weather and weather of forecast days
- * When user clicks a forecast day layout then refreshes all weather and sets detailed weather of selected forecast day
+ * Shows detailed weather of selected day and forecast days
+ * When user clicks a forecast day view then refreshes all weather and sets detailed weather of selected forecast day
  * When user clicks back button then it's finish parent activity
  * When user clicks refresh button then refreshes all weather
  */
-public class DetailedWeatherFragment extends Fragment implements IUpdateWeather {
+public class DetailedWeatherFragment extends Fragment implements IUpdateDetailedWeather, IUpdateForecastDayListWeather {
     private static final String TAG = DetailedWeatherFragment.class.getSimpleName();
 
     private static final String ARG_LOCATION_DATA_INFO =
             "com.emre.android.weatherapp.locationdata";
 
     private static int sSelectedDay;
-    private static List<WeatherDTO> sWeatherDTOList;
+    private static List<DetailedWeatherDTO> sDetailedWeatherDTOList;
     private static Location sLocation;
 
     private String mUnitsFormat = "";
@@ -261,8 +260,8 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         return sSelectedDay;
     }
 
-    public static List<WeatherDTO> getWeatherDTOList() {
-        return sWeatherDTOList;
+    public static List<DetailedWeatherDTO> getDetailedWeatherDTOList() {
+        return sDetailedWeatherDTOList;
     }
 
     public static String changeShortDateToLargeDate(String shortDate) {
@@ -299,7 +298,7 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         }
     }
 
-    private void updateForecastDaysName(List<WeatherDTO> weatherDTOList) {
+    private void updateForecastDaysName(List<DetailedWeatherDTO> detailedWeatherDTOList) {
         List<TextView> weatherDayNameList = new ArrayList<>();
         weatherDayNameList.add(mFirstDayName);
         weatherDayNameList.add(mSecondDayName);
@@ -310,8 +309,8 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         int weatherForecastDaysLimit = 5;
 
         for (int i = 0; i < weatherForecastDaysLimit; i++) {
-            WeatherDTO weatherDTO = weatherDTOList.get(i);
-            String dayName = weatherDTO.getDate();
+            DetailedWeatherDTO detailedWeatherDTO = detailedWeatherDTOList.get(i);
+            String dayName = detailedWeatherDTO.getDate();
             TextView weatherDayNameTextView = weatherDayNameList.get(i);
 
             weatherDayNameTextView.setText(dayName);
@@ -322,7 +321,7 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         selectedDayName.setTextColor(mDetailedDayName.getTextColors());
     }
 
-    private void updateForecastDaysImageView(List<WeatherDTO> weatherDTOList) {
+    private void updateForecastDaysImageView(List<DetailedWeatherDTO> detailedWeatherDTOList) {
         List<ImageView> weatherForecastDaysImageViewList = new ArrayList<>();
         weatherForecastDaysImageViewList.add(mFirstDayWeatherImage);
         weatherForecastDaysImageViewList.add(mSecondDayWeatherImage);
@@ -333,12 +332,12 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         int weatherForecastDaysLimit = 5;
 
         for (int i = 0; i < weatherForecastDaysLimit; i++) {
-            WeatherDTO weatherDTO = weatherDTOList.get(i);
-            updateWeatherImage(weatherDTO, weatherForecastDaysImageViewList.get(i));
+            DetailedWeatherDTO detailedWeatherDTO = detailedWeatherDTOList.get(i);
+            updateWeatherImage(detailedWeatherDTO, weatherForecastDaysImageViewList.get(i));
         }
     }
 
-    private void updateForecastDaysTempDegree(List<WeatherDTO> weatherDTOList) {
+    private void updateForecastDaysTempDegree(List<DetailedWeatherDTO> detailedWeatherDTOList) {
         List<TextView> weatherForecastDaysTempDegreeList = new ArrayList<>();
         weatherForecastDaysTempDegreeList.add(mFirstDayTempDegree);
         weatherForecastDaysTempDegreeList.add(mSecondDayTempDegree);
@@ -349,17 +348,17 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
         int weatherForecastDaysLimit = 5;
 
         for (int i = 0; i < weatherForecastDaysLimit; i++) {
-            WeatherDTO weatherDTO = weatherDTOList.get(i);
+            DetailedWeatherDTO detailedWeatherDTO = detailedWeatherDTOList.get(i);
             String tempDegree =
-                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mUnitsFormat);
+                    getString(R.string.temp_degree, detailedWeatherDTO.getTempDegree(), mUnitsFormat);
             TextView tempDegreeTextView = weatherForecastDaysTempDegreeList.get(i);
             tempDegreeTextView.setText(tempDegree);
         }
     }
 
-    private void updateWeatherImage(WeatherDTO weatherDTO,
+    private void updateWeatherImage(DetailedWeatherDTO detailedWeatherDTO,
                                     ImageView weatherImageView) {
-        String mainDescription = weatherDTO.getMainDescription();
+        String mainDescription = detailedWeatherDTO.getMainDescription();
 
         if (mainDescription.equals(getString(R.string.clear))) {
             weatherImageView.setImageResource(R.drawable.sun);
@@ -403,7 +402,7 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
                     getString(R.string.squall), getString(R.string.tornado)};
 
             for (String atmosphereDescription : atmosphereDescriptions) {
-                if (weatherDTO.getMainDescription().equals(atmosphereDescription)) {
+                if (detailedWeatherDTO.getMainDescription().equals(atmosphereDescription)) {
                     weatherImageView.setImageResource(R.drawable.mist);
                     weatherImageView.setContentDescription(getString(R.string.weather_image,
                             getString(R.string.user_location), getString(R.string.weather_image_is_mist)));
@@ -413,35 +412,35 @@ public class DetailedWeatherFragment extends Fragment implements IUpdateWeather 
     }
 
     @Override
-    public void updateWeather(WeatherDTO weatherDTO) {
+    public void updateDetailedWeather(DetailedWeatherDTO detailedWeatherDTO) {
         if (isAdded()) {
-            String detailedDayName = changeShortDateToLargeDate(weatherDTO.getDate());
+            String detailedDayName = changeShortDateToLargeDate(detailedWeatherDTO.getDate());
             String tempDegree =
-                    getString(R.string.temp_degree, weatherDTO.getTempDegree(), mUnitsFormat);
+                    getString(R.string.temp_degree, detailedWeatherDTO.getTempDegree(), mUnitsFormat);
 
-            mLocationName.setText(weatherDTO.getLocationName());
+            mLocationName.setText(detailedWeatherDTO.getLocationName());
             mDetailedDayName.setText(detailedDayName);
             mTempDegree.setText(tempDegree);
-            mDescription.setText(weatherDTO.getDescription());
-            mHumidityVolume.setText(weatherDTO.getHumidity());
-            mWindVolume.setText(weatherDTO.getWindVolume());
-            mRainVolume.setText(weatherDTO.getRainVolume());
-            mSnowVolume.setText(weatherDTO.getSnowVolume());
+            mDescription.setText(detailedWeatherDTO.getDescription());
+            mHumidityVolume.setText(detailedWeatherDTO.getHumidity());
+            mWindVolume.setText(detailedWeatherDTO.getWindVolume());
+            mRainVolume.setText(detailedWeatherDTO.getRainVolume());
+            mSnowVolume.setText(detailedWeatherDTO.getSnowVolume());
 
-            updateWeatherImage(weatherDTO, mWeatherImageView);
+            updateWeatherImage(detailedWeatherDTO, mWeatherImageView);
 
             mWeatherProgressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void updateListWeather(List<WeatherDTO> weatherDTOList) {
+    public void updateForecastDayListWeather(List<DetailedWeatherDTO> detailedWeatherDTOList) {
         if (isAdded()) {
-            sWeatherDTOList = weatherDTOList;
+            sDetailedWeatherDTOList = detailedWeatherDTOList;
 
-            updateForecastDaysName(weatherDTOList);
-            updateForecastDaysImageView(weatherDTOList);
-            updateForecastDaysTempDegree(weatherDTOList);
+            updateForecastDaysName(detailedWeatherDTOList);
+            updateForecastDaysImageView(detailedWeatherDTOList);
+            updateForecastDaysTempDegree(detailedWeatherDTOList);
 
             mWeatherProgressBar.setVisibility(View.GONE);
         }

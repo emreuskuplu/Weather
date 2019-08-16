@@ -24,10 +24,10 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.emre.android.weatherapp.dataaccessobjects.weatherdataaccess.WeatherDAO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTO;
-import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.WeatherDTOListBookmark;
-import com.emre.android.weatherapp.scenes.IUpdateWeather;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
+import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTOListSafe;
 import com.emre.android.weatherapp.scenes.bookmarklistweather.BookmarkListWeatherFragment;
+import com.emre.android.weatherapp.scenes.bookmarklistweather.IUpdateBookmarkListWeather;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ import java.util.List;
  *
  * Executes task for fetch weather of bookmark list from api
  */
-public class BookmarkListWeatherTask extends AsyncTask<WeatherDTOListBookmark, Void, List<WeatherDTO>> {
+public class BookmarkListWeatherTask extends AsyncTask<BookmarkWeatherDTOListSafe, Void, List<BookmarkWeatherDTO>> {
     private static final String TAG = BookmarkListWeatherTask.class.getSimpleName();
 
     private Context mBookmarkListWeatherContext;
@@ -50,17 +50,17 @@ public class BookmarkListWeatherTask extends AsyncTask<WeatherDTOListBookmark, V
     }
 
     @Override
-    protected List<WeatherDTO> doInBackground(WeatherDTOListBookmark... weatherDTOListBookmarks) {
-        List<WeatherDTO> weatherDTOList = weatherDTOListBookmarks[0].getWeatherDTOList();
+    protected List<BookmarkWeatherDTO> doInBackground(BookmarkWeatherDTOListSafe... bookmarkWeatherDTOListSafes) {
+        List<BookmarkWeatherDTO> bookmarkWeatherDTOList = bookmarkWeatherDTOListSafes[0].getBookmarkWeatherDTOList();
 
-        return new WeatherDAO(mBookmarkListWeatherContext).getBookmarkListWeather(weatherDTOList);
+        return new WeatherDAO(mBookmarkListWeatherContext).getBookmarkListWeather(bookmarkWeatherDTOList);
     }
 
     @Override
-    protected void onPostExecute(List<WeatherDTO> result) {
+    protected void onPostExecute(List<BookmarkWeatherDTO> result) {
         Log.i(TAG, "is executed");
 
-        IUpdateWeather iUpdateWeather = (BookmarkListWeatherFragment) mBookmarkListWeatherFragment;
-        iUpdateWeather.updateListWeather(result);
+        IUpdateBookmarkListWeather iUpdateBookmarkListWeather = (BookmarkListWeatherFragment) mBookmarkListWeatherFragment;
+        iUpdateBookmarkListWeather.updateBookmarkListWeather(result);
     }
 }
