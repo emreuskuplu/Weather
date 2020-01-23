@@ -35,7 +35,7 @@ import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
 import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.DetailedWeatherDTO;
 import com.emre.android.weatherapp.scenes.INetworkStatus;
-import com.emre.android.weatherapp.scenes.detailedweather.workerthread.ForecastDetailedWeatherTask;
+import com.emre.android.weatherapp.workerthread.ForecastDetailedWeatherTask;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
