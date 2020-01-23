@@ -15,7 +15,7 @@
  *
  */
 
-package com.emre.android.weatherapp.scenes.userweather.workerthread;
+package com.emre.android.weatherapp.workerthread;
 
 import android.content.Context;
 import android.location.Location;
