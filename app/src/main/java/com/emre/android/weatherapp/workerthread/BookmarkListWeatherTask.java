@@ -15,7 +15,7 @@
  *
  */
 
-package com.emre.android.weatherapp.scenes.bookmarklistweather.workerthread;
+package com.emre.android.weatherapp.workerthread;
 
 import android.content.Context;
 import android.os.AsyncTask;
