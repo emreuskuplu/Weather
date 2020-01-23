@@ -41,7 +41,7 @@ import com.emre.android.weatherapp.scenes.INetworkStatus;
 import com.emre.android.weatherapp.scenes.IRefreshWeather;
 import com.emre.android.weatherapp.scenes.detailedweather.DetailedUserWeatherActivity;
 import com.emre.android.weatherapp.scenes.mainweather.MainWeatherActivity;
-import com.emre.android.weatherapp.scenes.userweather.workerthread.UserWeatherTask;
+import com.emre.android.weatherapp.workerthread.UserWeatherTask;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;

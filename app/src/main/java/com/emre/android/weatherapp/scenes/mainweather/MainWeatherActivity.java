@@ -41,7 +41,7 @@ import com.emre.android.weatherapp.scenes.settings.SettingsActivity;
 import com.emre.android.weatherapp.scenes.userweather.UserWeatherFragment;
 import com.emre.android.weatherapp.scenes.appinfopage.AppInfoPageActivity;
 import com.emre.android.weatherapp.scenes.bookmarklistweather.BookmarkListWeatherFragment;
-import com.emre.android.weatherapp.scenes.mainweather.dialog.RatingBarDialogFragment;
+import com.emre.android.weatherapp.scenes.dialogs.RatingBarDialogFragment;
 import com.emre.android.weatherapp.scenes.main.MainFragmentActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
