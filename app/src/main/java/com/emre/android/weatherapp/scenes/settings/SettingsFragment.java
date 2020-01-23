@@ -27,7 +27,7 @@ import androidx.preference.SwitchPreference;
 
 import com.emre.android.weatherapp.R;
 import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.SettingsDAO;
-import com.emre.android.weatherapp.scenes.settings.dialog.DeleteAllBookmarksDialogFragment;
+import com.emre.android.weatherapp.scenes.dialogs.DeleteAllBookmarksDialogFragment;
 
 /**
  * @author Emre Üsküplü

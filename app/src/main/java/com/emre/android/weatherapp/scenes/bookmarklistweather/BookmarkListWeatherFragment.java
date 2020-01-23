@@ -44,7 +44,7 @@ import com.emre.android.weatherapp.dataaccessobjects.settingsdataaccess.Settings
 import com.emre.android.weatherapp.datatransferobjects.locationdatatransfer.LocationDTO;
 import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTO;
 import com.emre.android.weatherapp.datatransferobjects.weatherdatatransfer.BookmarkWeatherDTOListSafe;
-import com.emre.android.weatherapp.scenes.bookmarklistweather.workerthread.BookmarkListWeatherTask;
+import com.emre.android.weatherapp.workerthread.BookmarkListWeatherTask;
 import com.emre.android.weatherapp.scenes.detailedweather.DetailedBookmarkListWeatherActivity;
 import com.emre.android.weatherapp.scenes.INetworkStatus;
 import com.emre.android.weatherapp.scenes.IRefreshWeather;

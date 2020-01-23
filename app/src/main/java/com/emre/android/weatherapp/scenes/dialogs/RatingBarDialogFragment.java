@@ -15,7 +15,7 @@
  *
  */
 
-package com.emre.android.weatherapp.scenes.mainweather.dialog;
+package com.emre.android.weatherapp.scenes.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
